@@ -19,8 +19,8 @@ body{
 .hero-bar{
   flex-shrink:0;
   width:100%;
-  background:linear-gradient(135deg,#c5c8f8 0%,#b8bcf5 100%);
-  padding:10px 14px 10px;
+  background:linear-gradient(180deg,#d7dbff 0%,#c6ccfa 100%);
+  padding:7px 14px 7px;
   display:flex;align-items:center;gap:12px;
   border-bottom:1px solid rgba(124,92,252,.15);
   box-shadow:0 4px 20px rgba(0,0,0,.15);
@@ -42,13 +42,17 @@ body{
 .back-btn:active{transform:scale(.88);background:rgba(255,255,255,.85)}
 .back-btn i{font-size:15px;color:#4a3fa0}
 
-.hero-info{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
-.hero-title{
-  font-size:15px;font-weight:900;color:#3a3080;
+.hero-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.hero-sub{
+  font-size:16px;font-weight:900;color:#3a3080;
+  text-transform:uppercase;letter-spacing:.4px;line-height:1.1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  letter-spacing:.2px;
 }
-.hero-sub{font-size:11px;font-weight:700;color:#7C5CFC;text-transform:uppercase;letter-spacing:.5px}
+.hero-title{
+  font-size:12px;font-weight:700;color:#6a5cf0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.3px;text-transform:uppercase;
+}
 
 /* ── iframe wrapper fills remaining height ── */
 .frame-wrap{
@@ -133,19 +137,25 @@ body{
 ════════════════════════════════════════ */
 .fab-container{
   position:fixed;
-  bottom:18px;
+  bottom:20px;
   left:50%;
   transform:translateX(-50%);
   z-index:500;
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:center;
+  background:transparent;
+  border-radius:40px;
+  box-shadow:none;
+  padding:0;
+  gap:0;
+  transition:background .35s ease, box-shadow .35s ease, padding .35s cubic-bezier(.22,1,.36,1), gap .35s cubic-bezier(.22,1,.36,1);
+}
+.fab-container.open{
   background:#fff;
-  border-radius:50px;
-  box-shadow:0 6px 30px rgba(0,0,0,.18);
-  padding:8px 10px;
-  gap:6px;
-  min-width:220px;
+  box-shadow:0 10px 34px rgba(91,106,240,.22), 0 2px 8px rgba(0,0,0,.06);
+  padding:9px 12px;
+  gap:8px;
 }
 
 /* Active pill highlight — wraps the center X button */
@@ -184,17 +194,20 @@ body{
   transition:width .35s cubic-bezier(.22,1,.36,1);
   flex-shrink:0;
 }
-.fab-side.show{ width:64px; }
+.fab-left.show{ width:104px; }
+.fab-right.show{ width:118px; }
 
 .fab-left{ justify-content:flex-end; }
 .fab-right{ justify-content:flex-start; }
 
 .fab-side-btn{
-  width:48px;height:48px;
-  border-radius:50%;
+  height:48px;
+  padding:0 18px;
+  border-radius:24px;
   border:none;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;
   cursor:pointer;
+  white-space:nowrap;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1), opacity .25s;
   -webkit-tap-highlight-color:transparent;
   flex-shrink:0;
@@ -216,8 +229,8 @@ body{
   box-shadow:0 4px 14px rgba(0,151,167,.4);
 }
 .fab-side-btn i{font-size:16px;color:#fff}
-.fab-side-btn span{font-size:7px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:.3px;text-transform:uppercase;line-height:1}
-.fab-side-btn:active{transform:scale(.88) !important}
+.fab-side-btn span{font-size:13px;font-weight:800;color:#fff;letter-spacing:.3px;line-height:1}
+.fab-side-btn:active{transform:scale(.92) !important}
 
 /* ════════════════════════════════════════
    SLIDE-UP PANEL (Hack / Settings)
@@ -245,7 +258,8 @@ body{
   padding:20px 20px 40px;
   transform:translateY(100%);
   transition:transform .38s cubic-bezier(.22,1,.36,1);
-  height:50vh;
+  height:88vh;
+  max-height:88vh;
   overflow-y:auto;
 }
 .slide-panel.show{
@@ -516,6 +530,7 @@ function loadFrame(url){
 /* ══════════════════════════════
    FAB + PANEL LOGIC
 ══════════════════════════════ */
+const fabContainer= document.getElementById("fabContainer");
 const fabToggle   = document.getElementById("fabToggle");
 const fabLeft     = document.getElementById("fabLeft");
 const fabRight    = document.getElementById("fabRight");
@@ -530,6 +545,7 @@ let activePanel= null;   // "hack" | "setting" | null
 
 function openFab(){
   fabOpen = true;
+  fabContainer.classList.add("open");
   fabToggle.classList.add("open");
   fabLeft.classList.add("show");
   fabRight.classList.add("show");
@@ -537,6 +553,7 @@ function openFab(){
 
 function closeFab(){
   fabOpen = false;
+  fabContainer.classList.remove("open");
   fabToggle.classList.remove("open");
   fabLeft.classList.remove("show");
   fabRight.classList.remove("show");
