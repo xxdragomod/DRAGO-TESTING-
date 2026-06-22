@@ -331,79 +331,121 @@ body{
 }
 
 /* ════════════════════════════════════════
-   PREDICTION PANEL (HACK) — light theme
+   PREDICTION PANEL (HACK) — premium light
 ════════════════════════════════════════ */
-.pred-content{display:block;min-height:120px;width:100%}
+.pred-content{display:block;width:100%}
 .pred-top{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;gap:10px;
+  margin-bottom:16px;gap:10px;
 }
-.pred-game{font-size:13px;font-weight:900;color:#1a1a2e;text-transform:uppercase;letter-spacing:.4px}
+.pred-server-pill{
+  display:flex;align-items:center;gap:9px;
+}
+.pred-server-ic{
+  width:36px;height:36px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
+  box-shadow:0 4px 12px rgba(124,92,252,.35);
+}
+.pred-server-ic i{font-size:16px;color:#fff}
+.pred-server-name{font-size:14px;font-weight:900;color:#1a1a2e;line-height:1.05}
+.pred-server-tag{font-size:9.5px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.6px}
 .pred-period{
-  font-size:11px;font-weight:800;color:#7C5CFC;
-  background:#f1efff;border:1.5px solid #e6e1ff;
+  font-size:11px;font-weight:800;color:#16a34a;
+  background:#eafff1;border:1.5px solid #c9f4d8;
   padding:5px 11px;border-radius:20px;
   display:flex;align-items:center;gap:6px;white-space:nowrap;
 }
 .pred-period .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:livePulse 1.4s ease-in-out infinite}
 @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
-.pred-grid{display:flex;flex-direction:column;gap:12px}
-.pred-card{
-  background:#fff;border:1.5px solid #eef0ff;border-radius:18px;
-  padding:14px 16px;
-  box-shadow:0 6px 20px rgba(100,80,220,.08);
-}
-.pred-card-head{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.pred-server{display:flex;align-items:center;gap:9px}
-.pred-server-icon{
-  width:34px;height:34px;border-radius:10px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-}
-.pred-server-icon i{font-size:15px;color:#fff}
-.pred-server-name{font-size:13px;font-weight:900;color:#1a1a2e;line-height:1.1}
-.pred-server-tag{font-size:9.5px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px}
-.pred-badge{
-  font-size:11px;font-weight:900;
-  padding:5px 10px;border-radius:12px;
-  background:#f4f4ff;color:#7C5CFC;white-space:nowrap;
-}
-
-.pred-result{display:flex;align-items:center;gap:12px}
-.pred-call{
-  flex:1;
-  border-radius:14px;
-  padding:14px 12px;
+/* HERO call card */
+.pred-hero{
+  position:relative;overflow:hidden;
+  border-radius:22px;
+  padding:22px 18px 18px;
   text-align:center;
-  font-size:20px;font-weight:900;letter-spacing:.5px;
-  color:#fff;text-transform:uppercase;
-  transition:background .25s;
+  border:1.5px solid #eef0ff;
+  background:radial-gradient(120% 120% at 50% 0%,#fbfaff 0%,#f4f2ff 100%);
+  box-shadow:0 10px 30px rgba(100,80,220,.10);
 }
-.pred-call.green{background:linear-gradient(135deg,#22c55e,#16a34a)}
-.pred-call.red{background:linear-gradient(135deg,#ef4444,#dc2626)}
-.pred-call.big{background:linear-gradient(135deg,#f59e0b,#d97706)}
-.pred-call.small{background:linear-gradient(135deg,#06b6d4,#0891b2)}
-.pred-call.wait{background:#e5e7eb;color:#9ca3af}
+.pred-hero .period-line{
+  font-size:11px;font-weight:800;color:#8a8fb5;
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;
+}
+.pred-hero .period-line b{color:#1a1a2e}
+.pred-call-img{
+  width:100%;max-width:300px;height:auto;margin:0 auto 6px;
+  display:block;
+  animation:callPop .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes callPop{0%{transform:scale(.82);opacity:0}100%{transform:scale(1);opacity:1}}
+.pred-wait{
+  font-size:30px;font-weight:900;color:#aab0cf;letter-spacing:1px;
+  padding:18px 0;
+}
 
-.pred-meta{display:flex;flex-direction:column;gap:8px;min-width:96px}
-.pred-conf-label{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:800;color:#6b7280;text-transform:uppercase;letter-spacing:.3px}
-.pred-conf-label b{color:#1a1a2e;font-size:12px}
-.pred-bar{height:7px;border-radius:6px;background:#eef0ff;overflow:hidden}
-.pred-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#7C5CFC,#5B6AF0);width:0;transition:width .4s ease}
-.pred-wr{font-size:10px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.3px}
-.pred-wr b{color:#22c55e}
+/* confidence + meta row */
+.pred-stats{display:flex;gap:10px;margin-top:16px}
+.pred-stat{
+  flex:1;background:#fff;border:1.5px solid #eef0ff;border-radius:14px;
+  padding:11px 12px;text-align:center;
+}
+.pred-stat .lbl{font-size:9.5px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.pred-stat .val{font-size:17px;font-weight:900;color:#1a1a2e;line-height:1}
+.pred-stat .val.green{color:#16a34a}
+.pred-stat .badge-val{font-size:14px}
 
-.pred-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px 0;color:#9ca3af}
-.pred-loading .spinner{width:34px;height:34px}
-.pred-msg{font-size:12px;font-weight:700;color:#9ca3af;text-align:center;padding:24px 10px;line-height:1.6}
+.pred-bar{height:8px;border-radius:6px;background:#eef0ff;overflow:hidden;margin-top:12px}
+.pred-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#7C5CFC,#5B6AF0);width:0;transition:width .45s ease}
+
+.pred-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 0;color:#9ca3af}
+.pred-loading .spinner{width:36px;height:36px}
+.pred-msg{font-size:12.5px;font-weight:700;color:#9ca3af;text-align:center;padding:28px 12px;line-height:1.6}
+.pred-msg.lock{color:#7C5CFC}
+.pred-msg .lock-ic{font-size:30px;display:block;margin-bottom:10px;color:#7C5CFC}
+.pred-msg .up-btn{
+  display:inline-block;margin-top:14px;
+  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);color:#fff;
+  font-size:12px;font-weight:800;text-decoration:none;
+  padding:10px 20px;border-radius:12px;
+}
 .pred-foot{
-  margin-top:14px;text-align:center;
+  margin-top:16px;text-align:center;
   font-size:10px;font-weight:700;color:#b9bcd6;letter-spacing:.3px;
 }
+
+/* ════════════════════════════════════════
+   SETTINGS — server selector
+════════════════════════════════════════ */
+.set-title{font-size:14px;font-weight:900;color:#1a1a2e;margin-bottom:4px;text-align:center}
+.set-sub{font-size:11.5px;font-weight:600;color:#9ca3af;text-align:center;margin-bottom:18px;line-height:1.5}
+.srv-opt{
+  display:flex;align-items:center;gap:13px;
+  background:#fff;border:2px solid #eef0ff;border-radius:16px;
+  padding:14px 15px;margin-bottom:12px;cursor:pointer;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+  user-select:none;
+}
+.srv-opt:active{transform:scale(.98)}
+.srv-opt.active{border-color:#7C5CFC;box-shadow:0 6px 18px rgba(124,92,252,.18)}
+.srv-opt-ic{
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+}
+.srv-opt-ic.color{background:linear-gradient(135deg,#22c55e,#ef4444)}
+.srv-opt-ic.size{background:linear-gradient(135deg,#f59e0b,#06b6d4)}
+.srv-opt-ic i{font-size:18px}
+.srv-opt-txt{flex:1}
+.srv-opt-name{font-size:14px;font-weight:900;color:#1a1a2e;line-height:1.1}
+.srv-opt-desc{font-size:11px;font-weight:600;color:#9ca3af;margin-top:2px}
+.srv-opt-check{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  border:2px solid #d8dcf0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;transition:background .2s,border-color .2s;
+}
+.srv-opt.active .srv-opt-check{background:#7C5CFC;border-color:#7C5CFC}
+.srv-opt:not(.active) .srv-opt-check i{display:none}
 </style>
 </head>
 <body>
@@ -518,16 +560,22 @@ body{
 ���═══════════════════════════════════════ -->
 <div class="panel-overlay" id="panelOverlay"></div>
 
-<!-- HACK PANEL — live prediction -->
+<!-- HACK PANEL — live prediction (selected server only) -->
 <div class="slide-panel" id="hackPanel">
   <div class="panel-handle"></div>
   <div class="panel-tag">HACK</div>
   <div class="pred-content">
     <div class="pred-top">
-      <span class="pred-game" id="predGame">Prediction</span>
+      <span class="pred-server-pill">
+        <span class="pred-server-ic"><i class="fa-solid fa-bolt" id="predServerIcon"></i></span>
+        <span>
+          <span class="pred-server-name" id="predServerName">NOVA X</span><br>
+          <span class="pred-server-tag" id="predServerTag">Color Server</span>
+        </span>
+      </span>
       <span class="pred-period">
         <span class="dot"></span>
-        <span id="predPeriod">--</span>
+        <span id="predGameLabel">--</span>
       </span>
     </div>
 
@@ -542,13 +590,31 @@ body{
   </div>
 </div>
 
-<!-- SETTINGS PANEL -->
+<!-- SETTINGS PANEL — server selector -->
 <div class="slide-panel" id="settingPanel">
   <div class="panel-handle"></div>
   <div class="panel-tag">SETTING</div>
   <div class="panel-content">
-    <!-- Yahan apna Settings content daalo -->
-    <div class="panel-empty">Settings content yahan aayega</div>
+    <div class="set-title">Select Prediction Server</div>
+    <div class="set-sub">Ek server choose karo. Sirf usi ka prediction HACK panel me dikhega.</div>
+
+    <div class="srv-opt" id="srvColor" data-srv="color">
+      <span class="srv-opt-ic color"><i class="fa-solid fa-palette"></i></span>
+      <span class="srv-opt-txt">
+        <span class="srv-opt-name">NOVA X</span>
+        <span class="srv-opt-desc">Color Server · GREEN / RED</span>
+      </span>
+      <span class="srv-opt-check"><i class="fa-solid fa-check"></i></span>
+    </div>
+
+    <div class="srv-opt" id="srvSize" data-srv="size">
+      <span class="srv-opt-ic size"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
+      <span class="srv-opt-txt">
+        <span class="srv-opt-name">PRIME X</span>
+        <span class="srv-opt-desc">Size Server · BIG / SMALL</span>
+      </span>
+      <span class="srv-opt-check"><i class="fa-solid fa-check"></i></span>
+    </div>
   </div>
 </div>
 
@@ -639,42 +705,45 @@ function loadFrame(url){
 /* ══════════════════════════════
    PREDICTION (self-learning engine)
 ══════════════════════════════ */
-function callClass(pred){
-  const p=(pred||"").toUpperCase();
-  if(p==="GREEN") return "green";
-  if(p==="RED")   return "red";
-  if(p==="BIG")   return "big";
-  if(p==="SMALL") return "small";
-  return "wait";
+const CALL_IMG = {
+  GREEN: "/images/pred-green.png",
+  RED:   "/images/pred-red.png",
+  BIG:   "/images/pred-big.png",
+  SMALL: "/images/pred-small.png",
+};
+
+function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
+function setServer(s){ localStorage.setItem("_pred_srv", s); }
+
+function applyServerUI(){
+  const s = getServer();
+  const isColor = s==="color";
+  document.getElementById("predServerName").textContent = isColor ? "NOVA X" : "PRIME X";
+  document.getElementById("predServerTag").textContent  = isColor ? "Color Server" : "Size Server";
+  document.getElementById("predServerIcon").className   = isColor ? "fa-solid fa-palette" : "fa-solid fa-up-right-and-down-left-from-center";
+  // settings active state
+  const c=document.getElementById("srvColor"), z=document.getElementById("srvSize");
+  if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); }
 }
 
-function renderServerCard(d, serverName, tag, icon){
-  if(!d) return "";
-  const cls   = callClass(d.prediction);
-  const call  = d.prediction || "WAIT";
-  const conf  = Math.round(d.confidence||0);
-  const wr    = Math.round(d.win_rate||0);
-  const badge = d.badge || "";
+function renderHero(d){
+  const call = (d.prediction||"WAIT").toUpperCase();
+  const conf = Math.round(d.confidence||0);
+  const wr   = Math.round(d.win_rate||0);
+  const badge= d.badge || "🟢L1";
+  const callHtml = CALL_IMG[call]
+    ? `<img class="pred-call-img" src="${CALL_IMG[call]}" alt="${call}">`
+    : `<div class="pred-wait">WAIT</div>`;
   return `
-    <div class="pred-card">
-      <div class="pred-card-head">
-        <div class="pred-server">
-          <div class="pred-server-icon"><i class="fa-solid ${icon}"></i></div>
-          <div>
-            <div class="pred-server-name">${serverName}</div>
-            <div class="pred-server-tag">${tag}</div>
-          </div>
-        </div>
-        <span class="pred-badge">${badge}</span>
-      </div>
-      <div class="pred-result">
-        <div class="pred-call ${cls}">${call}</div>
-        <div class="pred-meta">
-          <div class="pred-conf-label"><span>Conf</span><b>${conf}%</b></div>
-          <div class="pred-bar"><div class="pred-bar-fill" style="width:${conf}%"></div></div>
-          <div class="pred-wr">Win <b>${wr}%</b></div>
-        </div>
-      </div>
+    <div class="pred-hero">
+      <div class="period-line">Next Period · <b>${d.period||"--"}</b></div>
+      ${callHtml}
+      <div class="pred-bar"><div class="pred-bar-fill" style="width:${conf}%"></div></div>
+    </div>
+    <div class="pred-stats">
+      <div class="pred-stat"><div class="lbl">Confidence</div><div class="val">${conf}%</div></div>
+      <div class="pred-stat"><div class="lbl">Win Rate</div><div class="val green">${wr}%</div></div>
+      <div class="pred-stat"><div class="lbl">Level</div><div class="val badge-val">${badge}</div></div>
     </div>`;
 }
 
@@ -685,32 +754,56 @@ async function loadPrediction(){
     return;
   }
   const a = auth(); if(!a){ goLogin(); return; }
+  const target = getServer();   // sirf selected server maango
   try{
     const d = await withRefresh(()=>apiFetch("/api/prediction",{
       uid:a.uid, session_signature:a.session_signature,
-      game:predGame, timeframe:predTf
+      game:predGame, timeframe:predTf, target:target
     }));
     if(!d) return;
     const res = d.result || {};
-    const color = res.color, size = res.size;
-    if(!color && !size){
+    if(!res || !res.prediction){
       body.innerHTML = '<div class="pred-msg">Engine warm ho raha hai... thodi der baad try karo.</div>';
       return;
     }
-    document.getElementById("predPeriod").textContent = (color&&color.period)||(size&&size.period)||"--";
-    body.innerHTML =
-      '<div class="pred-grid">' +
-        renderServerCard(color, "NOVA X", "Color Server", "fa-palette") +
-        renderServerCard(size,  "PRIME X", "Size Server",  "fa-up-right-and-down-left-from-center") +
-      '</div>';
+    document.getElementById("predGameLabel").textContent =
+      (predGame==="trx"?"TRX":"Wingo") + " · " + predTf;
+    body.innerHTML = renderHero(res);
   }catch(e){
-    if(e && e.status===403){ /* status overlay handled by poll */ return; }
+    if(e && e.status===403){
+      const msg = (e.detail||"").toString();
+      if(msg.indexOf("upgrade")>=0){
+        body.innerHTML =
+          '<div class="pred-msg lock">'+
+          '<i class="fa-solid fa-lock lock-ic"></i>'+
+          'Prediction sirf <b>paid plan</b> ke saath milti hai.<br>Free plan me sirf games access hain.'+
+          '<a class="up-btn" href="/payment">Upgrade Plan</a>'+
+          '</div>';
+        stopPredPoll();
+        return;
+      }
+      return; // session/ban -> poll overlay handle karega
+    }
     body.innerHTML = '<div class="pred-msg">Prediction abhi load nahi ho payi. Auto-retry...</div>';
   }
 }
 
-function startPredPoll(){ if(predTmr) return; loadPrediction(); predTmr=setInterval(loadPrediction,10000); }
+function startPredPoll(){ applyServerUI(); if(predTmr) return; loadPrediction(); predTmr=setInterval(loadPrediction,10000); }
 function stopPredPoll(){ if(predTmr){ clearInterval(predTmr); predTmr=null; } }
+
+/* settings: server select */
+function wireServerSelect(){
+  document.querySelectorAll(".srv-opt").forEach(el=>{
+    el.addEventListener("click",()=>{
+      setServer(el.dataset.srv);
+      applyServerUI();
+      // turant naya prediction laao (panel khula ho to)
+      const body=document.getElementById("predBody");
+      if(body) body.innerHTML='<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>';
+      loadPrediction();
+    });
+  });
+}
 
 /* ══════════════════════════════
    FAB + PANEL LOGIC
@@ -804,11 +897,13 @@ async function init(){
   document.getElementById("fbTitle").textContent    = gameName;
   document.title = gameName + " — Drago Predictor";
 
-  // Prediction panel labels
+  // Prediction panel labels + server selector
   if(predGame && predTf){
     const gl = predGame==="trx" ? "TRX" : "Wingo";
-    document.getElementById("predGame").textContent = gl + " · " + predTf;
+    document.getElementById("predGameLabel").textContent = gl + " · " + predTf;
   }
+  applyServerUI();
+  wireServerSelect();
 
   document.getElementById("backBtn").addEventListener("click",()=>{
     window.history.length > 1 ? window.history.back() : window.location.href = "/game";
