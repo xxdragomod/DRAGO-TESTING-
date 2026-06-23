@@ -9,7 +9,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
-/* ── Page view transitions (same as home.html / game.html) ── */
 @view-transition{navigation:auto}
 ::view-transition-old(root){animation:vtOut .22s cubic-bezier(.4,0,.2,1) both}
 ::view-transition-new(root){animation:vtIn .26s cubic-bezier(.22,1,.36,1) both}
@@ -23,13 +22,11 @@ body{
   font-family:'Montserrat',sans-serif;
 }
 
-/* ── Header bar — light app theme (frosted white pill-style) ── */
+/* ── Header bar ── */
 .hero-bar{
-  flex-shrink:0;
-  width:100%;
+  flex-shrink:0;width:100%;
   background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   padding:10px 16px;
   display:flex;align-items:center;gap:12px;
   border-bottom:1.5px solid rgba(255,255,255,0.95);
@@ -40,12 +37,9 @@ body{
 @keyframes slideDown{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
 
 .back-btn{
-  width:40px;height:40px;flex-shrink:0;
-  border-radius:50%;
-  background:#fff;
-  border:1.5px solid #eef0ff;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  background:#fff;border:1.5px solid #eef0ff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
   box-shadow:0 4px 12px rgba(124,92,252,.12);
   transition:background .18s,transform .18s cubic-bezier(.34,1.56,.64,1);
   -webkit-tap-highlight-color:transparent;
@@ -53,10 +47,7 @@ body{
 .back-btn:active{transform:scale(.88);background:#f4f4ff}
 .back-btn i{font-size:15px;color:#7C5CFC}
 
-.hero-logo{
-  width:48px;height:48px;flex-shrink:0;border-radius:12px;object-fit:contain;
-  background:transparent;
-}
+.hero-logo{width:48px;height:48px;flex-shrink:0;border-radius:12px;object-fit:contain;background:transparent;}
 .hero-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .hero-sub{
   font-size:16px;font-weight:900;color:#1a1a2e;
@@ -69,30 +60,17 @@ body{
   letter-spacing:.4px;text-transform:uppercase;
 }
 
-/* ── iframe wrapper fills remaining height ── */
-.frame-wrap{
-  flex:1;
-  position:relative;
-  overflow:hidden;
-  background:#fff;
-  animation:fadeIn .45s .15s ease both;
-}
+/* ── iframe wrapper ── */
+.frame-wrap{flex:1;position:relative;overflow:hidden;background:#fff;animation:fadeIn .45s .15s ease both;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#gameFrame{position:absolute;inset:0;width:100%;height:100%;border:none;background:#fff;}
 
-#gameFrame{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  border:none;
-  background:#fff;
-}
-
-/* ── Fallback overlay (light theme) ── */
+/* ── Fallback overlay ── */
 .fallback{
   position:absolute;inset:0;
   background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
   display:none;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:30px;
-  animation:fadeIn .3s ease both;
+  text-align:center;padding:30px;animation:fadeIn .3s ease both;
 }
 .fallback.show{display:flex}
 .fallback-icon{font-size:52px;margin-bottom:16px;color:#7C5CFC;opacity:.7}
@@ -102,36 +80,32 @@ body{
   padding:15px 32px;border-radius:16px;border:none;
   background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
   color:#fff;font-family:'Montserrat',sans-serif;
-  font-size:15px;font-weight:900;letter-spacing:.4px;
-  cursor:pointer;
+  font-size:15px;font-weight:900;letter-spacing:.4px;cursor:pointer;
   box-shadow:0 8px 24px rgba(124,92,252,.45);
   display:flex;align-items:center;gap:10px;
   transition:transform .18s cubic-bezier(.34,1.56,.64,1);
-  -webkit-tap-highlight-color:transparent;
-  text-decoration:none;
+  -webkit-tap-highlight-color:transparent;text-decoration:none;
 }
 .fallback-btn:active{transform:scale(.96)}
 .fallback-btn i{font-size:17px}
 
-/* ── Loading spinner (light theme) ── */
+/* ── Loading spinner ── */
 .frame-loader{
   position:absolute;inset:0;
   background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  z-index:10;
-  transition:opacity .3s;
+  z-index:10;transition:opacity .3s;
 }
 .frame-loader.hide{opacity:0;pointer-events:none}
 .spinner{
   width:44px;height:44px;
-  border:4px solid rgba(124,92,252,.2);
-  border-top-color:#7C5CFC;
+  border:4px solid rgba(124,92,252,.2);border-top-color:#7C5CFC;
   border-radius:50%;animation:spin .8s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-text{font-size:12px;font-weight:800;color:#9ca3af;letter-spacing:.5px;text-transform:uppercase}
 
-/* ── Auth loading overlay (light theme) ── */
+/* ── Auth loading overlay ── */
 #authOverlay{
   position:fixed;inset:0;
   background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
@@ -139,7 +113,7 @@ body{
   z-index:999;transition:opacity .3s;
 }
 
-/* ── Status overlays (light theme, same as app) ── */
+/* ── Status overlays ── */
 .full-ov{display:none;position:fixed;inset:0;z-index:3000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff)}
 .full-ov.show{display:flex;animation:fadeIn .3s ease both}
 .ov-icon{font-size:54px;margin-bottom:14px}
@@ -148,304 +122,335 @@ body{
 .ov-link{display:inline-block;background:linear-gradient(135deg,#7C3AED,#5B6AF0);color:#fff;text-decoration:none;padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(124,92,252,.35)}
 
 /* ════════════════════════════════════════
-   BOTTOM NAV BAR — pill style
+   BOTTOM NAV (FAB)
 ════════════════════════════════════════ */
 .fab-container{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:500;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:transparent;
-  border-radius:40px;
-  box-shadow:none;
-  padding:0;
-  gap:0;
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:500;display:flex;align-items:center;justify-content:center;
+  background:transparent;border-radius:40px;box-shadow:none;
+  padding:0;gap:0;
   animation:navSlideUp .45s .15s cubic-bezier(.22,1,.36,1) both;
   transition:background .35s ease, box-shadow .35s ease, padding .35s cubic-bezier(.22,1,.36,1), gap .35s cubic-bezier(.22,1,.36,1);
 }
 @keyframes navSlideUp{from{opacity:0;transform:translateX(-50%) translateY(24px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .fab-container.open{
   background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:1.5px solid rgba(255,255,255,0.95);
   box-shadow:0 8px 28px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
-  padding:9px 12px;
-  gap:8px;
+  padding:9px 12px;gap:8px;
 }
 
-/* Active pill highlight — wraps the center X button */
-.fab-toggle-wrap{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex:0 0 auto;
-}
-
-/* The pill toggle button (center) */
+.fab-toggle-wrap{display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
 .fab-toggle{
-  width:42px;height:42px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-  border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  box-shadow:none;
-  transition:transform .22s cubic-bezier(.34,1.56,.64,1), background .2s;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;
-  z-index:2;
-  flex-shrink:0;
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:none;transition:transform .22s cubic-bezier(.34,1.56,.64,1), background .2s;
+  -webkit-tap-highlight-color:transparent;position:relative;z-index:2;flex-shrink:0;
 }
 .fab-toggle:active{transform:scale(.9)}
 .fab-toggle i{font-size:18px;color:#fff;transition:transform .3s ease}
 .fab-toggle.open i{transform:rotate(45deg)}
 
-/* Side buttons wrapper */
-.fab-side{
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  max-width:0;
-  transition:max-width .35s cubic-bezier(.22,1,.36,1);
-  flex-shrink:0;
-}
-.fab-side.show{ max-width:200px; }
-
-.fab-left{ justify-content:flex-end; }
-.fab-right{ justify-content:flex-start; }
-
+.fab-side{display:flex;align-items:center;overflow:hidden;max-width:0;transition:max-width .35s cubic-bezier(.22,1,.36,1);flex-shrink:0;}
+.fab-side.show{max-width:200px;}
+.fab-left{justify-content:flex-end;}
+.fab-right{justify-content:flex-start;}
 .fab-side-btn{
-  height:42px;
-  padding:0 18px;
-  border-radius:24px;
-  border:none;
+  height:42px;padding:0 18px;border-radius:24px;border:none;
   display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;
-  cursor:pointer;
-  white-space:nowrap;
+  cursor:pointer;white-space:nowrap;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1), opacity .25s;
-  -webkit-tap-highlight-color:transparent;
-  flex-shrink:0;
-  opacity:0;
-  transform:scale(.5);
+  -webkit-tap-highlight-color:transparent;flex-shrink:0;opacity:0;transform:scale(.5);
 }
-.fab-side.show .fab-side-btn{
-  opacity:1;
-  transform:scale(1);
-  transition-delay:.08s;
-}
-
-.fab-hack-btn{
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-  box-shadow:none;
-}
-.fab-setting-btn{
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-  box-shadow:none;
-}
+.fab-side.show .fab-side-btn{opacity:1;transform:scale(1);transition-delay:.08s;}
+.fab-hack-btn{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
+.fab-setting-btn{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
 .fab-side-btn i{font-size:16px;color:#fff}
 .fab-side-btn span{font-size:13px;font-weight:800;color:#fff;letter-spacing:.3px;line-height:1}
 .fab-side-btn:active{transform:scale(.92) !important}
 
 /* ════════════════════════════════════════
-   SLIDE-UP PANEL (Hack / Settings) — light theme
+   SLIDE-UP PANEL BASE
 ════════════════════════════════════════ */
 .panel-overlay{
   position:fixed;inset:0;
-  background:rgba(30,30,60,.35);
-  backdrop-filter:blur(2px);
-  -webkit-backdrop-filter:blur(2px);
-  z-index:400;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s;
+  background:rgba(10,8,30,.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;
 }
-.panel-overlay.show{
-  opacity:1;
-  pointer-events:all;
-}
+.panel-overlay.show{opacity:1;pointer-events:all;}
 
 .slide-panel{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  z-index:450;
-  background:#fff;
-  border-radius:24px 24px 0 0;
-  border-top:1.5px solid #eef0ff;
-  padding:20px 20px 40px;
+  position:fixed;bottom:0;left:0;right:0;z-index:450;
+  background:#0f0c1e;
+  border-radius:28px 28px 0 0;
+  border-top:1.5px solid rgba(124,92,252,.25);
+  padding:0 0 40px;
   transform:translateY(100%);
   transition:transform .38s cubic-bezier(.22,1,.36,1);
-  height:70vh;
-  max-height:70vh;
-  overflow-y:auto;
-  box-shadow:0 -12px 40px rgba(100,80,220,.18);
+  height:72vh;max-height:72vh;overflow-y:auto;
+  box-shadow:0 -16px 60px rgba(80,50,200,.35);
 }
-.slide-panel.show{
-  transform:translateY(0);
-}
-.panel-tag{
-  position:absolute;
-  top:24px;left:22px;
-  background:transparent;
-  color:#7C5CFC;
-  font-size:28px;font-weight:900;letter-spacing:2px;
-  text-align:left;
-}
+.slide-panel.show{transform:translateY(0);}
 
 .panel-handle{
   width:40px;height:4px;
-  background:#e2e5ff;
-  border-radius:2px;
-  margin:0 auto 18px;
+  background:rgba(124,92,252,.35);border-radius:2px;
+  margin:14px auto 0;
 }
-.panel-header{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:20px;
-  padding-bottom:14px;
-  border-bottom:1.5px solid #eef0ff;
-}
-.panel-header-icon{
-  width:38px;height:38px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-}
-.panel-header-icon.hack{ background:linear-gradient(135deg,#FF6B6B,#FF4757); }
-.panel-header-icon.setting{ background:linear-gradient(135deg,#26c6da,#0097A7); }
-.panel-header-icon i{font-size:18px;color:#fff}
-.panel-title{font-size:18px;font-weight:900;color:#1a1a2e}
-.panel-subtitle{font-size:11px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px}
 
-/* Panel content — empty by default, ready for your content */
-.panel-content{
-  min-height:120px;
+/* ── Panel Header ── */
+.panel-head{
+  display:flex;align-items:center;gap:12px;
+  padding:18px 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.panel-head-icon{
+  width:40px;height:40px;border-radius:13px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
 }
-.panel-empty{
-  font-size:13px;font-weight:700;
-  color:#c4c7dd;
-  text-align:center;
+.panel-head-icon.hack{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
+.panel-head-icon.setting{background:linear-gradient(135deg,#06b6d4,#0e7490);}
+.panel-head-icon i{font-size:17px;color:#fff}
+.panel-head-text{}
+.panel-head-title{font-size:16px;font-weight:900;color:#fff;line-height:1.1}
+.panel-head-sub{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+
+/* ════════════════════════════════════════
+   ██ PREDICTION PANEL — PREMIUM UI
+════════════════════════════════════════ */
+.pred-wrap{padding:16px 16px 0;}
+
+/* Live status pill */
+.pred-live-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.pred-live-pill{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(34,197,94,.1);
+  border:1px solid rgba(34,197,94,.25);
+  padding:5px 12px 5px 8px;border-radius:20px;
+}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:livePulse 1.4s ease-in-out infinite;flex-shrink:0;}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+.live-label{font-size:11px;font-weight:800;color:#22c55e;letter-spacing:.4px;text-transform:uppercase}
+.pred-period-tag{
+  font-size:11px;font-weight:800;
+  color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  padding:5px 12px;border-radius:20px;
   letter-spacing:.3px;
 }
 
-/* ════════════════════════════════════════
-   PREDICTION PANEL (HACK) — premium light
-════════════════════════════════════════ */
-.pred-content{display:block;width:100%}
-.pred-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:16px;gap:10px;
-}
-.pred-server-pill{
-  display:flex;align-items:center;gap:9px;
-}
-.pred-server-ic{
-  width:36px;height:36px;border-radius:11px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-  box-shadow:0 4px 12px rgba(124,92,252,.35);
-}
-.pred-server-ic i{font-size:16px;color:#fff}
-.pred-server-name{font-size:14px;font-weight:900;color:#1a1a2e;line-height:1.05}
-.pred-server-tag{font-size:9.5px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.6px}
-.pred-period{
-  font-size:11px;font-weight:800;color:#16a34a;
-  background:#eafff1;border:1.5px solid #c9f4d8;
-  padding:5px 11px;border-radius:20px;
-  display:flex;align-items:center;gap:6px;white-space:nowrap;
-}
-.pred-period .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:livePulse 1.4s ease-in-out infinite}
-@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
-
-/* HERO call card */
-.pred-hero{
-  position:relative;overflow:hidden;
+/* ── BIG CALL CARD ── */
+.pred-call-card{
+  background:linear-gradient(145deg,#1a1530,#130f25);
+  border:1.5px solid rgba(124,92,252,.2);
   border-radius:22px;
-  padding:22px 18px 18px;
-  text-align:center;
-  border:1.5px solid #eef0ff;
-  background:radial-gradient(120% 120% at 50% 0%,#fbfaff 0%,#f4f2ff 100%);
-  box-shadow:0 10px 30px rgba(100,80,220,.10);
+  padding:22px 20px 20px;
+  position:relative;overflow:hidden;
+  margin-bottom:12px;
 }
-.pred-hero .period-line{
-  font-size:11px;font-weight:800;color:#8a8fb5;
-  text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;
+.pred-call-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,92,252,.18) 0%,transparent 70%);
+  pointer-events:none;
 }
-.pred-hero .period-line b{color:#1a1a2e}
-.pred-call-img{
-  width:100%;max-width:300px;height:auto;margin:0 auto 6px;
-  display:block;
-  animation:callPop .35s cubic-bezier(.34,1.56,.64,1);
+.pred-period-label{
+  font-size:10.5px;font-weight:800;color:rgba(255,255,255,.35);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
 }
-@keyframes callPop{0%{transform:scale(.82);opacity:0}100%{transform:scale(1);opacity:1}}
-.pred-wait{
-  font-size:30px;font-weight:900;color:#aab0cf;letter-spacing:1px;
-  padding:18px 0;
-}
+.pred-period-label b{color:rgba(255,255,255,.7);font-weight:900;}
 
-/* confidence + meta row */
-.pred-stats{display:flex;gap:10px;margin-top:16px}
-.pred-stat{
-  flex:1;background:#fff;border:1.5px solid #eef0ff;border-radius:14px;
-  padding:11px 12px;text-align:center;
+/* Divider */
+.pred-divider{height:1px;background:rgba(255,255,255,.06);margin:0 0 16px;}
+
+/* Call badge — the big centered prediction */
+.pred-call-center{display:flex;align-items:center;justify-content:center;gap:16px;padding:4px 0 8px;}
+.pred-call-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:120px;height:120px;border-radius:28px;
+  font-size:22px;font-weight:900;letter-spacing:.5px;
+  position:relative;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  animation:callPop .4s cubic-bezier(.34,1.56,.64,1);
 }
-.pred-stat .lbl{font-size:9.5px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-.pred-stat .val{font-size:17px;font-weight:900;color:#1a1a2e;line-height:1}
-.pred-stat .val.green{color:#16a34a}
-.pred-stat .badge-val{font-size:14px}
+@keyframes callPop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.pred-call-badge.green{
+  background:linear-gradient(145deg,#14532d,#166534);
+  box-shadow:0 0 0 1.5px rgba(34,197,94,.4),0 12px 32px rgba(22,163,74,.35);
+  color:#4ade80;
+}
+.pred-call-badge.red{
+  background:linear-gradient(145deg,#7f1d1d,#991b1b);
+  box-shadow:0 0 0 1.5px rgba(239,68,68,.4),0 12px 32px rgba(185,28,28,.35);
+  color:#f87171;
+}
+.pred-call-badge.big{
+  background:linear-gradient(145deg,#1e3a5f,#1d4ed8);
+  box-shadow:0 0 0 1.5px rgba(59,130,246,.4),0 12px 32px rgba(29,78,216,.35);
+  color:#60a5fa;
+}
+.pred-call-badge.small{
+  background:linear-gradient(145deg,#4c1d95,#6d28d9);
+  box-shadow:0 0 0 1.5px rgba(139,92,246,.4),0 12px 32px rgba(109,40,217,.35);
+  color:#a78bfa;
+}
+.pred-call-badge.wait{
+  background:linear-gradient(145deg,#1f1f30,#252540);
+  box-shadow:0 0 0 1.5px rgba(148,163,184,.2);
+  color:rgba(255,255,255,.3);
+}
+.pred-call-icon{font-size:32px;margin-bottom:6px;line-height:1;}
+.pred-call-word{font-size:18px;font-weight:900;letter-spacing:.8px;line-height:1;}
 
-.pred-bar{height:8px;border-radius:6px;background:#eef0ff;overflow:hidden;margin-top:12px}
-.pred-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#7C5CFC,#5B6AF0);width:0;transition:width .45s ease}
+/* Confidence ring + stats */
+.pred-stats-row{
+  display:flex;align-items:center;gap:12px;margin-top:16px;
+}
+.pred-ring-wrap{
+  flex-shrink:0;position:relative;
+  width:72px;height:72px;
+  display:flex;align-items:center;justify-content:center;
+}
+.pred-ring-svg{position:absolute;inset:0;width:100%;height:100%;}
+.pred-ring-bg{stroke:rgba(255,255,255,.06);stroke-width:5;fill:none;}
+.pred-ring-fill{stroke-width:5;fill:none;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset .6s ease;}
+.pred-ring-fill.green{stroke:#22c55e;}
+.pred-ring-fill.red{stroke:#ef4444;}
+.pred-ring-fill.blue{stroke:#3b82f6;}
+.pred-ring-fill.purple{stroke:#8b5cf6;}
+.pred-ring-val{
+  position:relative;z-index:1;
+  font-size:15px;font-weight:900;color:#fff;
+  line-height:1;text-align:center;
+}
+.pred-ring-lbl{font-size:7.5px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
 
-.pred-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 0;color:#9ca3af}
-.pred-loading .spinner{width:36px;height:36px}
-.pred-msg{font-size:12.5px;font-weight:700;color:#9ca3af;text-align:center;padding:28px 12px;line-height:1.6}
-.pred-msg.lock{color:#7C5CFC}
-.pred-msg .lock-ic{font-size:30px;display:block;margin-bottom:10px;color:#7C5CFC}
-.pred-msg .up-btn{
-  display:inline-block;margin-top:14px;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);color:#fff;
+.pred-right-stats{flex:1;display:flex;flex-direction:column;gap:10px;}
+.pred-stat-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:9px 13px;
+}
+.pred-stat-row .slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.5px;}
+.pred-stat-row .sval{font-size:13px;font-weight:900;color:#fff;}
+.pred-stat-row .sval.green{color:#4ade80;}
+.pred-stat-row .sval.amber{color:#fbbf24;}
+
+/* Win rate bar */
+.pred-wr-row{margin-top:14px;}
+.pred-wr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.pred-wr-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;}
+.pred-wr-pct{font-size:12px;font-weight:900;color:#4ade80;}
+.pred-wr-track{height:6px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;}
+.pred-wr-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#22c55e,#16a34a);transition:width .6s ease;width:0;}
+
+/* Auto-update footer */
+.pred-footer{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:14px;padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.pred-footer-ic{font-size:10px;color:rgba(255,255,255,.2);}
+.pred-footer-txt{font-size:10px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.3px;}
+
+/* Loading / error states */
+.pred-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:50px 0;}
+.pred-loading .spinner{width:32px;height:32px;border-color:rgba(124,92,252,.2);border-top-color:#7C5CFC;}
+.pred-loading .loader-text{font-size:11.5px;color:rgba(255,255,255,.3);}
+.pred-msg-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;gap:10px;}
+.pred-msg-ic{font-size:36px;opacity:.5;}
+.pred-msg-txt{font-size:13px;font-weight:700;color:rgba(255,255,255,.3);line-height:1.6;}
+.pred-upgrade-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:6px;background:linear-gradient(135deg,#7C5CFC,#5B6AF0);color:#fff;
   font-size:12px;font-weight:800;text-decoration:none;
-  padding:10px 20px;border-radius:12px;
-}
-.pred-foot{
-  margin-top:16px;text-align:center;
-  font-size:10px;font-weight:700;color:#b9bcd6;letter-spacing:.3px;
+  padding:11px 22px;border-radius:14px;
+  box-shadow:0 6px 20px rgba(124,92,252,.4);
 }
 
 /* ════════════════════════════════════════
-   SETTINGS — server selector
+   ⚙ SETTINGS PANEL — PREMIUM UI
 ════════════════════════════════════════ */
-.set-title{font-size:14px;font-weight:900;color:#1a1a2e;margin-bottom:4px;text-align:center}
-.set-sub{font-size:11.5px;font-weight:600;color:#9ca3af;text-align:center;margin-bottom:18px;line-height:1.5}
-.srv-opt{
-  display:flex;align-items:center;gap:13px;
-  background:#fff;border:2px solid #eef0ff;border-radius:16px;
-  padding:14px 15px;margin-bottom:12px;cursor:pointer;
-  transition:border-color .2s,box-shadow .2s,transform .15s;
-  user-select:none;
+.set-wrap{padding:20px 16px 0;}
+
+.set-section-label{
+  font-size:9.5px;font-weight:800;color:rgba(255,255,255,.25);
+  text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;
+  padding-left:2px;
 }
-.srv-opt:active{transform:scale(.98)}
-.srv-opt.active{border-color:#7C5CFC;box-shadow:0 6px 18px rgba(124,92,252,.18)}
-.srv-opt-ic{
-  width:42px;height:42px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;color:#fff;
+
+/* Server option cards */
+.srv-card{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,.04);
+  border:1.5px solid rgba(255,255,255,.08);
+  border-radius:18px;padding:16px 14px;
+  margin-bottom:10px;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s,box-shadow .2s;
+  user-select:none;position:relative;overflow:hidden;
 }
-.srv-opt-ic.color{background:linear-gradient(135deg,#22c55e,#ef4444)}
-.srv-opt-ic.size{background:linear-gradient(135deg,#f59e0b,#06b6d4)}
-.srv-opt-ic i{font-size:18px}
-.srv-opt-txt{flex:1}
-.srv-opt-name{font-size:14px;font-weight:900;color:#1a1a2e;line-height:1.1}
-.srv-opt-desc{font-size:11px;font-weight:600;color:#9ca3af;margin-top:2px}
-.srv-opt-check{
-  width:22px;height:22px;border-radius:50%;flex-shrink:0;
-  border:2px solid #d8dcf0;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:11px;transition:background .2s,border-color .2s;
+.srv-card::before{
+  content:'';position:absolute;inset:0;border-radius:18px;
+  background:linear-gradient(135deg,rgba(124,92,252,.06),rgba(91,106,240,.03));
+  opacity:0;transition:opacity .2s;
 }
-.srv-opt.active .srv-opt-check{background:#7C5CFC;border-color:#7C5CFC}
-.srv-opt:not(.active) .srv-opt-check i{display:none}
+.srv-card:active{transform:scale(.98);}
+.srv-card.active{
+  border-color:#7C5CFC;
+  background:rgba(124,92,252,.08);
+  box-shadow:0 0 0 1px rgba(124,92,252,.2), 0 8px 24px rgba(124,92,252,.18);
+}
+.srv-card.active::before{opacity:1;}
+
+.srv-card-icon{
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.srv-card-icon.color-ic{background:linear-gradient(135deg,#22c55e,#16a34a);}
+.srv-card-icon.size-ic{background:linear-gradient(135deg,#f59e0b,#d97706);}
+.srv-card-icon i{font-size:19px;color:#fff;}
+
+.srv-card-body{flex:1;}
+.srv-card-name{font-size:15px;font-weight:900;color:#fff;line-height:1.1;}
+.srv-card-desc{font-size:11px;font-weight:600;color:rgba(255,255,255,.35);margin-top:3px;}
+.srv-tags{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.srv-tag{
+  font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+  padding:3px 9px;border-radius:6px;
+}
+.srv-tag.ac{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.2);}
+.srv-tag.am{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.18);}
+.srv-tag.pr{background:rgba(124,92,252,.15);color:#a78bfa;border:1px solid rgba(124,92,252,.2);}
+
+.srv-radio{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.srv-card.active .srv-radio{background:#7C5CFC;border-color:#7C5CFC;}
+.srv-radio i{font-size:10px;color:#fff;display:none;}
+.srv-card.active .srv-radio i{display:block;}
+
+/* Info note at bottom */
+.set-info{
+  display:flex;align-items:flex-start;gap:10px;
+  margin-top:14px;
+  background:rgba(124,92,252,.07);
+  border:1px solid rgba(124,92,252,.15);
+  border-radius:14px;padding:12px 14px;
+}
+.set-info-ic{font-size:14px;color:#a78bfa;flex-shrink:0;margin-top:1px;}
+.set-info-txt{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.4);line-height:1.55;}
 </style>
 </head>
 <body>
@@ -485,7 +490,7 @@ body{
   <a href="/game" class="ov-link">Back to Games</a>
 </div>
 
-<!-- ── Hero header bar ── -->
+<!-- Hero header -->
 <div class="hero-bar">
   <button class="back-btn" id="backBtn" aria-label="Back">
     <i class="fa-solid fa-arrow-left"></i>
@@ -497,23 +502,18 @@ body{
   </div>
 </div>
 
-<!-- ── iframe / content area ── -->
+<!-- iframe area -->
 <div class="frame-wrap">
-  <!-- Loading indicator -->
   <div class="frame-loader" id="frameLoader">
     <div class="spinner"></div>
     <span class="loader-text">Loading Game...</span>
   </div>
-
-  <!-- Actual iframe -->
   <iframe
     id="gameFrame"
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
     allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen
   ></iframe>
-
-  <!-- Fallback if iframe blocked -->
   <div class="fallback" id="fallback">
     <div class="fallback-icon"><i class="fa-solid fa-gamepad"></i></div>
     <div class="fallback-title" id="fbTitle">Game</div>
@@ -525,60 +525,53 @@ body{
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     FLOATING ACTION BOX
-════════════════════════════════════════ -->
+<!-- FAB -->
 <div class="fab-container" id="fabContainer">
-
-  <!-- Left side — HACK button -->
   <div class="fab-side fab-left" id="fabLeft">
     <button class="fab-side-btn fab-hack-btn" id="hackBtn" aria-label="Hack">
       <i class="fa-solid fa-bolt"></i>
       <span>HACK</span>
     </button>
   </div>
-
-  <!-- Center toggle (X) -->
   <div class="fab-toggle-wrap">
     <button class="fab-toggle" id="fabToggle" aria-label="Toggle menu">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
-
-  <!-- Right side — SETTING button -->
   <div class="fab-side fab-right" id="fabRight">
     <button class="fab-side-btn fab-setting-btn" id="settingBtn" aria-label="Settings">
       <i class="fa-solid fa-gear"></i>
       <span>SETTING</span>
     </button>
   </div>
-
 </div>
 
-<!-- ════════════════════════════════════════
-     PANEL OVERLAY (dim background)
-���═══════════════════════════════════════ -->
+<!-- Panel overlay -->
 <div class="panel-overlay" id="panelOverlay"></div>
 
-<!-- HACK PANEL — live prediction (selected server only) -->
+<!-- ════ HACK PANEL ════ -->
 <div class="slide-panel" id="hackPanel">
   <div class="panel-handle"></div>
-  <div class="panel-tag">HACK</div>
-  <div class="pred-content">
-    <div class="pred-top">
-      <span class="pred-server-pill">
-        <span class="pred-server-ic"><i class="fa-solid fa-bolt" id="predServerIcon"></i></span>
-        <span>
-          <span class="pred-server-name" id="predServerName">NOVA X</span><br>
-          <span class="pred-server-tag" id="predServerTag">Color Server</span>
-        </span>
-      </span>
-      <span class="pred-period">
-        <span class="dot"></span>
-        <span id="predGameLabel">--</span>
-      </span>
+
+  <div class="panel-head">
+    <div class="panel-head-icon hack"><i class="fa-solid fa-bolt"></i></div>
+    <div class="panel-head-text">
+      <div class="panel-head-title" id="predServerName">NOVA X · Color Server</div>
+      <div class="panel-head-sub">Prediction Engine · Auto-Updates</div>
+    </div>
+  </div>
+
+  <div class="pred-wrap">
+    <!-- Live pill + period tag -->
+    <div class="pred-live-row">
+      <div class="pred-live-pill">
+        <span class="live-dot"></span>
+        <span class="live-label">Live</span>
+      </div>
+      <span class="pred-period-tag" id="predGameLabel">-- · --</span>
     </div>
 
+    <!-- Main prediction body -->
     <div id="predBody">
       <div class="pred-loading">
         <div class="spinner"></div>
@@ -586,46 +579,68 @@ body{
       </div>
     </div>
 
-    <div class="pred-foot">Auto-updates every round · Self-learning engine</div>
+    <div class="pred-footer">
+      <i class="fa-solid fa-rotate pred-footer-ic"></i>
+      <span class="pred-footer-txt">Auto-updates every round · Self-learning engine</span>
+    </div>
   </div>
 </div>
 
-<!-- SETTINGS PANEL — server selector -->
+<!-- ════ SETTINGS PANEL ════ -->
 <div class="slide-panel" id="settingPanel">
   <div class="panel-handle"></div>
-  <div class="panel-tag">SETTING</div>
-  <div class="panel-content">
-    <div class="set-title">Select Prediction Server</div>
-    <div class="set-sub">Ek server choose karo. Sirf usi ka prediction HACK panel me dikhega.</div>
 
-    <div class="srv-opt" id="srvColor" data-srv="color">
-      <span class="srv-opt-ic color"><i class="fa-solid fa-palette"></i></span>
-      <span class="srv-opt-txt">
-        <span class="srv-opt-name">NOVA X</span>
-        <span class="srv-opt-desc">Color Server · GREEN / RED</span>
-      </span>
-      <span class="srv-opt-check"><i class="fa-solid fa-check"></i></span>
+  <div class="panel-head">
+    <div class="panel-head-icon setting"><i class="fa-solid fa-gear"></i></div>
+    <div class="panel-head-text">
+      <div class="panel-head-title">Prediction Server</div>
+      <div class="panel-head-sub">Server choose karo · Active server ka prediction milega</div>
+    </div>
+  </div>
+
+  <div class="set-wrap">
+    <div class="set-section-label">Available Servers</div>
+
+    <div class="srv-card" id="srvColor" data-srv="color">
+      <div class="srv-card-icon color-ic"><i class="fa-solid fa-palette"></i></div>
+      <div class="srv-card-body">
+        <div class="srv-card-name">NOVA X</div>
+        <div class="srv-card-desc">Color Prediction Server</div>
+        <div class="srv-tags">
+          <span class="srv-tag ac">GREEN / RED</span>
+          <span class="srv-tag pr">High Accuracy</span>
+        </div>
+      </div>
+      <div class="srv-radio"><i class="fa-solid fa-check"></i></div>
     </div>
 
-    <div class="srv-opt" id="srvSize" data-srv="size">
-      <span class="srv-opt-ic size"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
-      <span class="srv-opt-txt">
-        <span class="srv-opt-name">PRIME X</span>
-        <span class="srv-opt-desc">Size Server · BIG / SMALL</span>
-      </span>
-      <span class="srv-opt-check"><i class="fa-solid fa-check"></i></span>
+    <div class="srv-card" id="srvSize" data-srv="size">
+      <div class="srv-card-icon size-ic"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+      <div class="srv-card-body">
+        <div class="srv-card-name">PRIME X</div>
+        <div class="srv-card-desc">Size Prediction Server</div>
+        <div class="srv-tags">
+          <span class="srv-tag am">BIG / SMALL</span>
+          <span class="srv-tag pr">Premium</span>
+        </div>
+      </div>
+      <div class="srv-radio"><i class="fa-solid fa-check"></i></div>
+    </div>
+
+    <div class="set-info">
+      <i class="fa-solid fa-circle-info set-info-ic"></i>
+      <span class="set-info-txt">Sirf selected server ka prediction HACK panel mein dikhega. Server switch karne par prediction turant update hoti hai.</span>
     </div>
   </div>
 </div>
-
 
 <script>
 const API = "https://flask-hello-world-nu-sooty-63.vercel.app";
 let pollTmr = null;
 let gameLink = "";
-let predGame = "";      // "trx" | "wingo"
-let predTf   = "";      // "1m" | "30s"
-let predTmr  = null;    // prediction refresh timer
+let predGame = "";
+let predTf   = "";
+let predTmr  = null;
 
 function ud(){ try{ return JSON.parse(localStorage.getItem("_ud")||"null"); }catch(e){ return null; } }
 function auth(){
@@ -668,138 +683,196 @@ function startPoll(){ if(pollTmr) return; pollTmr=setInterval(doPoll,15000); }
 function stopPoll(){ if(pollTmr){ clearInterval(pollTmr); pollTmr=null; } }
 async function doPoll(){
   const a=auth(); if(!a) return;
-  try{
-    const d=await withRefresh(()=>apiFetch("/api/account-status",a));
-    handleStatus(d.account_status,d.subscription_status);
-  }catch(e){}
+  try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); handleStatus(d.account_status,d.subscription_status); }catch(e){}
 }
 
 function hideAuthOverlay(){ const l=document.getElementById("authOverlay"); l.style.opacity="0"; setTimeout(()=>l.style.display="none",300); }
 
 function loadFrame(url){
-  const frame  = document.getElementById("gameFrame");
-  const loader = document.getElementById("frameLoader");
-  const fb     = document.getElementById("fallback");
-
-  let loadTimer = setTimeout(()=>{
-    frame.style.display = "none";
-    fb.classList.add("show");
-    loader.classList.add("hide");
-  }, 8000);
-
-  frame.onload = ()=>{
-    clearTimeout(loadTimer);
-    loader.classList.add("hide");
-    try{ void frame.contentWindow.location.href; }catch(e){}
-  };
-  frame.onerror = ()=>{
-    clearTimeout(loadTimer);
-    frame.style.display = "none";
-    fb.classList.add("show");
-    loader.classList.add("hide");
-  };
-
-  frame.src = url;
+  const frame=document.getElementById("gameFrame");
+  const loader=document.getElementById("frameLoader");
+  const fb=document.getElementById("fallback");
+  let loadTimer=setTimeout(()=>{ frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); },8000);
+  frame.onload=()=>{ clearTimeout(loadTimer); loader.classList.add("hide"); try{ void frame.contentWindow.location.href; }catch(e){} };
+  frame.onerror=()=>{ clearTimeout(loadTimer); frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); };
+  frame.src=url;
 }
 
 /* ══════════════════════════════
-   PREDICTION (self-learning engine)
+   PREDICTION — Premium Render
 ══════════════════════════════ */
-const CALL_IMG = {
-  GREEN: "/images/pred-green.png",
-  RED:   "/images/pred-red.png",
-  BIG:   "/images/pred-big.png",
-  SMALL: "/images/pred-small.png",
+function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
+function setServer(s){ localStorage.setItem("_pred_srv",s); }
+
+// Map prediction call → badge class + icon
+const CALL_META = {
+  GREEN:{ cls:"green", icon:"fa-circle", word:"GREEN" },
+  RED:  { cls:"red",   icon:"fa-circle", word:"RED" },
+  BIG:  { cls:"big",   icon:"fa-arrow-up", word:"BIG" },
+  SMALL:{ cls:"small", icon:"fa-arrow-down", word:"SMALL" },
 };
 
-function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
-function setServer(s){ localStorage.setItem("_pred_srv", s); }
+// Ring circumference for r=30
+const R = 30;
+const CIRC = 2 * Math.PI * R;
+
+function buildRingSVG(pct, colorClass){
+  const offset = CIRC - (pct/100)*CIRC;
+  return `<svg class="pred-ring-svg" viewBox="0 0 72 72">
+    <circle class="pred-ring-bg" cx="36" cy="36" r="${R}"/>
+    <circle class="pred-ring-fill ${colorClass}" cx="36" cy="36" r="${R}"
+      stroke-dasharray="${CIRC}" stroke-dashoffset="${offset}"/>
+  </svg>`;
+}
+
+function renderPredCard(d){
+  const call   = (d.prediction||"WAIT").toUpperCase();
+  const conf   = Math.round(d.confidence||0);
+  const wr     = Math.round(d.win_rate||0);
+  const badge  = d.badge || "—";
+  const period = d.period || "—";
+  const meta   = CALL_META[call];
+
+  let ringColor = "purple";
+  if(call==="GREEN") ringColor="green";
+  else if(call==="RED") ringColor="red";
+  else if(call==="BIG"||call==="SMALL") ringColor="blue";
+
+  const wrFill = `<div class="pred-wr-fill" style="width:${wr}%"></div>`;
+
+  if(!meta){
+    // WAIT state
+    return `
+      <div class="pred-call-card">
+        <div class="pred-period-label">Next Period · <b>${period}</b></div>
+        <div class="pred-divider"></div>
+        <div class="pred-call-center">
+          <div class="pred-call-badge wait">
+            <i class="fa-solid fa-clock pred-call-icon" style="font-size:28px;color:rgba(255,255,255,.2)"></i>
+            <span class="pred-call-word" style="color:rgba(255,255,255,.2)">WAIT</span>
+          </div>
+        </div>
+        <div class="pred-stats-row">
+          ${buildRingSVG(conf, ringColor)}
+          <div style="position:relative;z-index:1;text-align:center">
+            <div class="pred-ring-val">${conf}%</div>
+            <div class="pred-ring-lbl">Confidence</div>
+          </div>
+          <div class="pred-right-stats">
+            <div class="pred-stat-row"><span class="slbl">Win Rate</span><span class="sval green">${wr}%</span></div>
+            <div class="pred-stat-row"><span class="slbl">Level</span><span class="sval amber">${badge}</span></div>
+          </div>
+        </div>
+        <div class="pred-wr-row">
+          <div class="pred-wr-head"><span class="pred-wr-lbl">Win Rate</span><span class="pred-wr-pct">${wr}%</span></div>
+          <div class="pred-wr-track">${wrFill}</div>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="pred-call-card">
+      <div class="pred-period-label">Next Period · <b>${period}</b></div>
+      <div class="pred-divider"></div>
+      <div class="pred-call-center">
+        <div class="pred-call-badge ${meta.cls}">
+          <i class="fa-solid ${meta.icon} pred-call-icon"></i>
+          <span class="pred-call-word">${meta.word}</span>
+        </div>
+      </div>
+      <div class="pred-stats-row">
+        <div class="pred-ring-wrap">
+          ${buildRingSVG(conf, ringColor)}
+          <div style="position:relative;z-index:1;text-align:center">
+            <div class="pred-ring-val">${conf}%</div>
+            <div class="pred-ring-lbl">Conf.</div>
+          </div>
+        </div>
+        <div class="pred-right-stats">
+          <div class="pred-stat-row"><span class="slbl">Win Rate</span><span class="sval green">${wr}%</span></div>
+          <div class="pred-stat-row"><span class="slbl">Level</span><span class="sval amber">${badge}</span></div>
+        </div>
+      </div>
+      <div class="pred-wr-row">
+        <div class="pred-wr-head"><span class="pred-wr-lbl">Win Rate</span><span class="pred-wr-pct">${wr}%</span></div>
+        <div class="pred-wr-track">${wrFill}</div>
+      </div>
+    </div>`;
+}
 
 function applyServerUI(){
   const s = getServer();
   const isColor = s==="color";
-  document.getElementById("predServerName").textContent = isColor ? "NOVA X" : "PRIME X";
-  document.getElementById("predServerTag").textContent  = isColor ? "Color Server" : "Size Server";
-  document.getElementById("predServerIcon").className   = isColor ? "fa-solid fa-palette" : "fa-solid fa-up-right-and-down-left-from-center";
-  // settings active state
+  document.getElementById("predServerName").textContent =
+    isColor ? "NOVA X · Color Server" : "PRIME X · Size Server";
+  document.getElementById("predGameLabel").textContent =
+    (predGame==="trx"?"TRX":"Wingo") + " · " + (predTf||"--");
   const c=document.getElementById("srvColor"), z=document.getElementById("srvSize");
   if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); }
 }
 
-function renderHero(d){
-  const call = (d.prediction||"WAIT").toUpperCase();
-  const conf = Math.round(d.confidence||0);
-  const wr   = Math.round(d.win_rate||0);
-  const badge= d.badge || "🟢L1";
-  const callHtml = CALL_IMG[call]
-    ? `<img class="pred-call-img" src="${CALL_IMG[call]}" alt="${call}">`
-    : `<div class="pred-wait">WAIT</div>`;
-  return `
-    <div class="pred-hero">
-      <div class="period-line">Next Period · <b>${d.period||"--"}</b></div>
-      ${callHtml}
-      <div class="pred-bar"><div class="pred-bar-fill" style="width:${conf}%"></div></div>
-    </div>
-    <div class="pred-stats">
-      <div class="pred-stat"><div class="lbl">Confidence</div><div class="val">${conf}%</div></div>
-      <div class="pred-stat"><div class="lbl">Win Rate</div><div class="val green">${wr}%</div></div>
-      <div class="pred-stat"><div class="lbl">Level</div><div class="val badge-val">${badge}</div></div>
-    </div>`;
-}
-
 async function loadPrediction(){
-  const body = document.getElementById("predBody");
-  if(!predGame || !predTf){
-    body.innerHTML = '<div class="pred-msg">Is game ke liye prediction available nahi hai.</div>';
+  const body=document.getElementById("predBody");
+  if(!predGame||!predTf){
+    body.innerHTML=`<div class="pred-msg-box">
+      <span class="pred-msg-ic">📊</span>
+      <span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span>
+    </div>`;
     return;
   }
-  const a = auth(); if(!a){ goLogin(); return; }
-  const target = getServer();   // sirf selected server maango
+  const a=auth(); if(!a){ goLogin(); return; }
   try{
-    const d = await withRefresh(()=>apiFetch("/api/prediction",{
+    const d=await withRefresh(()=>apiFetch("/api/prediction",{
       uid:a.uid, session_signature:a.session_signature,
-      game:predGame, timeframe:predTf, target:target
+      game:predGame, timeframe:predTf, target:getServer()
     }));
     if(!d) return;
-    const res = d.result || {};
-    if(!res || !res.prediction){
-      body.innerHTML = '<div class="pred-msg">Engine warm ho raha hai... thodi der baad try karo.</div>';
+    const res=d.result||{};
+    if(!res||!res.prediction){
+      body.innerHTML=`<div class="pred-msg-box">
+        <span class="pred-msg-ic">⏳</span>
+        <span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span>
+      </div>`;
       return;
     }
     document.getElementById("predGameLabel").textContent =
-      (predGame==="trx"?"TRX":"Wingo") + " · " + predTf;
-    body.innerHTML = renderHero(res);
+      (predGame==="trx"?"TRX":"Wingo")+" · "+predTf;
+    body.innerHTML = renderPredCard(res);
   }catch(e){
-    if(e && e.status===403){
-      const msg = (e.detail||"").toString();
+    if(e&&e.status===403){
+      const msg=(e.detail||"").toString();
       if(msg.indexOf("upgrade")>=0){
-        body.innerHTML =
-          '<div class="pred-msg lock">'+
-          '<i class="fa-solid fa-lock lock-ic"></i>'+
-          'Prediction sirf <b>paid plan</b> ke saath milti hai.<br>Free plan me sirf games access hain.'+
-          '<a class="up-btn" href="/payment">Upgrade Plan</a>'+
-          '</div>';
-        stopPredPoll();
-        return;
+        body.innerHTML=`<div class="pred-msg-box">
+          <span class="pred-msg-ic" style="font-size:40px">🔒</span>
+          <span class="pred-msg-txt">Prediction sirf <b style="color:#a78bfa">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span>
+          <a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a>
+        </div>`;
+        stopPredPoll(); return;
       }
-      return; // session/ban -> poll overlay handle karega
+      return;
     }
-    body.innerHTML = '<div class="pred-msg">Prediction abhi load nahi ho payi. Auto-retry...</div>';
+    body.innerHTML=`<div class="pred-msg-box">
+      <span class="pred-msg-ic">🔄</span>
+      <span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span>
+    </div>`;
   }
 }
 
-function startPredPoll(){ applyServerUI(); if(predTmr) return; loadPrediction(); predTmr=setInterval(loadPrediction,10000); }
+function startPredPoll(){
+  applyServerUI();
+  if(predTmr) return;
+  loadPrediction();
+  predTmr=setInterval(loadPrediction,10000);
+}
 function stopPredPoll(){ if(predTmr){ clearInterval(predTmr); predTmr=null; } }
 
-/* settings: server select */
 function wireServerSelect(){
-  document.querySelectorAll(".srv-opt").forEach(el=>{
+  document.querySelectorAll(".srv-card").forEach(el=>{
     el.addEventListener("click",()=>{
       setServer(el.dataset.srv);
       applyServerUI();
-      // turant naya prediction laao (panel khula ho to)
       const body=document.getElementById("predBody");
-      if(body) body.innerHTML='<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>';
+      if(body) body.innerHTML=`<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>`;
       loadPrediction();
     });
   });
@@ -808,127 +881,93 @@ function wireServerSelect(){
 /* ══════════════════════════════
    FAB + PANEL LOGIC
 ══════════════════════════════ */
-const fabContainer= document.getElementById("fabContainer");
-const fabToggle   = document.getElementById("fabToggle");
-const fabLeft     = document.getElementById("fabLeft");
-const fabRight    = document.getElementById("fabRight");
-const hackBtn     = document.getElementById("hackBtn");
-const settingBtn  = document.getElementById("settingBtn");
-const overlay     = document.getElementById("panelOverlay");
-const hackPanel   = document.getElementById("hackPanel");
-const settingPanel= document.getElementById("settingPanel");
+const fabContainer=document.getElementById("fabContainer");
+const fabToggle=document.getElementById("fabToggle");
+const fabLeft=document.getElementById("fabLeft");
+const fabRight=document.getElementById("fabRight");
+const hackBtn=document.getElementById("hackBtn");
+const settingBtn=document.getElementById("settingBtn");
+const overlay=document.getElementById("panelOverlay");
+const hackPanel=document.getElementById("hackPanel");
+const settingPanel=document.getElementById("settingPanel");
 
-let fabOpen    = false;
-let activePanel= null;   // "hack" | "setting" | null
+let fabOpen=false;
+let activePanel=null;
 
 function openFab(){
-  fabOpen = true;
+  fabOpen=true;
   fabContainer.classList.add("open");
   fabToggle.classList.add("open");
   fabLeft.classList.add("show");
   fabRight.classList.add("show");
 }
-
 function closeFab(){
-  fabOpen = false;
+  fabOpen=false;
   fabContainer.classList.remove("open");
   fabToggle.classList.remove("open");
   fabLeft.classList.remove("show");
   fabRight.classList.remove("show");
 }
-
 function openPanel(which){
-  activePanel = which;
+  activePanel=which;
   overlay.classList.add("show");
   if(which==="hack"){
     hackPanel.classList.add("show");
     settingPanel.classList.remove("show");
-    startPredPoll();              // live prediction start
+    startPredPoll();
   } else {
     settingPanel.classList.add("show");
     hackPanel.classList.remove("show");
     stopPredPoll();
   }
 }
-
 function closePanel(){
   overlay.classList.remove("show");
   hackPanel.classList.remove("show");
   settingPanel.classList.remove("show");
-  activePanel = null;
-  stopPredPoll();                 // panel band -> polling band (bandwidth bachao)
+  activePanel=null;
+  stopPredPoll();
 }
 
-fabToggle.addEventListener("click",()=>{
-  if(fabOpen){
-    closeFab();
-    closePanel();
-  } else {
-    openFab();
-  }
-});
-
-hackBtn.addEventListener("click",()=>{
-  openPanel("hack");
-});
-
-settingBtn.addEventListener("click",()=>{
-  openPanel("setting");
-});
-
-/* Overlay tap = close panel but keep fab open */
-overlay.addEventListener("click",()=>{
-  closePanel();
-});
+fabToggle.addEventListener("click",()=>{ fabOpen ? (closeFab(), closePanel()) : openFab(); });
+hackBtn.addEventListener("click",()=>{ openPanel("hack"); });
+settingBtn.addEventListener("click",()=>{ openPanel("setting"); });
+overlay.addEventListener("click",()=>{ closePanel(); });
 
 /* ══════════════════════════════
-   MAIN INIT
+   INIT
 ══════════════════════════════ */
 async function init(){
-  const a = auth(); if(!a){ goLogin(); return; }
+  const a=auth(); if(!a){ goLogin(); return; }
+  const params=new URLSearchParams(window.location.search);
+  const gameName=params.get("name")||"Game";
+  gameLink=params.get("link")||"";
+  predGame=(params.get("game")||"").toLowerCase();
+  predTf=(params.get("tf")||"").toLowerCase();
 
-  const params   = new URLSearchParams(window.location.search);
-  const gameName = params.get("name")||"Game";
-  gameLink       = params.get("link")||"";
-  predGame       = (params.get("game")||"").toLowerCase();   // "trx" | "wingo"
-  predTf         = (params.get("tf")||"").toLowerCase();     // "1m" | "30s"
+  document.getElementById("heroTitle").textContent=gameName;
+  document.getElementById("fbTitle").textContent=gameName;
+  document.title=gameName+" — Drago Predictor";
 
-  document.getElementById("heroTitle").textContent  = gameName;
-  document.getElementById("fbTitle").textContent    = gameName;
-  document.title = gameName + " — Drago Predictor";
-
-  // Prediction panel labels + server selector
-  if(predGame && predTf){
-    const gl = predGame==="trx" ? "TRX" : "Wingo";
-    document.getElementById("predGameLabel").textContent = gl + " · " + predTf;
-  }
+  if(predGame&&predTf) document.getElementById("predGameLabel").textContent=(predGame==="trx"?"TRX":"Wingo")+" · "+predTf;
   applyServerUI();
   wireServerSelect();
 
   document.getElementById("backBtn").addEventListener("click",()=>{
-    window.history.length > 1 ? window.history.back() : window.location.href = "/game";
+    window.history.length>1 ? window.history.back() : window.location.href="/game";
   });
-
-  if(gameLink){
-    document.getElementById("fbBtn").href = gameLink;
-  }
-
-  if(!gameLink){
-    hideAuthOverlay();
-    document.getElementById("ovNoLink").classList.add("show");
-    return;
-  }
+  if(gameLink) document.getElementById("fbBtn").href=gameLink;
+  if(!gameLink){ hideAuthOverlay(); document.getElementById("ovNoLink").classList.add("show"); return; }
 
   try{
-    const d = await withRefresh(()=>apiFetch("/api/account-status",a));
-    if(!handleStatus(d.account_status||"active", d.subscription_status||"none")){ hideAuthOverlay(); return; }
+    const d=await withRefresh(()=>apiFetch("/api/account-status",a));
+    if(!handleStatus(d.account_status||"active",d.subscription_status||"none")){ hideAuthOverlay(); return; }
     startPoll();
   }catch(e){ startPoll(); }
 
   hideAuthOverlay();
   loadFrame(gameLink);
 }
-
 init();
 </script>
 </body>
