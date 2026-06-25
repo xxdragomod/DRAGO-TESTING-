@@ -279,28 +279,38 @@ body{
   overflow:visible;margin-bottom:12px;
 }
 
-/* Pill progress bar (confidence) */
-.pred-pill-wrap{margin-bottom:16px;}
-.pred-pill-track{
-  position:relative;height:48px;
-  background:rgba(195,202,255,0.22);
-  border:2.5px solid rgba(124,92,252,0.25);
-  border-radius:24px;overflow:hidden;
+/* Pill Progress Bar (Confidence) */
+.pill-progress-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding: 0 4px;
 }
-.pred-pill-fill{
-  position:absolute;left:4px;top:4px;bottom:4px;
-  background:linear-gradient(90deg,#7C5CFC,#a78bfa);
-  border-radius:20px;
-  transition:width .7s cubic-bezier(.34,1.56,.64,1);
-  min-width:32px;
+.pill-progress-text {
+  font-size: 28px;
+  font-weight: 900;
+  color: #4a4a4a;
+  min-width: 68px;
+  line-height: 1;
 }
-.pred-pill-info{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;z-index:1;
+.pill-track {
+  flex: 1;
+  height: 32px;
+  background: rgba(124, 92, 252, 0.12);
+  border: 4px solid rgba(124, 92, 252, 0.22);
+  border-radius: 16px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
 }
-.pred-pill-label{font-size:11px;font-weight:900;color:#fff;letter-spacing:.6px;text-shadow:0 1px 4px rgba(80,40,180,.4);}
-.pred-pill-pct{font-size:18px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(80,40,180,.4);}
+.pill-fill {
+  height: 100%;
+  background: #7c5cfc;
+  border-radius: 12px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 /* 3 meters row */
 .pred-meters-row{display:flex;gap:8px;}
@@ -649,7 +659,7 @@ function loadFrame(url){
 function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
 function setServer(s){ localStorage.setItem("_pred_srv",s); }
 
-// Map prediction call → Image URLs Provided by you
+// Map prediction call → Image URLs
 const CALL_META = {
   GREEN:{ img:"https://i.ibb.co/8nF8ZwD4/1770796863859-316fd738-2c08-4a2f-a306-c88d5f75891b.png" },
   RED:  { img:"https://i.ibb.co/6RqjsgDz/1770796950403-a8434662-f5cf-446a-9e7d-11c950273688.png" },
@@ -658,22 +668,12 @@ const CALL_META = {
 };
 
 // ── Ring helpers ──
-const R_MAIN = 33, CIRC_MAIN = 2*Math.PI*R_MAIN;
 const R_SM   = 26, CIRC_SM   = 2*Math.PI*R_SM;
-
-function buildMainRing(pct, colorClass){
-  const offset = CIRC_MAIN - (pct/100)*CIRC_MAIN;
-  return `<svg class="pred-ring-svg" viewBox="0 0 92 92">
-    <circle class="pred-ring-bg" cx="46" cy="46" r="${R_MAIN}"/>
-    <circle class="pred-ring-fill ${colorClass}" cx="46" cy="46" r="${R_MAIN}"
-      stroke-dasharray="${CIRC_MAIN.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"/>
-  </svg>`;
-}
 
 function buildSmallRing(pct, stroke, id){
   const offset = CIRC_SM - (pct/100)*CIRC_SM;
   return `<svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%">
-    <circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="rgba(195,202,255,0.55)" stroke-width="11"/>
+    <circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/>
     <circle ${id?`id="${id}"`:''}  cx="34" cy="34" r="${R_SM}" fill="none" stroke="${stroke}" stroke-width="11"
       stroke-linecap="round" stroke-dasharray="${CIRC_SM.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"
       transform="rotate(-90 34 34)" style="transition:stroke-dashoffset .5s ease"/>
@@ -735,14 +735,6 @@ function renderPredCard(d){
   const period = d.period || "—";
   const meta   = CALL_META[call];
 
-  let ringColor="purple";
-  if(call==="GREEN") ringColor="green";
-  else if(call==="RED") ringColor="red";
-  else if(call==="BIG"||call==="SMALL") ringColor="blue";
-
-  const ringColors={green:"#16a34a",red:"#ef4444",blue:"#3b82f6",purple:"#8b5cf6"};
-  const confStroke=ringColors[ringColor]||"#8b5cf6";
-
   const lvlPct=badgePct(badge);
 
   // Timer initial state
@@ -760,27 +752,21 @@ function renderPredCard(d){
     <div class="pred-period-charcoal">Period : ${period}</div>
 
     <div class="pred-call-card">
-      <!-- Row 1: Confidence ring + Win Rate big box -->
-      <div class="pred-stats-row">
-        <div class="pred-ring-wrap">
-          ${buildMainRing(conf, ringColor)}
-          <div style="position:relative;z-index:1;text-align:center">
-            <div class="pred-ring-val">${conf}%</div>
-            <div class="pred-ring-lbl">Conf.</div>
-          </div>
-        </div>
-        <div class="pred-wr-bigbox">
-          <div class="wr-val">${wr}%</div>
-          <div class="wr-lbl">Win Rate</div>
+      
+      <!-- New Pill Progress Bar (Confidence Meter) -->
+      <div class="pill-progress-container">
+        <div class="pill-progress-text">${conf}%</div>
+        <div class="pill-track">
+          <div class="pill-fill" style="width: ${conf}%"></div>
         </div>
       </div>
 
-      <!-- Row 2: 3 meters — Level | Win Rate | Timer -->
+      <!-- Row: 3 bold meters — Level | Win Rate | Timer -->
       <div class="pred-meters-row">
         <!-- Level -->
         <div class="pred-meter-item">
           <div class="pred-meter-ring">
-            ${buildSmallRing(lvlPct,"#d97706","")}
+            ${buildSmallRing(lvlPct,"#7C5CFC","")}
             <div class="pred-meter-val">
               ${badge}
               <div class="pred-meter-sub">Level</div>
@@ -791,7 +777,7 @@ function renderPredCard(d){
         <!-- Win Rate -->
         <div class="pred-meter-item">
           <div class="pred-meter-ring">
-            ${buildSmallRing(wr,"#16a34a","")}
+            ${buildSmallRing(wr,"#7C5CFC","")}
             <div class="pred-meter-val">
               ${wr}%
               <div class="pred-meter-sub">WR</div>
@@ -803,8 +789,8 @@ function renderPredCard(d){
         <div class="pred-meter-item">
           <div class="pred-meter-ring">
             <svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%">
-              <circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="7"/>
-              <circle id="tmr-fill" cx="34" cy="34" r="${R_SM}" fill="none" stroke="#7C5CFC" stroke-width="7"
+              <circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+              <circle id="tmr-fill" cx="34" cy="34" r="${R_SM}" fill="none" stroke="#7C5CFC" stroke-width="11"
                 stroke-linecap="round"
                 stroke-dasharray="${CIRC_SM.toFixed(2)}"
                 stroke-dashoffset="${(CIRC_SM-(initPct/100)*CIRC_SM).toFixed(2)}"
