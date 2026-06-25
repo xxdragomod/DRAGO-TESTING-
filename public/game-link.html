@@ -172,7 +172,7 @@ body{
 .fab-side-btn:active{transform:scale(.92) !important}
 
 /* ════════════════════════════════════════
-   SLIDE-UP PANEL BASE (WHITE THEME)
+   SLIDE-UP PANEL BASE (GLASS THEME)
 ════════════════════════════════════════ */
 .panel-overlay{
   position:fixed;inset:0;
@@ -184,144 +184,183 @@ body{
 
 .slide-panel{
   position:fixed;bottom:0;left:0;right:0;z-index:450;
-  background:#ffffff;
-  border-radius:28px 28px 0 0;
-  border-top:1.5px solid rgba(0,0,0,0.05);
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:32px 32px 0 0;
+  border-top:1.5px solid rgba(255,255,255,0.6);
   padding:0 0 40px;
   transform:translateY(100%);
-  transition:transform .38s cubic-bezier(.22,1,.36,1);
-  height:72vh;max-height:72vh;overflow-y:auto;
-  box-shadow:0 -16px 60px rgba(0,0,0,0.1);
+  transition:transform .42s cubic-bezier(.16, 1, .3, 1);
+  height:75vh;max-height:75vh;overflow-y:auto;
+  box-shadow:0 -18px 50px rgba(124,92,252,.12);
 }
 .slide-panel.show{transform:translateY(0);}
 
 .panel-handle{
-  width:40px;height:4px;
-  background:rgba(0,0,0,0.15);
-  border-radius:2px;
-  margin:14px auto 0;
+  width:44px;height:5px;
+  background:rgba(124,92,252,0.2);
+  border-radius:10px;
+  margin:16px auto 0;
 }
 
 /* ── Panel Header (LEFT ALIGNED) ── */
 .panel-head{
   display:flex;align-items:center;
   justify-content:flex-start;
-  padding:24px 20px 0px; 
-  border-bottom:none; 
+  padding:24px 22px 0px; 
 }
 
 .panel-title-main {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 900;
-  color: #1a1a2e;
-  letter-spacing: 2px;
+  background: linear-gradient(135deg, #7C5CFC, #5B6AF0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1.5px;
 }
 
 /* ════════════════════════════════════════
    ██ PREDICTION CONTENT INSIDE HACK PANEL
 ════════════════════════════════════════ */
-.pred-wrap{padding:28px 16px 0;}
+.pred-wrap{padding:24px 16px 0;}
 
 @keyframes callPop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
 
-/* Image Container (Outside Box) */
+/* Image Container (Modern Glass Box Frame) */
 .pred-image-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 2px;
-  background: transparent;
+  background: #ffffff;
+  border: 1.5px solid rgba(124,92,252,0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(124,92,252,0.04);
+  margin-bottom: 14px;
 }
 
-/* Huge Image */
+/* Prediction Image styling */
 .pred-img-large {
   width: 100%;
-  max-height: 520px;
+  max-height: 280px;
   object-fit: contain;
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
+  display: block;
   animation: callPop .4s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* Wait State (If no image) */
+/* Wait State */
 .pred-img-wait {
   width: 100%;
-  height: 180px;
+  height: 160px;
   background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 18px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
   color: #94a3b8;
   letter-spacing: 1px;
   animation: callPop .4s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* Charcoal Period Text (Outside Box) */
-.pred-period-charcoal {
+/* Badge for Period */
+.pred-period-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(124,92,252,0.08);
+  color: #7C5CFC;
   font-size: 11px;
   font-weight: 800;
-  color: #36454F;
-  text-align: center;
-  margin: 6px 0 12px;
+  border-radius: 100px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
-/* ── STATS CARD — NO BOX ── */
-.pred-call-card{
-  background:transparent;border:none;box-shadow:none;
-  border-radius:0;padding:0;position:relative;
-  overflow:visible;margin-bottom:12px;
+/* ── PREDICTIONS CARD — PREMIUM WRAP ── */
+.pred-card-main {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 20px;
+  border: 1.5px solid rgba(124,92,252,0.06);
+  box-shadow: 0 12px 40px rgba(124,92,252,0.05);
+  margin-bottom: 16px;
 }
 
-/* Pill Progress Bar (Confidence) */
-.pill-progress-container {
+/* Pill Progress Bar Styling */
+.pill-progress-card {
+  background: rgba(124,92,252,0.03);
+  border: 1px solid rgba(124,92,252,0.06);
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.pill-progress-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  gap: 16px;
-  margin-bottom: 22px;
-  padding: 0 4px;
+  margin-bottom: 10px;
+}
+.pill-progress-lbl {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .pill-progress-text {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 900;
-  color: #4a4a4a;
-  min-width: 68px;
-  line-height: 1;
+  color: #7C5CFC;
 }
 .pill-track {
-  flex: 1;
-  height: 32px;
-  background: rgba(124, 92, 252, 0.12);
-  border: 4px solid rgba(124, 92, 252, 0.22);
-  border-radius: 16px;
-  padding: 2px;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  height: 18px;
+  background: rgba(124, 92, 252, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
 }
 .pill-fill {
   height: 100%;
-  background: #7c5cfc;
-  border-radius: 12px;
+  background: linear-gradient(90deg, #7C5CFC, #5B6AF0);
+  border-radius: 10px;
   transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 10px rgba(124, 92, 252, 0.3);
 }
 
-/* 3 meters row */
-.pred-meters-row{display:flex;gap:8px;}
-.pred-meter-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+/* 3 meters row with clean separate cards */
+.pred-meters-row{
+  display:flex;
+  gap:10px;
+  justify-content: space-between;
+}
+.pred-meter-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 20px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+  transition: transform 0.2s;
+}
+.pred-meter-card:hover {
+  transform: translateY(-2px);
+}
 .pred-meter-ring{
-  position:relative;width:72px;height:72px;
+  position:relative;width:64px;height:64px;
   display:flex;align-items:center;justify-content:center;
 }
 .pred-meter-ring svg{position:absolute;inset:0;width:100%;height:100%;}
-.pred-meter-val{position:relative;z-index:1;text-align:center;font-size:12px;font-weight:900;color:#1e293b;line-height:1;}
-.pred-meter-sub{font-size:7px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;}
+.pred-meter-val{position:relative;z-index:1;text-align:center;font-size:11px;font-weight:900;color:#1e293b;line-height:1.1;}
+.pred-meter-sub{font-size:6.5px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.2px;margin-top:1px;}
 .pred-meter-lbl{font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.5px;text-align:center;}
 
 /* Auto-update footer */
@@ -360,13 +399,14 @@ body{
 }
 
 .srv-card{
-  display:flex;align-items:center;gap:14px;
-  background:#f8fafc; 
-  border:1.5px solid #e2e8f0;
-  border-radius:18px;padding:16px 14px;
-  margin-bottom:10px;cursor:pointer;
-  transition:border-color .2s,background .2s,transform .15s,box-shadow .2s;
+  display:flex;align-items:center;gap:16px;
+  background:#ffffff; 
+  border:1.5px solid rgba(0,0,0,0.05);
+  border-radius:22px;padding:18px 16px;
+  margin-bottom:12px;cursor:pointer;
+  transition:border-color .25s,background .25s,transform .15s,box-shadow .25s;
   user-select:none;position:relative;overflow:hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.01);
 }
 .srv-card::before{
   content:'';position:absolute;inset:0;border-radius:18px;
@@ -376,8 +416,8 @@ body{
 .srv-card:active{transform:scale(.98);}
 .srv-card.active{
   border-color:#7C5CFC;
-  background:rgba(124,92,252,.04);
-  box-shadow:0 0 0 1px rgba(124,92,252,.2), 0 8px 24px rgba(124,92,252,.12);
+  background:rgba(124,92,252,.03);
+  box-shadow:0 10px 25px rgba(124,92,252,.08);
 }
 .srv-card.active::before{opacity:1;}
 
@@ -748,23 +788,34 @@ function renderPredCard(d){
   if(meta) imageUI=`<img src="${meta.img}" class="pred-img-large" alt="${call}">`;
 
   return `
+    <!-- Prediction Image Framed -->
     <div class="pred-image-container">${imageUI}</div>
-    <div class="pred-period-charcoal">Period : ${period}</div>
+    
+    <!-- Modern Status Badge for Period -->
+    <div style="display: flex; justify-content: center; width: 100%;">
+      <div class="pred-period-badge">
+        <i class="fa-solid fa-hashtag"></i> Period : ${period}
+      </div>
+    </div>
 
-    <div class="pred-call-card">
+    <!-- Main Clean Glass Container -->
+    <div class="pred-card-main">
       
-      <!-- New Pill Progress Bar (Confidence Meter) -->
-      <div class="pill-progress-container">
-        <div class="pill-progress-text">${conf}%</div>
+      <!-- Premium Confidence Pill Progress Box -->
+      <div class="pill-progress-card">
+        <div class="pill-progress-header">
+          <span class="pill-progress-lbl">Confidence</span>
+          <span class="pill-progress-text">${conf}%</span>
+        </div>
         <div class="pill-track">
           <div class="pill-fill" style="width: ${conf}%"></div>
         </div>
       </div>
 
-      <!-- Row: 3 bold meters — Level | Win Rate | Timer -->
+      <!-- 3 Column Meters (Level, Win Rate, Timer) in Separate Cards -->
       <div class="pred-meters-row">
         <!-- Level -->
-        <div class="pred-meter-item">
+        <div class="pred-meter-card">
           <div class="pred-meter-ring">
             ${buildSmallRing(lvlPct,"#7C5CFC","")}
             <div class="pred-meter-val">
@@ -774,8 +825,9 @@ function renderPredCard(d){
           </div>
           <span class="pred-meter-lbl">Level</span>
         </div>
+
         <!-- Win Rate -->
-        <div class="pred-meter-item">
+        <div class="pred-meter-card">
           <div class="pred-meter-ring">
             ${buildSmallRing(wr,"#7C5CFC","")}
             <div class="pred-meter-val">
@@ -785,8 +837,9 @@ function renderPredCard(d){
           </div>
           <span class="pred-meter-lbl">Win Rate</span>
         </div>
+
         <!-- Timer -->
-        <div class="pred-meter-item">
+        <div class="pred-meter-card">
           <div class="pred-meter-ring">
             <svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%">
               <circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/>
