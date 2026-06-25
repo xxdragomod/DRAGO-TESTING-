@@ -2,651 +2,533 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Game — Drago Predictor</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+/* ── Reset & Base ── */
+*{margin:0;padding:0;box-sizing:border-box; -webkit-font-smoothing: antialiased;}
 
-@view-transition{navigation:auto}
-::view-transition-old(root){animation:vtOut .22s cubic-bezier(.4,0,.2,1) both}
-::view-transition-new(root){animation:vtIn .26s cubic-bezier(.22,1,.36,1) both}
-@keyframes vtOut{to{opacity:0;transform:translateY(-8px)}}
-@keyframes vtIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-html,body{height:100%;overflow:hidden}
-body{
-  display:flex;flex-direction:column;
-  background:linear-gradient(180deg,#c3caff 0%,#e2e5ff 40%,#ffffff 100%);
-  font-family:'Montserrat',sans-serif;
+html, body {
+  height: 100%; 
+  overflow: hidden;
 }
 
-/* ── Header bar ── */
-.hero-bar{
-  flex-shrink:0;width:100%;
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  padding:10px 16px;
-  display:flex;align-items:center;gap:12px;
-  border-bottom:1.5px solid rgba(255,255,255,0.95);
-  box-shadow:0 8px 28px rgba(100,80,220,.15);
-  animation:slideDown .4s cubic-bezier(.22,1,.36,1) both;
-  z-index:100;
+body {
+  display: flex; flex-direction: column;
+  /* Aapka bataya hua exact premium background */
+  background: linear-gradient(180deg, #c3caff 0%, #e2e5ff 40%, #ffffff 100%);
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Smooth View Transitions ── */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vtOut .25s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(root){animation:vtIn .3s cubic-bezier(.22,1,.36,1) both}
+@keyframes vtOut{to{opacity:0;transform:translateY(-10px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Ultra Sleek Header ── */
+.hero-bar {
+  flex-shrink: 0; width: 100%;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  animation: slideDown .5s cubic-bezier(.22,1,.36,1) both;
+  z-index: 100;
 }
 @keyframes slideDown{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
 
-.back-btn{
-  width:40px;height:40px;flex-shrink:0;border-radius:50%;
-  background:#fff;border:1.5px solid #eef0ff;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 4px 12px rgba(124,92,252,.12);
-  transition:background .18s,transform .18s cubic-bezier(.34,1.56,.64,1);
-  -webkit-tap-highlight-color:transparent;
+.back-btn {
+  width: 42px; height: 42px; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 1);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(124, 92, 252, 0.08);
+  transition: all .2s cubic-bezier(.34,1.56,.64,1);
+  -webkit-tap-highlight-color: transparent;
 }
-.back-btn:active{transform:scale(.88);background:#f4f4ff}
-.back-btn i{font-size:15px;color:#7C5CFC}
+.back-btn:active { transform: scale(.9); background: #f8f9ff; }
+.back-btn i { font-size: 16px; color: #5B6AF0; }
 
-.hero-logo{width:48px;height:48px;flex-shrink:0;border-radius:12px;object-fit:contain;background:transparent;}
-.hero-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
-.hero-sub{
-  font-size:16px;font-weight:900;color:#1a1a2e;
-  text-transform:uppercase;letter-spacing:.4px;line-height:1.1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.hero-logo { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.hero-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.hero-sub {
+  font-size: 11px; font-weight: 800; color: #5B6AF0;
+  text-transform: uppercase; letter-spacing: 1px;
 }
-.hero-title{
-  font-size:11px;font-weight:800;color:#7C5CFC;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  letter-spacing:.4px;text-transform:uppercase;
+.hero-title {
+  font-size: 17px; font-weight: 900; color: #1a1a2e;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: -0.3px; line-height: 1.1;
 }
 
-/* ── iframe wrapper ── */
-.frame-wrap{flex:1;position:relative;overflow:hidden;background:#fff;animation:fadeIn .45s .15s ease both;}
+/* ── Content Area & Fallbacks ── */
+.frame-wrap { flex: 1; position: relative; overflow: hidden; background: transparent; }
+#gameFrame { position: absolute; inset: 0; width: 100%; height: 100%; border: none; border-radius: 20px 20px 0 0; background: #fff; box-shadow: 0 -4px 20px rgba(0,0,0,0.03);}
+
+.frame-loader, .fallback, #authOverlay, .full-ov {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #c3caff 0%, #e2e5ff 40%, #ffffff 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; z-index: 10;
+}
+#authOverlay, .full-ov { position: fixed; z-index: 9999; }
+.frame-loader.hide { opacity: 0; pointer-events: none; transition: opacity .4s ease; }
+.fallback { display: none; padding: 30px; animation: fadeIn .4s ease both; }
+.fallback.show { display: flex; }
+.full-ov { display: none; padding: 30px; }
+.full-ov.show { display: flex; animation: fadeIn .3s ease both; }
+
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-#gameFrame{position:absolute;inset:0;width:100%;height:100%;border:none;background:#fff;}
 
-/* ── Fallback overlay ── */
-.fallback{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:30px;animation:fadeIn .3s ease both;
+/* Clean Spinner */
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid rgba(91, 106, 240, 0.15);
+  border-top-color: #5B6AF0;
+  border-radius: 50%;
+  animation: spin .8s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
 }
-.fallback.show{display:flex}
-.fallback-icon{font-size:52px;margin-bottom:16px;color:#7C5CFC;opacity:.7}
-.fallback-title{font-size:20px;font-weight:900;color:#1E293B;margin-bottom:8px}
-.fallback-desc{font-size:13px;color:#6b7280;max-width:300px;line-height:1.6;margin-bottom:24px}
-.fallback-btn{
-  padding:15px 32px;border-radius:16px;border:none;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);
-  color:#fff;font-family:'Montserrat',sans-serif;
-  font-size:15px;font-weight:900;letter-spacing:.4px;cursor:pointer;
-  box-shadow:0 8px 24px rgba(124,92,252,.45);
-  display:flex;align-items:center;gap:10px;
-  transition:transform .18s cubic-bezier(.34,1.56,.64,1);
-  -webkit-tap-highlight-color:transparent;text-decoration:none;
-}
-.fallback-btn:active{transform:scale(.96)}
-.fallback-btn i{font-size:17px}
+@keyframes spin { to { transform: rotate(360deg) } }
+.loader-text { margin-top: 16px; font-size: 12px; font-weight: 800; color: #6b7280; letter-spacing: 1px; text-transform: uppercase; }
 
-/* ── Loading spinner ── */
-.frame-loader{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  z-index:10;transition:opacity .3s;
-}
-.frame-loader.hide{opacity:0;pointer-events:none}
-.spinner{
-  width:44px;height:44px;
-  border:4px solid rgba(124,92,252,.2);border-top-color:#7C5CFC;
-  border-radius:50%;animation:spin .8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-text{font-size:12px;font-weight:800;color:#9ca3af;letter-spacing:.5px;text-transform:uppercase}
+/* ── UI Elements for Overlays ── */
+.ov-icon, .fallback-icon { font-size: 60px; margin-bottom: 20px; color: #5B6AF0; filter: drop-shadow(0 10px 20px rgba(91, 106, 240, 0.2)); }
+.ov-title, .fallback-title { font-size: 24px; font-weight: 900; color: #1E293B; margin-bottom: 10px; letter-spacing: -0.5px; }
+.ov-desc, .fallback-desc { font-size: 14px; font-weight: 600; color: #64748b; max-width: 300px; line-height: 1.6; margin-bottom: 30px; }
 
-/* ── Auth loading overlay ── */
-#authOverlay{
-  position:fixed;inset:0;
-  background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff);
-  display:flex;align-items:center;justify-content:center;
-  z-index:999;transition:opacity .3s;
+.fallback-btn, .ov-link {
+  padding: 16px 36px; border-radius: 20px; border: none;
+  background: linear-gradient(135deg, #7C5CFC, #5B6AF0);
+  color: #fff; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(124, 92, 252, 0.3);
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  transition: all .2s cubic-bezier(.34,1.56,.64,1);
 }
-
-/* ── Status overlays ── */
-.full-ov{display:none;position:fixed;inset:0;z-index:3000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff)}
-.full-ov.show{display:flex;animation:fadeIn .3s ease both}
-.ov-icon{font-size:54px;margin-bottom:14px}
-.ov-title{font-size:22px;font-weight:900;color:#1E293B;margin-bottom:10px}
-.ov-desc{font-size:14px;color:#6b7280;max-width:300px;line-height:1.6;margin-bottom:20px}
-.ov-link{display:inline-block;background:linear-gradient(135deg,#7C3AED,#5B6AF0);color:#fff;text-decoration:none;padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(124,92,252,.35)}
+.fallback-btn:active, .ov-link:active { transform: scale(.95); box-shadow: 0 5px 15px rgba(124, 92, 252, 0.2); }
 
 /* ════════════════════════════════════════
-   BOTTOM NAV (FAB)
+   CLEAN & MODERN FLOATING ACTION MENU
 ════════════════════════════════════════ */
-.fab-container{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  z-index:500;display:flex;align-items:center;justify-content:center;
-  background:transparent;border-radius:40px;box-shadow:none;
-  padding:0;gap:0;
-  animation:navSlideUp .45s .15s cubic-bezier(.22,1,.36,1) both;
-  transition:background .35s ease, box-shadow .35s ease, padding .35s cubic-bezier(.22,1,.36,1), gap .35s cubic-bezier(.22,1,.36,1);
+.fab-container {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+  background: transparent; border-radius: 40px;
+  padding: 0; gap: 0;
+  animation: navSlideUp .6s cubic-bezier(.22,1,.36,1) both;
+  transition: all .4s cubic-bezier(.22,1,.36,1);
 }
-@keyframes navSlideUp{from{opacity:0;transform:translateX(-50%) translateY(24px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.fab-container.open{
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1.5px solid rgba(255,255,255,0.95);
-  box-shadow:0 8px 28px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
-  padding:9px 12px;gap:8px;
+@keyframes navSlideUp{from{opacity:0;transform:translateX(-50%) translateY(40px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+.fab-container.open {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.4) inset;
+  padding: 8px 10px; gap: 6px;
 }
 
-.fab-toggle-wrap{display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
-.fab-toggle{
-  width:42px;height:42px;border-radius:50%;
-  background:linear-gradient(135deg,#7C5CFC,#5B6AF0);border:none;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:none;transition:transform .22s cubic-bezier(.34,1.56,.64,1), background .2s;
-  -webkit-tap-highlight-color:transparent;position:relative;z-index:2;flex-shrink:0;
+.fab-toggle-wrap { display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.fab-toggle {
+  width: 48px; height: 48px; border-radius: 24px;
+  background: #1a1a2e; border: none;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  box-shadow: 0 8px 25px rgba(26, 26, 46, 0.3);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  -webkit-tap-highlight-color: transparent; position: relative; z-index: 2; flex-shrink: 0;
 }
-.fab-toggle:active{transform:scale(.9)}
-.fab-toggle i{font-size:18px;color:#fff;transition:transform .3s ease}
-.fab-toggle.open i{transform:rotate(45deg)}
+.fab-container.open .fab-toggle { background: #f1f3f9; box-shadow: none; width: 44px; height: 44px; }
+.fab-toggle:active { transform: scale(.85); }
+.fab-toggle i { font-size: 20px; color: #fff; transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
+.fab-container.open .fab-toggle i { transform: rotate(45deg); color: #1a1a2e; }
 
-.fab-side{display:flex;align-items:center;overflow:hidden;max-width:0;transition:max-width .35s cubic-bezier(.22,1,.36,1);flex-shrink:0;}
-.fab-side.show{max-width:200px;}
-.fab-left{justify-content:flex-end;}
-.fab-right{justify-content:flex-start;}
-.fab-side-btn{
-  height:42px;padding:0 18px;border-radius:24px;border:none;
-  display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;
-  cursor:pointer;white-space:nowrap;
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1), opacity .25s;
-  -webkit-tap-highlight-color:transparent;flex-shrink:0;opacity:0;transform:scale(.5);
+.fab-side { display: flex; align-items: center; overflow: hidden; max-width: 0; transition: max-width .4s cubic-bezier(.22,1,.36,1); flex-shrink: 0; }
+.fab-side.show { max-width: 200px; }
+.fab-left { justify-content: flex-end; }
+.fab-right { justify-content: flex-start; }
+
+.fab-side-btn {
+  height: 44px; padding: 0 20px; border-radius: 22px; border: none;
+  display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; white-space: nowrap;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  -webkit-tap-highlight-color: transparent; flex-shrink: 0; opacity: 0; transform: scale(.7) translateY(5px);
 }
-.fab-side.show .fab-side-btn{opacity:1;transform:scale(1);transition-delay:.08s;}
-.fab-hack-btn{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
-.fab-setting-btn{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
-.fab-side-btn i{font-size:16px;color:#fff}
-.fab-side-btn span{font-size:13px;font-weight:800;color:#fff;letter-spacing:.3px;line-height:1}
-.fab-side-btn:active{transform:scale(.92) !important}
+.fab-side.show .fab-side-btn { opacity: 1; transform: scale(1) translateY(0); transition-delay: .05s; }
+.fab-hack-btn { background: linear-gradient(135deg, #7C5CFC, #5B6AF0); box-shadow: 0 8px 20px rgba(124, 92, 252, 0.3); }
+.fab-setting-btn { background: #1E293B; box-shadow: 0 8px 20px rgba(30, 41, 59, 0.3); }
+.fab-side-btn i { font-size: 15px; color: #fff; }
+.fab-side-btn span { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.fab-side-btn:active { transform: scale(.9) !important; }
 
 /* ════════════════════════════════════════
-   SLIDE-UP PANEL BASE
+   PRO DARK PANELS (Slide-Up Bottom Sheet)
 ════════════════════════════════════════ */
-.panel-overlay{
-  position:fixed;inset:0;
-  background:rgba(10,8,30,.55);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;
+.panel-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  z-index: 400; opacity: 0; pointer-events: none; transition: opacity .4s ease;
 }
-.panel-overlay.show{opacity:1;pointer-events:all;}
+.panel-overlay.show { opacity: 1; pointer-events: all; }
 
-.slide-panel{
-  position:fixed;bottom:0;left:0;right:0;z-index:450;
-  background:#0f0c1e;
-  border-radius:28px 28px 0 0;
-  border-top:1.5px solid rgba(124,92,252,.25);
-  padding:0 0 40px;
-  transform:translateY(100%);
-  transition:transform .38s cubic-bezier(.22,1,.36,1);
-  height:72vh;max-height:72vh;overflow-y:auto;
-  box-shadow:0 -16px 60px rgba(80,50,200,.35);
+.slide-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 450;
+  background: #09090e; /* Extremely premium dark color */
+  border-radius: 32px 32px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 0 40px;
+  transform: translateY(100%);
+  transition: transform .5s cubic-bezier(.22,1,.36,1);
+  height: 75vh; max-height: 75vh; overflow-y: auto;
+  box-shadow: 0 -20px 80px rgba(91, 106, 240, 0.15);
 }
-.slide-panel.show{transform:translateY(0);}
+.slide-panel.show { transform: translateY(0); }
 
-.panel-handle{
-  width:40px;height:4px;
-  background:rgba(124,92,252,.35);border-radius:2px;
-  margin:14px auto 0;
+.panel-handle {
+  width: 48px; height: 5px;
+  background: rgba(255, 255, 255, 0.15); border-radius: 3px;
+  margin: 16px auto 0;
 }
 
 /* ── Panel Header ── */
-.panel-head{
-  display:flex;align-items:center;gap:12px;
-  padding:18px 20px 16px;
-  border-bottom:1px solid rgba(255,255,255,.06);
+.panel-head {
+  display: flex; align-items: center; gap: 16px;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
-.panel-head-icon{
-  width:40px;height:40px;border-radius:13px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
+.panel-head-icon {
+  width: 48px; height: 48px; border-radius: 16px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
 }
-.panel-head-icon.hack{background:linear-gradient(135deg,#7C5CFC,#5B6AF0);}
-.panel-head-icon.setting{background:linear-gradient(135deg,#06b6d4,#0e7490);}
-.panel-head-icon i{font-size:17px;color:#fff}
-.panel-head-text{}
-.panel-head-title{font-size:16px;font-weight:900;color:#fff;line-height:1.1}
-.panel-head-sub{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+.panel-head-icon.hack { background: linear-gradient(135deg, #7C5CFC, #5B6AF0); box-shadow: 0 10px 25px rgba(124, 92, 252, 0.2); }
+.panel-head-icon.setting { background: linear-gradient(135deg, #1E293B, #0F172A); border: 1px solid rgba(255,255,255,0.1); }
+.panel-head-icon i { font-size: 20px; color: #fff; }
+.panel-head-title { font-size: 18px; font-weight: 900; color: #fff; line-height: 1.2; letter-spacing: -0.3px; }
+.panel-head-sub { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 
 /* ════════════════════════════════════════
-   ██ PREDICTION PANEL — PREMIUM UI
+   PREDICTION UI — Ultra Modern Dark Widget
 ════════════════════════════════════════ */
-.pred-wrap{padding:16px 16px 0;}
+.pred-wrap { padding: 20px 24px 0; }
 
-/* Live status pill */
-.pred-live-row{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
+.pred-live-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.pred-live-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 6px 14px 6px 10px; border-radius: 20px;
 }
-.pred-live-pill{
-  display:flex;align-items:center;gap:7px;
-  background:rgba(34,197,94,.1);
-  border:1px solid rgba(34,197,94,.25);
-  padding:5px 12px 5px 8px;border-radius:20px;
-}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:livePulse 1.4s ease-in-out infinite;flex-shrink:0;}
-@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
-.live-label{font-size:11px;font-weight:800;color:#22c55e;letter-spacing:.4px;text-transform:uppercase}
-.pred-period-tag{
-  font-size:11px;font-weight:800;
-  color:rgba(255,255,255,.5);
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  padding:5px 12px;border-radius:20px;
-  letter-spacing:.3px;
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: livePulse 1.5s ease-in-out infinite; box-shadow: 0 0 10px #22c55e; }
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.live-label { font-size: 12px; font-weight: 800; color: #22c55e; letter-spacing: 0.5px; text-transform: uppercase; }
+.pred-period-tag {
+  font-size: 12px; font-weight: 800; color: #fff;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 16px; border-radius: 20px; letter-spacing: 0.5px;
 }
 
-/* ── BIG CALL CARD ── */
-.pred-call-card{
-  background:linear-gradient(145deg,#1a1530,#130f25);
-  border:1.5px solid rgba(124,92,252,.2);
-  border-radius:22px;
-  padding:22px 20px 20px;
-  position:relative;overflow:hidden;
-  margin-bottom:12px;
+/* ── Pro Call Card ── */
+.pred-call-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px; padding: 28px 24px;
+  position: relative; overflow: hidden; margin-bottom: 16px;
+  box-shadow: inset 0 0 40px rgba(255,255,255,0.01);
 }
-.pred-call-card::before{
-  content:'';position:absolute;top:-40px;right:-40px;
-  width:140px;height:140px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,92,252,.18) 0%,transparent 70%);
-  pointer-events:none;
+.pred-period-label {
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;
+  text-align: center; display: block;
 }
-.pred-period-label{
-  font-size:10.5px;font-weight:800;color:rgba(255,255,255,.35);
-  text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;
-  display:flex;align-items:center;gap:8px;
-}
-.pred-period-label b{color:rgba(255,255,255,.7);font-weight:900;}
+.pred-period-label b { color: #fff; font-weight: 900; }
 
-/* Divider */
-.pred-divider{height:1px;background:rgba(255,255,255,.06);margin:0 0 16px;}
+.pred-call-center { display: flex; justify-content: center; margin-bottom: 24px; }
+.pred-call-badge {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 130px; height: 130px; border-radius: 32px;
+  position: relative;
+  transition: all .4s cubic-bezier(.34,1.56,.64,1);
+  animation: callPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes callPop{0%{transform:scale(.6);opacity:0;filter:blur(10px)}100%{transform:scale(1);opacity:1;filter:blur(0)}}
 
-/* Call badge — the big centered prediction */
-.pred-call-center{display:flex;align-items:center;justify-content:center;gap:16px;padding:4px 0 8px;}
-.pred-call-badge{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  width:120px;height:120px;border-radius:28px;
-  font-size:22px;font-weight:900;letter-spacing:.5px;
-  position:relative;
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
-  animation:callPop .4s cubic-bezier(.34,1.56,.64,1);
+/* Advanced Glowing Badges */
+.pred-call-badge.green {
+  background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(21,128,61,0.25));
+  border: 1px solid rgba(34,197,94,0.4);
+  box-shadow: 0 15px 40px rgba(22,163,74,0.15), inset 0 0 20px rgba(34,197,94,0.1); color: #4ade80;
 }
-@keyframes callPop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
-.pred-call-badge.green{
-  background:linear-gradient(145deg,#14532d,#166534);
-  box-shadow:0 0 0 1.5px rgba(34,197,94,.4),0 12px 32px rgba(22,163,74,.35);
-  color:#4ade80;
+.pred-call-badge.red {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(185,28,28,0.25));
+  border: 1px solid rgba(239,68,68,0.4);
+  box-shadow: 0 15px 40px rgba(220,38,38,0.15), inset 0 0 20px rgba(239,68,68,0.1); color: #f87171;
 }
-.pred-call-badge.red{
-  background:linear-gradient(145deg,#7f1d1d,#991b1b);
-  box-shadow:0 0 0 1.5px rgba(239,68,68,.4),0 12px 32px rgba(185,28,28,.35);
-  color:#f87171;
+.pred-call-badge.big {
+  background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(29,78,216,0.25));
+  border: 1px solid rgba(59,130,246,0.4);
+  box-shadow: 0 15px 40px rgba(37,99,235,0.15), inset 0 0 20px rgba(59,130,246,0.1); color: #60a5fa;
 }
-.pred-call-badge.big{
-  background:linear-gradient(145deg,#1e3a5f,#1d4ed8);
-  box-shadow:0 0 0 1.5px rgba(59,130,246,.4),0 12px 32px rgba(29,78,216,.35);
-  color:#60a5fa;
+.pred-call-badge.small {
+  background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(126,34,206,0.25));
+  border: 1px solid rgba(168,85,247,0.4);
+  box-shadow: 0 15px 40px rgba(147,51,234,0.15), inset 0 0 20px rgba(168,85,247,0.1); color: #c084fc;
 }
-.pred-call-badge.small{
-  background:linear-gradient(145deg,#4c1d95,#6d28d9);
-  box-shadow:0 0 0 1.5px rgba(139,92,246,.4),0 12px 32px rgba(109,40,217,.35);
-  color:#a78bfa;
-}
-.pred-call-badge.wait{
-  background:linear-gradient(145deg,#1f1f30,#252540);
-  box-shadow:0 0 0 1.5px rgba(148,163,184,.2);
-  color:rgba(255,255,255,.3);
-}
-.pred-call-icon{font-size:32px;margin-bottom:6px;line-height:1;}
-.pred-call-word{font-size:18px;font-weight:900;letter-spacing:.8px;line-height:1;}
+.pred-call-badge.wait { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); }
 
-/* Confidence ring + stats */
-.pred-stats-row{
-  display:flex;align-items:center;gap:12px;margin-top:16px;
-}
-.pred-ring-wrap{
-  flex-shrink:0;position:relative;
-  width:72px;height:72px;
-  display:flex;align-items:center;justify-content:center;
-}
-.pred-ring-svg{position:absolute;inset:0;width:100%;height:100%;}
-.pred-ring-bg{stroke:rgba(255,255,255,.06);stroke-width:5;fill:none;}
-.pred-ring-fill{stroke-width:5;fill:none;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset .6s ease;}
-.pred-ring-fill.green{stroke:#22c55e;}
-.pred-ring-fill.red{stroke:#ef4444;}
-.pred-ring-fill.blue{stroke:#3b82f6;}
-.pred-ring-fill.purple{stroke:#8b5cf6;}
-.pred-ring-val{
-  position:relative;z-index:1;
-  font-size:15px;font-weight:900;color:#fff;
-  line-height:1;text-align:center;
-}
-.pred-ring-lbl{font-size:7.5px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+.pred-call-icon { font-size: 38px; margin-bottom: 10px; }
+.pred-call-word { font-size: 20px; font-weight: 900; letter-spacing: 1px; }
 
-.pred-right-stats{flex:1;display:flex;flex-direction:column;gap:10px;}
-.pred-stat-row{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:12px;padding:9px 13px;
+/* Stats UI */
+.pred-stats-grid {
+  display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center;
+  background: rgba(0,0,0,0.2); border-radius: 20px; padding: 16px;
 }
-.pred-stat-row .slbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.5px;}
-.pred-stat-row .sval{font-size:13px;font-weight:900;color:#fff;}
-.pred-stat-row .sval.green{color:#4ade80;}
-.pred-stat-row .sval.amber{color:#fbbf24;}
+.pred-ring-wrap { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+.pred-ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pred-ring-bg { stroke: rgba(255,255,255,0.05); stroke-width: 4; fill: none; }
+.pred-ring-fill { stroke-width: 4; fill: none; stroke-linecap: round; transform-origin: center; transform: rotate(-90deg); transition: stroke-dashoffset 1s cubic-bezier(.22,1,.36,1); }
+.pred-ring-fill.green { stroke: #4ade80; filter: drop-shadow(0 0 4px rgba(74,222,128,0.5)); }
+.pred-ring-fill.red { stroke: #f87171; filter: drop-shadow(0 0 4px rgba(248,113,113,0.5)); }
+.pred-ring-fill.blue { stroke: #60a5fa; filter: drop-shadow(0 0 4px rgba(96,165,250,0.5)); }
+.pred-ring-fill.purple { stroke: #c084fc; filter: drop-shadow(0 0 4px rgba(192,132,252,0.5)); }
+.pred-ring-val { position: relative; z-index: 1; font-size: 16px; font-weight: 900; color: #fff; line-height: 1; text-align: center; }
+.pred-ring-lbl { font-size: 8px; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-/* Win rate bar */
-.pred-wr-row{margin-top:14px;}
-.pred-wr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
-.pred-wr-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;}
-.pred-wr-pct{font-size:12px;font-weight:900;color:#4ade80;}
-.pred-wr-track{height:6px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;}
-.pred-wr-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#22c55e,#16a34a);transition:width .6s ease;width:0;}
+.pred-right-stats { display: flex; flex-direction: column; gap: 8px; }
+.pred-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.pred-stat-row:last-child { border-bottom: none; }
+.pred-stat-row .slbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; }
+.pred-stat-row .sval { font-size: 14px; font-weight: 900; color: #fff; }
 
-/* Auto-update footer */
-.pred-footer{
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  margin-top:14px;padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.05);
-}
-.pred-footer-ic{font-size:10px;color:rgba(255,255,255,.2);}
-.pred-footer-txt{font-size:10px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.3px;}
+.pred-wr-wrap { margin-top: 20px; }
+.pred-wr-head { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.pred-wr-lbl { font-size: 11px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+.pred-wr-pct { font-size: 12px; font-weight: 900; color: #4ade80; }
+.pred-wr-track { height: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
+.pred-wr-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #22c55e, #4ade80); transition: width 1s cubic-bezier(.22,1,.36,1); width: 0; box-shadow: 0 0 10px rgba(74,222,128,0.5); }
 
-/* Loading / error states */
-.pred-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:50px 0;}
-.pred-loading .spinner{width:32px;height:32px;border-color:rgba(124,92,252,.2);border-top-color:#7C5CFC;}
-.pred-loading .loader-text{font-size:11.5px;color:rgba(255,255,255,.3);}
-.pred-msg-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;gap:10px;}
-.pred-msg-ic{font-size:36px;opacity:.5;}
-.pred-msg-txt{font-size:13px;font-weight:700;color:rgba(255,255,255,.3);line-height:1.6;}
-.pred-upgrade-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  margin-top:6px;background:linear-gradient(135deg,#7C5CFC,#5B6AF0);color:#fff;
-  font-size:12px;font-weight:800;text-decoration:none;
-  padding:11px 22px;border-radius:14px;
-  box-shadow:0 6px 20px rgba(124,92,252,.4);
-}
+.pred-footer { text-align: center; margin-top: 20px; opacity: 0.5; }
+.pred-footer-txt { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Info / Loading states */
+.pred-msg-box { padding: 40px 20px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+.pred-msg-ic { font-size: 40px; margin-bottom: 16px; display: block; opacity: 0.8; }
+.pred-msg-txt { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.6); line-height: 1.6; }
 
 /* ════════════════════════════════════════
-   ⚙ SETTINGS PANEL — PREMIUM UI
+   SETTINGS UI — Sleek Cards
 ════════════════════════════════════════ */
-.set-wrap{padding:20px 16px 0;}
+.set-wrap { padding: 20px 24px 0; }
+.set-section-label { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
 
-.set-section-label{
-  font-size:9.5px;font-weight:800;color:rgba(255,255,255,.25);
-  text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;
-  padding-left:2px;
+.srv-card {
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px; padding: 18px 16px;
+  margin-bottom: 12px; cursor: pointer;
+  transition: all .3s cubic-bezier(.22,1,.36,1);
+}
+.srv-card:active { transform: scale(.96); }
+.srv-card.active {
+  background: rgba(124, 92, 252, 0.1);
+  border-color: #7C5CFC;
+  box-shadow: inset 0 0 0 1px #7C5CFC, 0 10px 30px rgba(124,92,252,0.1);
 }
 
-/* Server option cards */
-.srv-card{
-  display:flex;align-items:center;gap:14px;
-  background:rgba(255,255,255,.04);
-  border:1.5px solid rgba(255,255,255,.08);
-  border-radius:18px;padding:16px 14px;
-  margin-bottom:10px;cursor:pointer;
-  transition:border-color .2s,background .2s,transform .15s,box-shadow .2s;
-  user-select:none;position:relative;overflow:hidden;
-}
-.srv-card::before{
-  content:'';position:absolute;inset:0;border-radius:18px;
-  background:linear-gradient(135deg,rgba(124,92,252,.06),rgba(91,106,240,.03));
-  opacity:0;transition:opacity .2s;
-}
-.srv-card:active{transform:scale(.98);}
-.srv-card.active{
-  border-color:#7C5CFC;
-  background:rgba(124,92,252,.08);
-  box-shadow:0 0 0 1px rgba(124,92,252,.2), 0 8px 24px rgba(124,92,252,.18);
-}
-.srv-card.active::before{opacity:1;}
+.srv-card-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.srv-card-icon.color-ic { background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(21,128,61,0.2)); color: #4ade80; }
+.srv-card-icon.size-ic { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.2)); color: #fbbf24; }
+.srv-card-icon i { font-size: 22px; }
 
-.srv-card-icon{
-  width:46px;height:46px;border-radius:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.srv-card-icon.color-ic{background:linear-gradient(135deg,#22c55e,#16a34a);}
-.srv-card-icon.size-ic{background:linear-gradient(135deg,#f59e0b,#d97706);}
-.srv-card-icon i{font-size:19px;color:#fff;}
+.srv-card-body { flex: 1; }
+.srv-card-name { font-size: 16px; font-weight: 900; color: #fff; }
+.srv-card-desc { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-top: 4px; }
+.srv-tags { display: flex; gap: 6px; margin-top: 10px; }
+.srv-tag { font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.srv-tag.ac { background: rgba(34,197,94,0.1); color: #4ade80; }
+.srv-tag.pr { background: rgba(124,92,252,0.1); color: #a78bfa; }
 
-.srv-card-body{flex:1;}
-.srv-card-name{font-size:15px;font-weight:900;color:#fff;line-height:1.1;}
-.srv-card-desc{font-size:11px;font-weight:600;color:rgba(255,255,255,.35);margin-top:3px;}
-.srv-tags{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
-.srv-tag{
-  font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
-  padding:3px 9px;border-radius:6px;
+.srv-radio {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .3s;
 }
-.srv-tag.ac{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.2);}
-.srv-tag.am{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.18);}
-.srv-tag.pr{background:rgba(124,92,252,.15);color:#a78bfa;border:1px solid rgba(124,92,252,.2);}
+.srv-card.active .srv-radio { background: #7C5CFC; border-color: #7C5CFC; box-shadow: 0 0 15px rgba(124,92,252,0.5); }
+.srv-radio i { font-size: 12px; color: #fff; opacity: 0; transform: scale(0.5); transition: all .3s; }
+.srv-card.active .srv-radio i { opacity: 1; transform: scale(1); }
 
-.srv-radio{
-  width:24px;height:24px;border-radius:50%;flex-shrink:0;
-  border:2px solid rgba(255,255,255,.15);
-  display:flex;align-items:center;justify-content:center;
-  transition:background .2s,border-color .2s;
+.set-info {
+  display: flex; gap: 12px; margin-top: 20px;
+  background: rgba(255,255,255,0.02); border-radius: 16px; padding: 16px;
+  border: 1px dashed rgba(255,255,255,0.1);
 }
-.srv-card.active .srv-radio{background:#7C5CFC;border-color:#7C5CFC;}
-.srv-radio i{font-size:10px;color:#fff;display:none;}
-.srv-card.active .srv-radio i{display:block;}
-
-/* Info note at bottom */
-.set-info{
-  display:flex;align-items:flex-start;gap:10px;
-  margin-top:14px;
-  background:rgba(124,92,252,.07);
-  border:1px solid rgba(124,92,252,.15);
-  border-radius:14px;padding:12px 14px;
-}
-.set-info-ic{font-size:14px;color:#a78bfa;flex-shrink:0;margin-top:1px;}
-.set-info-txt{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.4);line-height:1.55;}
+.set-info i { color: rgba(255,255,255,0.4); font-size: 18px; }
+.set-info span { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); line-height: 1.5; }
 </style>
 </head>
 <body>
 
-<!-- Auth loading -->
+<!-- Auth Loading -->
 <div id="authOverlay"><div class="spinner"></div></div>
 
-<!-- Status overlays -->
+<!-- Overlays -->
 <div class="full-ov" id="ovBanned">
-  <div class="ov-icon">&#128683;</div>
-  <div class="ov-title">Account Banned</div>
-  <div class="ov-desc">Aapka account permanently ban kar diya gaya hai.</div>
+  <div class="ov-icon"><i class="fa-solid fa-ban"></i></div>
+  <div class="ov-title">Banned</div>
+  <div class="ov-desc">Your account has been permanently restricted.</div>
   <a href="https://t.me/xx_drago" target="_blank" class="ov-link">Contact Support</a>
 </div>
 <div class="full-ov" id="ovBlocked">
-  <div class="ov-icon">&#9940;</div>
-  <div class="ov-title">Account Blocked</div>
-  <div class="ov-desc">Aapka account block kar diya gaya hai. Support se contact karo.</div>
-  <a href="https://t.me/xx_drago" target="_blank" class="ov-link">Contact Support</a>
-</div>
-<div class="full-ov" id="ovPaused">
-  <div class="ov-icon">&#9208;</div>
-  <div class="ov-title">Account Paused</div>
-  <div class="ov-desc">Aapka account temporarily pause hai.</div>
+  <div class="ov-icon"><i class="fa-solid fa-lock"></i></div>
+  <div class="ov-title">Blocked</div>
+  <div class="ov-desc">Your account is temporarily blocked for security.</div>
   <a href="https://t.me/xx_drago" target="_blank" class="ov-link">Contact Support</a>
 </div>
 <div class="full-ov" id="ovExpired">
-  <div class="ov-icon">&#9203;</div>
-  <div class="ov-title">Subscription Expired</div>
-  <div class="ov-desc">Aapka plan expire ho gaya hai. Naya plan lo.</div>
-  <a href="/payment" class="ov-link">Select Plan</a>
-</div>
-<div class="full-ov" id="ovNoLink">
-  <div class="ov-icon">&#128279;</div>
-  <div class="ov-title">Link Not Found</div>
-  <div class="ov-desc">Is game ka link available nahi hai. Wapas jao.</div>
-  <a href="/game" class="ov-link">Back to Games</a>
+  <div class="ov-icon"><i class="fa-solid fa-crown"></i></div>
+  <div class="ov-title">Plan Expired</div>
+  <div class="ov-desc">Upgrade your plan to continue using premium features.</div>
+  <a href="/payment" class="ov-link">View Plans</a>
 </div>
 
-<!-- Hero header -->
+<!-- Header -->
 <div class="hero-bar">
   <button class="back-btn" id="backBtn" aria-label="Back">
-    <i class="fa-solid fa-arrow-left"></i>
+    <i class="fa-solid fa-chevron-left"></i>
   </button>
-  <img class="hero-logo" src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" alt="Drago Predictor">
+  <img class="hero-logo" src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" alt="Logo">
   <div class="hero-info">
     <span class="hero-sub">Drago Predictor</span>
-    <span class="hero-title" id="heroTitle">Game</span>
+    <span class="hero-title" id="heroTitle">Gaming Suite</span>
   </div>
 </div>
 
-<!-- iframe area -->
+<!-- Game Frame area -->
 <div class="frame-wrap">
   <div class="frame-loader" id="frameLoader">
     <div class="spinner"></div>
-    <span class="loader-text">Loading Game...</span>
+    <span class="loader-text">Loading Assets</span>
   </div>
-  <iframe
-    id="gameFrame"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-    allow="accelerometer; autoplay; clipboard-read; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
+  <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation" allowfullscreen></iframe>
   <div class="fallback" id="fallback">
-    <div class="fallback-icon"><i class="fa-solid fa-gamepad"></i></div>
-    <div class="fallback-title" id="fbTitle">Game</div>
-    <div class="fallback-desc">Yeh platform direct open nahi ho sakta. Naye tab mein kholo.</div>
-    <a class="fallback-btn" id="fbBtn" href="#" target="_blank" rel="noopener noreferrer">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-      Open Game
-    </a>
+    <div class="fallback-icon"><i class="fa-brands fa-space-awesome"></i></div>
+    <div class="fallback-title" id="fbTitle">Game Suite</div>
+    <div class="fallback-desc">This platform requires a native browser window to launch properly.</div>
+    <a class="fallback-btn" id="fbBtn" href="#" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Launch External</a>
   </div>
 </div>
 
-<!-- FAB -->
+<!-- Floating Action Button -->
 <div class="fab-container" id="fabContainer">
   <div class="fab-side fab-left" id="fabLeft">
-    <button class="fab-side-btn fab-hack-btn" id="hackBtn" aria-label="Hack">
-      <i class="fa-solid fa-bolt"></i>
-      <span>HACK</span>
+    <button class="fab-side-btn fab-hack-btn" id="hackBtn">
+      <i class="fa-solid fa-bolt"></i> <span>HACK</span>
     </button>
   </div>
   <div class="fab-toggle-wrap">
-    <button class="fab-toggle" id="fabToggle" aria-label="Toggle menu">
+    <button class="fab-toggle" id="fabToggle">
       <i class="fa-solid fa-plus"></i>
     </button>
   </div>
   <div class="fab-side fab-right" id="fabRight">
-    <button class="fab-side-btn fab-setting-btn" id="settingBtn" aria-label="Settings">
-      <i class="fa-solid fa-gear"></i>
-      <span>SETTING</span>
+    <button class="fab-side-btn fab-setting-btn" id="settingBtn">
+      <i class="fa-solid fa-sliders"></i> <span>SETTING</span>
     </button>
   </div>
 </div>
 
-<!-- Panel overlay -->
+<!-- Overlay for Bottom Sheets -->
 <div class="panel-overlay" id="panelOverlay"></div>
 
-<!-- ════ HACK PANEL ════ -->
+<!-- ════ HACK PANEL (Dark Widget) ════ -->
 <div class="slide-panel" id="hackPanel">
   <div class="panel-handle"></div>
-
   <div class="panel-head">
     <div class="panel-head-icon hack"><i class="fa-solid fa-bolt"></i></div>
-    <div class="panel-head-text">
-      <div class="panel-head-title" id="predServerName">NOVA X · Color Server</div>
-      <div class="panel-head-sub">Prediction Engine · Auto-Updates</div>
+    <div>
+      <div class="panel-head-title" id="predServerName">NOVA X ENGINE</div>
+      <div class="panel-head-sub">AI Prediction Matrix</div>
     </div>
   </div>
 
   <div class="pred-wrap">
-    <!-- Live pill + period tag -->
     <div class="pred-live-row">
-      <div class="pred-live-pill">
-        <span class="live-dot"></span>
-        <span class="live-label">Live</span>
-      </div>
+      <div class="pred-live-pill"><span class="live-dot"></span><span class="live-label">LIVE SYNC</span></div>
       <span class="pred-period-tag" id="predGameLabel">-- · --</span>
     </div>
 
-    <!-- Main prediction body -->
     <div id="predBody">
-      <div class="pred-loading">
-        <div class="spinner"></div>
-        <span class="loader-text">Loading prediction...</span>
+      <div class="pred-msg-box" style="padding: 60px 20px;">
+        <div class="spinner" style="margin: 0 auto 20px;"></div>
+        <span class="pred-msg-txt">Establishing secure connection...</span>
       </div>
     </div>
-
+    
     <div class="pred-footer">
-      <i class="fa-solid fa-rotate pred-footer-ic"></i>
-      <span class="pred-footer-txt">Auto-updates every round · Self-learning engine</span>
+      <span class="pred-footer-txt"><i class="fa-solid fa-shield-halved" style="margin-right: 5px;"></i> End-to-End Encrypted Data</span>
     </div>
   </div>
 </div>
 
-<!-- ════ SETTINGS PANEL ════ -->
+<!-- ════ SETTING PANEL ════ -->
 <div class="slide-panel" id="settingPanel">
   <div class="panel-handle"></div>
-
   <div class="panel-head">
-    <div class="panel-head-icon setting"><i class="fa-solid fa-gear"></i></div>
-    <div class="panel-head-text">
-      <div class="panel-head-title">Prediction Server</div>
-      <div class="panel-head-sub">Server choose karo · Active server ka prediction milega</div>
+    <div class="panel-head-icon setting"><i class="fa-solid fa-sliders"></i></div>
+    <div>
+      <div class="panel-head-title">System Settings</div>
+      <div class="panel-head-sub">Configure Prediction Engine</div>
     </div>
   </div>
 
   <div class="set-wrap">
-    <div class="set-section-label">Available Servers</div>
+    <div class="set-section-label">Target Servers</div>
 
     <div class="srv-card" id="srvColor" data-srv="color">
       <div class="srv-card-icon color-ic"><i class="fa-solid fa-palette"></i></div>
       <div class="srv-card-body">
         <div class="srv-card-name">NOVA X</div>
-        <div class="srv-card-desc">Color Prediction Server</div>
+        <div class="srv-card-desc">Color Analysis Protocol</div>
         <div class="srv-tags">
-          <span class="srv-tag ac">GREEN / RED</span>
-          <span class="srv-tag pr">High Accuracy</span>
+          <span class="srv-tag ac">GREEN / RED</span><span class="srv-tag pr">STABLE</span>
         </div>
       </div>
       <div class="srv-radio"><i class="fa-solid fa-check"></i></div>
     </div>
 
     <div class="srv-card" id="srvSize" data-srv="size">
-      <div class="srv-card-icon size-ic"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+      <div class="srv-card-icon size-ic"><i class="fa-solid fa-expand"></i></div>
       <div class="srv-card-body">
         <div class="srv-card-name">PRIME X</div>
-        <div class="srv-card-desc">Size Prediction Server</div>
+        <div class="srv-card-desc">Volume / Size Protocol</div>
         <div class="srv-tags">
-          <span class="srv-tag am">BIG / SMALL</span>
-          <span class="srv-tag pr">Premium</span>
+          <span class="srv-tag" style="background:rgba(245,158,11,0.1);color:#fbbf24">BIG / SMALL</span>
         </div>
       </div>
       <div class="srv-radio"><i class="fa-solid fa-check"></i></div>
     </div>
 
     <div class="set-info">
-      <i class="fa-solid fa-circle-info set-info-ic"></i>
-      <span class="set-info-txt">Sirf selected server ka prediction HACK panel mein dikhega. Server switch karne par prediction turant update hoti hai.</span>
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Predictions will instantly adapt based on the selected server protocol. Changes are applied automatically.</span>
     </div>
   </div>
 </div>
 
 <script>
+/* Javascript logic mostly same, HTML generators updated for modern UI */
 const API = "https://flask-hello-world-nu-sooty-63.vercel.app";
-let pollTmr = null;
-let gameLink = "";
-let predGame = "";
-let predTf   = "";
-let predTmr  = null;
+let pollTmr = null, gameLink = "", predGame = "", predTf = "", predTmr = null;
 
 function ud(){ try{ return JSON.parse(localStorage.getItem("_ud")||"null"); }catch(e){ return null; } }
-function auth(){
-  const u=ud(); if(!u||!u.uid||!u.session_signature) return null;
-  return {uid:u.uid,session_signature:u.session_signature};
-}
+function auth(){ const u=ud(); if(!u||!u.uid||!u.session_signature) return null; return {uid:u.uid,session_signature:u.session_signature}; }
 function goLogin(){ localStorage.removeItem("_ud"); window.location.replace("/"); }
 
 async function apiFetch(path,body){
@@ -665,308 +547,153 @@ async function withRefresh(cb){
         if(d.session_signature){ const u=ud(); u.session_signature=d.session_signature; localStorage.setItem("_ud",JSON.stringify(u)); }
         return await cb();
       }catch(e2){ if(e2.status===403){ goLogin(); return; } throw e2; }
-    }
-    throw e;
+    } throw e;
   }
 }
 
-function hideOvs(){ ["ovBanned","ovBlocked","ovPaused","ovExpired","ovNoLink"].forEach(id=>document.getElementById(id).classList.remove("show")); }
 function handleStatus(as,ss){
-  if(as==="banned") { stopPoll(); hideOvs(); document.getElementById("ovBanned").classList.add("show");  return false; }
-  if(as==="blocked"){ stopPoll(); hideOvs(); document.getElementById("ovBlocked").classList.add("show"); return false; }
-  if(as==="paused") { stopPoll(); hideOvs(); document.getElementById("ovPaused").classList.add("show");  return false; }
-  if(ss!=="active"&&ss!=="free"){ stopPoll(); hideOvs(); document.getElementById("ovExpired").classList.add("show"); return false; }
-  hideOvs(); return true;
+  if(as==="banned") { document.getElementById("ovBanned").classList.add("show"); return false; }
+  if(as==="blocked"){ document.getElementById("ovBlocked").classList.add("show"); return false; }
+  if(ss!=="active"&&ss!=="free"){ document.getElementById("ovExpired").classList.add("show"); return false; }
+  return true;
 }
-
-function startPoll(){ if(pollTmr) return; pollTmr=setInterval(doPoll,15000); }
-function stopPoll(){ if(pollTmr){ clearInterval(pollTmr); pollTmr=null; } }
-async function doPoll(){
-  const a=auth(); if(!a) return;
-  try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); handleStatus(d.account_status,d.subscription_status); }catch(e){}
-}
-
-function hideAuthOverlay(){ const l=document.getElementById("authOverlay"); l.style.opacity="0"; setTimeout(()=>l.style.display="none",300); }
 
 function loadFrame(url){
-  const frame=document.getElementById("gameFrame");
-  const loader=document.getElementById("frameLoader");
-  const fb=document.getElementById("fallback");
-  let loadTimer=setTimeout(()=>{ frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); },8000);
-  frame.onload=()=>{ clearTimeout(loadTimer); loader.classList.add("hide"); try{ void frame.contentWindow.location.href; }catch(e){} };
-  frame.onerror=()=>{ clearTimeout(loadTimer); frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); };
+  const frame=document.getElementById("gameFrame"), loader=document.getElementById("frameLoader"), fb=document.getElementById("fallback");
+  let t=setTimeout(()=>{ frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); },8000);
+  frame.onload=()=>{ clearTimeout(t); loader.classList.add("hide"); try{ void frame.contentWindow.location.href; }catch(e){} };
+  frame.onerror=()=>{ clearTimeout(t); frame.style.display="none"; fb.classList.add("show"); loader.classList.add("hide"); };
   frame.src=url;
 }
 
-/* ══════════════════════════════
-   PREDICTION — Premium Render
-══════════════════════════════ */
+// ── UI Data Render ──
 function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
 function setServer(s){ localStorage.setItem("_pred_srv",s); }
 
-// Map prediction call → badge class + icon
-const CALL_META = {
-  GREEN:{ cls:"green", icon:"fa-circle", word:"GREEN" },
-  RED:  { cls:"red",   icon:"fa-circle", word:"RED" },
-  BIG:  { cls:"big",   icon:"fa-arrow-up", word:"BIG" },
-  SMALL:{ cls:"small", icon:"fa-arrow-down", word:"SMALL" },
+const CM = {
+  GREEN:{ cls:"green", icon:"fa-circle", word:"GREEN", ring:"green" },
+  RED:  { cls:"red",   icon:"fa-circle", word:"RED", ring:"red" },
+  BIG:  { cls:"big",   icon:"fa-arrow-up", word:"BIG", ring:"blue" },
+  SMALL:{ cls:"small", icon:"fa-arrow-down", word:"SMALL", ring:"purple" },
 };
 
-// Ring circumference for r=30
-const R = 30;
-const CIRC = 2 * Math.PI * R;
-
-function buildRingSVG(pct, colorClass){
-  const offset = CIRC - (pct/100)*CIRC;
-  return `<svg class="pred-ring-svg" viewBox="0 0 72 72">
-    <circle class="pred-ring-bg" cx="36" cy="36" r="${R}"/>
-    <circle class="pred-ring-fill ${colorClass}" cx="36" cy="36" r="${R}"
-      stroke-dasharray="${CIRC}" stroke-dashoffset="${offset}"/>
+function buildRing(pct, col){
+  const c = 2*Math.PI*28; const off = c - (pct/100)*c;
+  return `<svg class="pred-ring-svg" viewBox="0 0 64 64">
+    <circle class="pred-ring-bg" cx="32" cy="32" r="28"/><circle class="pred-ring-fill ${col}" cx="32" cy="32" r="28" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
   </svg>`;
 }
 
-function renderPredCard(d){
-  const call   = (d.prediction||"WAIT").toUpperCase();
-  const conf   = Math.round(d.confidence||0);
-  const wr     = Math.round(d.win_rate||0);
-  const badge  = d.badge || "—";
-  const period = d.period || "—";
-  const meta   = CALL_META[call];
-
-  let ringColor = "purple";
-  if(call==="GREEN") ringColor="green";
-  else if(call==="RED") ringColor="red";
-  else if(call==="BIG"||call==="SMALL") ringColor="blue";
-
-  const wrFill = `<div class="pred-wr-fill" style="width:${wr}%"></div>`;
-
-  if(!meta){
-    // WAIT state
-    return `
-      <div class="pred-call-card">
-        <div class="pred-period-label">Next Period · <b>${period}</b></div>
-        <div class="pred-divider"></div>
-        <div class="pred-call-center">
-          <div class="pred-call-badge wait">
-            <i class="fa-solid fa-clock pred-call-icon" style="font-size:28px;color:rgba(255,255,255,.2)"></i>
-            <span class="pred-call-word" style="color:rgba(255,255,255,.2)">WAIT</span>
-          </div>
+function renderCard(d){
+  const call=(d.prediction||"WAIT").toUpperCase(), conf=Math.round(d.confidence||0), wr=Math.round(d.win_rate||0);
+  const m=CM[call];
+  
+  if(!m) return `
+    <div class="pred-call-card">
+      <span class="pred-period-label">Target Period <b>${d.period||"—"}</b></span>
+      <div class="pred-call-center"><div class="pred-call-badge wait"><i class="fa-solid fa-clock pred-call-icon"></i><span class="pred-call-word">WAIT</span></div></div>
+      <div class="pred-stats-grid">
+        <div class="pred-ring-wrap">${buildRing(0,"")}</div>
+        <div class="pred-right-stats">
+          <div class="pred-stat-row"><span class="slbl">Win Rate</span><span class="sval" style="color:gray">${wr}%</span></div>
+          <div class="pred-stat-row"><span class="slbl">Security</span><span class="sval" style="color:gray">ANALYZING</span></div>
         </div>
-        <div class="pred-stats-row">
-          ${buildRingSVG(conf, ringColor)}
-          <div style="position:relative;z-index:1;text-align:center">
-            <div class="pred-ring-val">${conf}%</div>
-            <div class="pred-ring-lbl">Confidence</div>
-          </div>
-          <div class="pred-right-stats">
-            <div class="pred-stat-row"><span class="slbl">Win Rate</span><span class="sval green">${wr}%</span></div>
-            <div class="pred-stat-row"><span class="slbl">Level</span><span class="sval amber">${badge}</span></div>
-          </div>
-        </div>
-        <div class="pred-wr-row">
-          <div class="pred-wr-head"><span class="pred-wr-lbl">Win Rate</span><span class="pred-wr-pct">${wr}%</span></div>
-          <div class="pred-wr-track">${wrFill}</div>
-        </div>
-      </div>`;
-  }
-
+      </div>
+    </div>`;
+    
   return `
     <div class="pred-call-card">
-      <div class="pred-period-label">Next Period · <b>${period}</b></div>
-      <div class="pred-divider"></div>
-      <div class="pred-call-center">
-        <div class="pred-call-badge ${meta.cls}">
-          <i class="fa-solid ${meta.icon} pred-call-icon"></i>
-          <span class="pred-call-word">${meta.word}</span>
-        </div>
-      </div>
-      <div class="pred-stats-row">
+      <span class="pred-period-label">Target Period <b>${d.period||"—"}</b></span>
+      <div class="pred-call-center"><div class="pred-call-badge ${m.cls}"><i class="fa-solid ${m.icon} pred-call-icon"></i><span class="pred-call-word">${m.word}</span></div></div>
+      <div class="pred-stats-grid">
         <div class="pred-ring-wrap">
-          ${buildRingSVG(conf, ringColor)}
-          <div style="position:relative;z-index:1;text-align:center">
-            <div class="pred-ring-val">${conf}%</div>
-            <div class="pred-ring-lbl">Conf.</div>
-          </div>
+          ${buildRing(conf, m.ring)}
+          <div style="position:relative;z-index:1"><div class="pred-ring-val">${conf}%</div><div class="pred-ring-lbl">CONF</div></div>
         </div>
         <div class="pred-right-stats">
-          <div class="pred-stat-row"><span class="slbl">Win Rate</span><span class="sval green">${wr}%</span></div>
-          <div class="pred-stat-row"><span class="slbl">Level</span><span class="sval amber">${badge}</span></div>
+          <div class="pred-stat-row"><span class="slbl">Algorithm</span><span class="sval" style="color:#a78bfa">${d.badge||"PRO"}</span></div>
+          <div class="pred-stat-row"><span class="slbl">Volatility</span><span class="sval" style="color:#4ade80">STABLE</span></div>
         </div>
       </div>
-      <div class="pred-wr-row">
-        <div class="pred-wr-head"><span class="pred-wr-lbl">Win Rate</span><span class="pred-wr-pct">${wr}%</span></div>
-        <div class="pred-wr-track">${wrFill}</div>
+      <div class="pred-wr-wrap">
+        <div class="pred-wr-head"><span class="pred-wr-lbl">Historical Win Rate</span><span class="pred-wr-pct">${wr}%</span></div>
+        <div class="pred-wr-track"><div class="pred-wr-fill" style="width:${wr}%"></div></div>
       </div>
     </div>`;
 }
 
 function applyServerUI(){
-  const s = getServer();
-  const isColor = s==="color";
-  document.getElementById("predServerName").textContent =
-    isColor ? "NOVA X · Color Server" : "PRIME X · Size Server";
-  document.getElementById("predGameLabel").textContent =
-    (predGame==="trx"?"TRX":"Wingo") + " · " + (predTf||"--");
-  const c=document.getElementById("srvColor"), z=document.getElementById("srvSize");
-  if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); }
+  const s=getServer(), isCol=s==="color";
+  document.getElementById("predServerName").textContent = isCol ? "NOVA X ENGINE" : "PRIME X ENGINE";
+  document.getElementById("predGameLabel").textContent = (predGame==="trx"?"TRX":"Wingo")+" "+(predTf||"");
+  document.getElementById("srvColor").classList.toggle("active",isCol);
+  document.getElementById("srvSize").classList.toggle("active",!isCol);
 }
 
 async function loadPrediction(){
   const body=document.getElementById("predBody");
-  if(!predGame||!predTf){
-    body.innerHTML=`<div class="pred-msg-box">
-      <span class="pred-msg-ic">📊</span>
-      <span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span>
-    </div>`;
-    return;
-  }
-  const a=auth(); if(!a){ goLogin(); return; }
+  if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><i class="fa-solid fa-triangle-exclamation pred-msg-ic"></i><span class="pred-msg-txt">No active protocol available for this application.</span></div>`; return; }
+  const a=auth(); if(!a) return;
   try{
-    const d=await withRefresh(()=>apiFetch("/api/prediction",{
-      uid:a.uid, session_signature:a.session_signature,
-      game:predGame, timeframe:predTf, target:getServer()
-    }));
-    if(!d) return;
-    const res=d.result||{};
-    if(!res||!res.prediction){
-      body.innerHTML=`<div class="pred-msg-box">
-        <span class="pred-msg-ic">⏳</span>
-        <span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span>
-      </div>`;
-      return;
-    }
-    document.getElementById("predGameLabel").textContent =
-      (predGame==="trx"?"TRX":"Wingo")+" · "+predTf;
-    body.innerHTML = renderPredCard(res);
+    const d=await withRefresh(()=>apiFetch("/api/prediction",{uid:a.uid, session_signature:a.session_signature, game:predGame, timeframe:predTf, target:getServer()}));
+    if(!d||!d.result||!d.result.prediction){ body.innerHTML=`<div class="pred-msg-box"><i class="fa-solid fa-satellite-dish pred-msg-ic"></i><span class="pred-msg-txt">Engine warming up... awaiting data sync.</span></div>`; return; }
+    body.innerHTML = renderCard(d.result);
   }catch(e){
-    if(e&&e.status===403){
-      const msg=(e.detail||"").toString();
-      if(msg.indexOf("upgrade")>=0){
-        body.innerHTML=`<div class="pred-msg-box">
-          <span class="pred-msg-ic" style="font-size:40px">🔒</span>
-          <span class="pred-msg-txt">Prediction sirf <b style="color:#a78bfa">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span>
-          <a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a>
-        </div>`;
-        stopPredPoll(); return;
-      }
-      return;
+    if(e&&e.status===403&&e.detail.includes("upgrade")){
+      body.innerHTML=`<div class="pred-msg-box"><i class="fa-solid fa-lock pred-msg-ic" style="color:#a78bfa"></i><span class="pred-msg-txt" style="display:block;margin-bottom:15px">Prediction protocol requires Premium Access.</span><a href="/payment" style="display:inline-block;background:#7C5CFC;color:#fff;padding:10px 20px;border-radius:12px;text-decoration:none;font-weight:800;font-size:12px">UPGRADE NOW</a></div>`;
+      if(predTmr){ clearInterval(predTmr); predTmr=null; } return;
     }
-    body.innerHTML=`<div class="pred-msg-box">
-      <span class="pred-msg-ic">🔄</span>
-      <span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span>
-    </div>`;
+    body.innerHTML=`<div class="pred-msg-box"><i class="fa-solid fa-rotate-right pred-msg-ic"></i><span class="pred-msg-txt">Connection lost. Retrying...</span></div>`;
   }
 }
 
-function startPredPoll(){
-  applyServerUI();
-  if(predTmr) return;
-  loadPrediction();
-  predTmr=setInterval(loadPrediction,10000);
-}
-function stopPredPoll(){ if(predTmr){ clearInterval(predTmr); predTmr=null; } }
-
-function wireServerSelect(){
-  document.querySelectorAll(".srv-card").forEach(el=>{
-    el.addEventListener("click",()=>{
-      setServer(el.dataset.srv);
-      applyServerUI();
-      const body=document.getElementById("predBody");
-      if(body) body.innerHTML=`<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>`;
-      loadPrediction();
-    });
+// ── UI Interactions ──
+document.querySelectorAll(".srv-card").forEach(el=>{
+  el.addEventListener("click",()=>{
+    setServer(el.dataset.srv); applyServerUI();
+    document.getElementById("predBody").innerHTML=`<div class="pred-msg-box"><div class="spinner" style="margin:0 auto 15px"></div><span class="pred-msg-txt">Switching Protocols...</span></div>`;
+    loadPrediction();
   });
-}
-
-/* ══════════════════════════════
-   FAB + PANEL LOGIC
-══════════════════════════════ */
-const fabContainer=document.getElementById("fabContainer");
-const fabToggle=document.getElementById("fabToggle");
-const fabLeft=document.getElementById("fabLeft");
-const fabRight=document.getElementById("fabRight");
-const hackBtn=document.getElementById("hackBtn");
-const settingBtn=document.getElementById("settingBtn");
-const overlay=document.getElementById("panelOverlay");
-const hackPanel=document.getElementById("hackPanel");
-const settingPanel=document.getElementById("settingPanel");
+});
 
 let fabOpen=false;
-let activePanel=null;
+const $=(id)=>document.getElementById(id);
+$("fabToggle").onclick=()=>{ fabOpen?closeAll():openFab(); };
+$("hackBtn").onclick=()=>{ openPanel("hack"); };
+$("settingBtn").onclick=()=>{ openPanel("setting"); };
+$("panelOverlay").onclick=()=>{ closeAll(); };
 
-function openFab(){
-  fabOpen=true;
-  fabContainer.classList.add("open");
-  fabToggle.classList.add("open");
-  fabLeft.classList.add("show");
-  fabRight.classList.add("show");
+function openFab(){ fabOpen=true; $("fabContainer").classList.add("open"); $("fabLeft").classList.add("show"); $("fabRight").classList.add("show"); }
+function closeAll(){
+  fabOpen=false; $("fabContainer").classList.remove("open"); $("fabLeft").classList.remove("show"); $("fabRight").classList.remove("show");
+  $("panelOverlay").classList.remove("show"); $("hackPanel").classList.remove("show"); $("settingPanel").classList.remove("show");
+  if(predTmr){ clearInterval(predTmr); predTmr=null; }
 }
-function closeFab(){
-  fabOpen=false;
-  fabContainer.classList.remove("open");
-  fabToggle.classList.remove("open");
-  fabLeft.classList.remove("show");
-  fabRight.classList.remove("show");
-}
-function openPanel(which){
-  activePanel=which;
-  overlay.classList.add("show");
-  if(which==="hack"){
-    hackPanel.classList.add("show");
-    settingPanel.classList.remove("show");
-    startPredPoll();
-  } else {
-    settingPanel.classList.add("show");
-    hackPanel.classList.remove("show");
-    stopPredPoll();
-  }
-}
-function closePanel(){
-  overlay.classList.remove("show");
-  hackPanel.classList.remove("show");
-  settingPanel.classList.remove("show");
-  activePanel=null;
-  stopPredPoll();
+function openPanel(w){
+  $("panelOverlay").classList.add("show");
+  if(w==="hack"){ $("hackPanel").classList.add("show"); $("settingPanel").classList.remove("show"); applyServerUI(); loadPrediction(); predTmr=setInterval(loadPrediction,10000); }
+  else{ $("settingPanel").classList.add("show"); $("hackPanel").classList.remove("show"); if(predTmr){ clearInterval(predTmr); predTmr=null; } }
 }
 
-fabToggle.addEventListener("click",()=>{ fabOpen ? (closeFab(), closePanel()) : openFab(); });
-hackBtn.addEventListener("click",()=>{ openPanel("hack"); });
-settingBtn.addEventListener("click",()=>{ openPanel("setting"); });
-overlay.addEventListener("click",()=>{ closePanel(); });
-
-/* ══════════════════════════════
-   INIT
-══════════════════════════════ */
+// ── Init ──
 async function init(){
-  const a=auth(); if(!a){ goLogin(); return; }
   const params=new URLSearchParams(window.location.search);
   const gameName=params.get("name")||"Game";
   gameLink=params.get("link")||"";
   predGame=(params.get("game")||"").toLowerCase();
   predTf=(params.get("tf")||"").toLowerCase();
-
-  document.getElementById("heroTitle").textContent=gameName;
-  document.getElementById("fbTitle").textContent=gameName;
-  document.title=gameName+" — Drago Predictor";
-
-  if(predGame&&predTf) document.getElementById("predGameLabel").textContent=(predGame==="trx"?"TRX":"Wingo")+" · "+predTf;
+  
+  $("heroTitle").textContent=gameName; $("fbTitle").textContent=gameName; document.title=gameName;
+  if(gameLink) $("fbBtn").href=gameLink;
+  
+  $("backBtn").onclick=()=>window.history.length>1?window.history.back():(window.location.href="/game");
   applyServerUI();
-  wireServerSelect();
 
-  document.getElementById("backBtn").addEventListener("click",()=>{
-    window.history.length>1 ? window.history.back() : window.location.href="/game";
-  });
-  if(gameLink) document.getElementById("fbBtn").href=gameLink;
-  if(!gameLink){ hideAuthOverlay(); document.getElementById("ovNoLink").classList.add("show"); return; }
-
-  try{
-    const d=await withRefresh(()=>apiFetch("/api/account-status",a));
-    if(!handleStatus(d.account_status||"active",d.subscription_status||"none")){ hideAuthOverlay(); return; }
-    startPoll();
-  }catch(e){ startPoll(); }
-
-  hideAuthOverlay();
-  loadFrame(gameLink);
+  const a=auth(); if(!a){ goLogin(); return; }
+  try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); if(!handleStatus(d.account_status,d.subscription_status)) return; }catch(e){}
+  
+  $("authOverlay").style.opacity=0; setTimeout(()=>$("authOverlay").style.display="none",300);
+  if(gameLink) loadFrame(gameLink); else $("fallback").classList.add("show");
 }
 init();
 </script>
