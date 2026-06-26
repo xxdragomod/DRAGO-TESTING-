@@ -547,12 +547,12 @@ input:checked + .slider:before {
 .set-info-txt{font-size:11.5px;font-weight:600;color:#475569;line-height:1.55;}
 
 /* ════════════════════════════════════════
-   🛸 FLOATING DRAGGABLE WIDGET STYLES (AESTHETIC UPGRADE)
+   🛸 FLOATING DRAGGABLE WIDGET STYLES (COMPACTED & ANIMATED)
 ════════════════════════════════════════ */
 #injectorWidget {
   position: fixed;
   top: 25%;
-  left: calc(50% - 155px); /* Centered based on new width */
+  left: calc(50% - 120px); /* Centered perfectly for the compact 240px layout */
   z-index: 4000;
   cursor: grab;
   user-select: none;
@@ -562,81 +562,101 @@ input:checked + .slider:before {
   cursor: grabbing;
 }
 
-/* Floating Card Mode — Ultra Polished Glass box */
+/* Floating Card Mode — Extremely compact and polished */
 .widget-card {
-  width: 310px;
+  width: 240px; /* Reduced for ultra sleek styling */
   background: #ffffff;
-  border-radius: 44px; /* Perfectly round, premium frame */
-  border: 1px solid rgba(124, 92, 252, 0.08);
-  box-shadow: 0 20px 60px rgba(124, 92, 252, 0.2);
-  padding: 24px;
+  border-radius: 36px; /* Smooth rounded shape */
+  border: 1.5px solid rgba(124, 92, 252, 0.08);
+  box-shadow: 0 16px 48px rgba(124, 92, 252, 0.18);
+  padding: 16px; /* Compact padding */
   display: flex;
   flex-direction: column;
   align-items: center;
   animation: widgetPop .3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes widgetPop {
-  from { transform: scale(0.8); opacity: 0; }
+  from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
 .widget-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
+
+/* Gentle Breathing Animation for circular logo */
+@keyframes widgetLogoBreath {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(140, 82, 255, 0.4);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 10px 4px rgba(140, 82, 255, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(140, 82, 255, 0.4);
+  }
+}
+
 .widget-logo {
-  width: 46px;
-  height: 46px;
+  width: 36px; /* Scaled down slightly */
+  height: 36px;
   border-radius: 50%;
-  border: 2px solid rgba(140, 82, 255, 0.3);
-  padding: 2px;
+  border: 2px solid rgba(140, 82, 255, 0.4);
+  padding: 1px;
   background: #fff;
   object-fit: contain;
+  animation: widgetLogoBreath 2.5s ease-in-out infinite; /* Smooth continuous breathing */
 }
+
 .widget-title {
-  font-size: 19px;
-  font-weight: 900;
+  font-size: 13px; /* Smaller fit for narrow width */
+  font-weight: 900; /* Extra bold */
   color: #4C2FA1;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase; /* CAPITAL */
   font-family: 'Montserrat', sans-serif;
 }
 .widget-divider {
   width: 100%;
   height: 1.5px;
   background: #f1f1f6;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 .widget-period-badge {
   width: 100%;
-  background: #8249FF; /* Perfect deep purple badge matching first image */
+  background: #8249FF; /* Deep matching purple badge */
   color: #ffffff;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 800;
   text-align: center;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 100px; /* Pill shaped */
   letter-spacing: 0.6px;
-  box-shadow: 0 6px 16px rgba(130, 73, 255, 0.25);
-  margin-bottom: 18px;
+  box-shadow: 0 4px 12px rgba(130, 73, 255, 0.2);
+  margin-bottom: 12px;
   text-transform: uppercase;
 }
 .widget-body {
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 .widget-pred-box {
   width: 100%;
-  height: 124px;
-  background: #F5F6FC; /* Clean light grey box matching mockup */
-  border-radius: 32px; /* Smooth rounded shape */
+  height: 84px; /* Shorter for compact presentation */
+  background: #F5F6FC; /* Light gray box matches mockups */
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 12px;
+  padding: 8px;
 }
 .widget-pred-img {
   max-width: 100%;
@@ -644,23 +664,23 @@ input:checked + .slider:before {
   object-fit: contain;
 }
 .widget-pred-wait {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 900;
   color: #a0aec0;
   letter-spacing: 1px;
 }
 .widget-footer {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 }
 .widget-btn {
   flex: 1;
-  height: 48px;
-  border-radius: 30px; /* Highly rounded buttons matching the mockup style */
+  height: 38px; /* Slightly shorter */
+  border-radius: 20px; /* Highly rounded matching mockup */
   border: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -676,17 +696,17 @@ input:checked + .slider:before {
 .btn-hide {
   background: #8c52ff;
   color: #ffffff;
-  box-shadow: 0 6px 20px rgba(140, 82, 255, 0.3);
+  box-shadow: 0 4px 14px rgba(140, 82, 255, 0.25);
 }
 
 /* Minimized Spinning Ball Mode */
 .widget-ball {
-  width: 62px;
-  height: 62px;
+  width: 58px;
+  height: 58px;
   background: #ffffff;
   border-radius: 50%;
-  border: 3.5px solid #7C5CFC;
-  box-shadow: 0 8px 28px rgba(124, 92, 252, 0.4);
+  border: 3px solid #7C5CFC;
+  box-shadow: 0 8px 24px rgba(124, 92, 252, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -694,8 +714,8 @@ input:checked + .slider:before {
   animation: widgetBallSpin 12s linear infinite, widgetPop .3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .widget-ball-logo {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   border-radius: 50%;
 }
@@ -783,7 +803,7 @@ input:checked + .slider:before {
   <div id="widgetCard" class="widget-card">
     <div class="widget-header">
       <img class="widget-logo" src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" alt="logo">
-      <span class="widget-title">Drago Predictor..</span>
+      <span class="widget-title">DRAGO PREDICTOR</span>
     </div>
     <div class="widget-divider"></div>
     <div class="widget-period-badge" id="widgetPeriod">PERIOD: —</div>
@@ -1011,7 +1031,7 @@ const CALL_META = {
   GREEN:{ img:"https://i.ibb.co/8nF8ZwD4/1770796863859-316fd738-2c08-4a2f-a306-c88d5f75891b.png" },
   RED:  { img:"https://i.ibb.co/6RqjsgDz/1770796950403-a8434662-f5cf-446a-9e7d-11c950273688.png" },
   BIG:  { img:"https://i.ibb.co/Vk9pTW8/1770190123131-24e81887-a75f-4cd8-aa8f-de3b3e9b4468.png" },
-  SMALL:{ img:"https://i.ibb.co/0VByJkGF/1770189526625-c1b6c510-cf81-4589-a305-86430a66146a.png" },
+  SMALL:{ img:"https://i.ibb.co/0VByJkGF/1770189526625-c1b6c510-cf81-4589-a305-86430a55146a.png" },
 };
 
 // ── Ring helpers ──
@@ -1210,62 +1230,6 @@ function renderPredCard(d){
     </div>`;
 }
 
-function applyServerUI(){
-  const s = getServer();
-  const isColor = s==="color";
-  const c=document.getElementById("srvColor"), z=document.getElementById("srvSize");
-  if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); }
-}
-
-async function loadPrediction(){
-  const body=document.getElementById("predBody");
-  if(!predGame||!predTf){
-    body.innerHTML=`<div class="pred-msg-box">
-      <span class="pred-msg-ic">📊</span>
-      <span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span>
-    </div>`;
-    return;
-  }
-  const a=auth(); if(!a){ goLogin(); return; }
-  try{
-    const d=await withRefresh(()=>apiFetch("/api/prediction",{
-      uid:a.uid, session_signature:a.session_signature,
-      game:predGame, timeframe:predTf, target:getServer()
-    }));
-    if(!d) return;
-    const res=d.result||{};
-    if(!res||!res.prediction){
-      body.innerHTML=`<div class="pred-msg-box">
-        <span class="pred-msg-ic">⏳</span>
-        <span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span>
-      </div>`;
-      return;
-    }
-    body.innerHTML = renderPredCard(res);
-    startTimerTick();
-    
-    // Auto-update floating draggable widget
-    updateFloatingWidget(res);
-  }catch(e){
-    if(e&&e.status===403){
-      const msg=(e.detail||"").toString();
-      if(msg.indexOf("upgrade")>=0){
-        body.innerHTML=`<div class="pred-msg-box">
-          <span class="pred-msg-ic" style="font-size:40px">🔒</span>
-          <span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span>
-          <a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a>
-        </div>`;
-        checkAndManagePoll(); return;
-      }
-      return;
-    }
-    body.innerHTML=`<div class="pred-msg-box">
-      <span class="pred-msg-ic">🔄</span>
-      <span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span>
-    </div>`;
-  }
-}
-
 /* ── Smart Background Polling Manager ── */
 function shouldPollPredictions() {
   const isHackPanelOpen = (activePanel === "hack");
@@ -1372,7 +1336,7 @@ function makeElementDraggable(el) {
     document.removeEventListener('touchend', closeDragElement);
     document.removeEventListener('touchmove', elementTouchDrag);
     
-    // Ball click click to expand handler
+    // Ball click to expand handler
     if (!isDragging) {
       const ball = document.getElementById('widgetBall');
       const card = document.getElementById('widgetCard');
