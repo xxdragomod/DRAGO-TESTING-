@@ -388,7 +388,7 @@ body{
 }
 
 /* ════════════════════════════════════════
-   ⚙ NEW PREMIUM SETTINGS PANEL STYLES
+   ⚙ PREMIUM SETTINGS PANEL STYLES
 ════════════════════════════════════════ */
 .set-wrap{padding:20px 16px 0;}
 
@@ -547,12 +547,12 @@ input:checked + .slider:before {
 .set-info-txt{font-size:11.5px;font-weight:600;color:#475569;line-height:1.55;}
 
 /* ════════════════════════════════════════
-   🛸 FLOATING DRAGGABLE WIDGET STYLES
+   🛸 FLOATING DRAGGABLE WIDGET STYLES (AESTHETIC UPGRADE)
 ════════════════════════════════════════ */
 #injectorWidget {
   position: fixed;
   top: 25%;
-  left: calc(50% - 145px); /* Perfectly Centered horizontally */
+  left: calc(50% - 155px); /* Centered based on new width */
   z-index: 4000;
   cursor: grab;
   user-select: none;
@@ -562,14 +562,14 @@ input:checked + .slider:before {
   cursor: grabbing;
 }
 
-/* Floating Card Mode */
+/* Floating Card Mode — Ultra Polished Glass box */
 .widget-card {
-  width: 290px;
+  width: 310px;
   background: #ffffff;
-  border-radius: 36px;
-  border: 4px solid #ffffff;
-  box-shadow: 0 16px 48px rgba(124, 92, 252, 0.25);
-  padding: 20px;
+  border-radius: 44px; /* Perfectly round, premium frame */
+  border: 1px solid rgba(124, 92, 252, 0.08);
+  box-shadow: 0 20px 60px rgba(124, 92, 252, 0.2);
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -583,59 +583,60 @@ input:checked + .slider:before {
 .widget-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .widget-logo {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  border: 2px solid #8c52ff;
+  border: 2px solid rgba(140, 82, 255, 0.3);
   padding: 2px;
   background: #fff;
   object-fit: contain;
 }
 .widget-title {
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 900;
   color: #4C2FA1;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
+  font-family: 'Montserrat', sans-serif;
 }
 .widget-divider {
   width: 100%;
   height: 1.5px;
   background: #f1f1f6;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .widget-period-badge {
   width: 100%;
-  background: linear-gradient(135deg, #8c52ff, #6236ff);
+  background: #8249FF; /* Perfect deep purple badge matching first image */
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   text-align: center;
-  padding: 10px;
-  border-radius: 20px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(124, 92, 252, 0.2);
-  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 100px; /* Pill shaped */
+  letter-spacing: 0.6px;
+  box-shadow: 0 6px 16px rgba(130, 73, 255, 0.25);
+  margin-bottom: 18px;
   text-transform: uppercase;
 }
 .widget-body {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 .widget-pred-box {
   width: 100%;
-  height: 110px;
-  background: #f8f9fe;
-  border-radius: 24px;
+  height: 124px;
+  background: #F5F6FC; /* Clean light grey box matching mockup */
+  border-radius: 32px; /* Smooth rounded shape */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 10px;
+  padding: 12px;
 }
 .widget-pred-img {
   max-width: 100%;
@@ -650,16 +651,16 @@ input:checked + .slider:before {
 }
 .widget-footer {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 .widget-btn {
   flex: 1;
-  height: 44px;
-  border-radius: 22px;
+  height: 48px;
+  border-radius: 30px; /* Highly rounded buttons matching the mockup style */
   border: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -669,13 +670,13 @@ input:checked + .slider:before {
   transform: scale(0.95);
 }
 .btn-exit {
-  background: #f1f3f9;
-  color: #718096;
+  background: #ECEFF5;
+  color: #5E6E85;
 }
 .btn-hide {
-  background: linear-gradient(135deg, #8c52ff, #6236ff);
+  background: #8c52ff;
   color: #ffffff;
-  box-shadow: 0 6px 18px rgba(124, 92, 252, 0.3);
+  box-shadow: 0 6px 20px rgba(140, 82, 255, 0.3);
 }
 
 /* Minimized Spinning Ball Mode */
@@ -1046,6 +1047,7 @@ function parseTfSecs(tf){
 // ── Timer tick (live countdown synced to real clock) ──
 let timerTmr=null;
 let _tfSecs=60;
+let lastRem = -1;
 
 function getTimerRemaining(){
   const now=Math.floor(Date.now()/1000);
@@ -1063,10 +1065,21 @@ function tickTimer(){
   if(!fillEl||!valEl){ stopTimerTick(); return; }
   fillEl.setAttribute('stroke-dashoffset', offset.toFixed(2));
   valEl.textContent=str;
+
+  // Real-time synchronization check:
+  // When timer goes from 1s to maximum _tfSecs (meaning previous round ended and new round starts),
+  // wait exactly 1 second, then run a fresh api request.
+  if (lastRem === 1 && rem === _tfSecs) {
+    setTimeout(() => {
+      loadPrediction();
+    }, 1000);
+  }
+  lastRem = rem;
 }
 
 function startTimerTick(){
   _tfSecs=parseTfSecs(predTf)||60;
+  lastRem = -1;
   tickTimer();
   if(timerTmr) return;
   timerTmr=setInterval(tickTimer,1000);
@@ -1242,7 +1255,7 @@ async function loadPrediction(){
           <span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span>
           <a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a>
         </div>`;
-        stopPredPoll(); return;
+        checkAndManagePoll(); return;
       }
       return;
     }
@@ -1253,13 +1266,28 @@ async function loadPrediction(){
   }
 }
 
-function startPredPoll(){
-  applyServerUI();
-  if(predTmr) return;
-  loadPrediction();
-  predTmr=setInterval(loadPrediction,10000);
+/* ── Smart Background Polling Manager ── */
+function shouldPollPredictions() {
+  const isHackPanelOpen = (activePanel === "hack");
+  const isInjectorOn = document.getElementById("injectorToggle").checked;
+  return isHackPanelOpen || isInjectorOn;
 }
-function stopPredPoll(){ if(predTmr){ clearInterval(predTmr); predTmr=null; } stopTimerTick(); }
+
+function checkAndManagePoll() {
+  applyServerUI();
+  if (shouldPollPredictions()) {
+    if (!predTmr) {
+      loadPrediction();
+      predTmr = setInterval(loadPrediction, 10000);
+    }
+  } else {
+    if (predTmr) {
+      clearInterval(predTmr);
+      predTmr = null;
+    }
+    stopTimerTick();
+  }
+}
 
 function wireServerSelect(){
   document.querySelectorAll(".server-select-btn").forEach(el=>{
@@ -1367,16 +1395,18 @@ function wireInjectorToggle() {
       widget.style.display = 'block';
       card.style.display = 'flex';
       ball.style.display = 'none';
-      startPredPoll(); // Ensure predictions are pulling
     } else {
       widget.style.display = 'none';
     }
+    // Manage polling state immediately
+    checkAndManagePoll();
   });
 
   // Exit floating button action
   document.getElementById('widgetExitBtn').addEventListener('click', () => {
     widget.style.display = 'none';
     toggle.checked = false;
+    checkAndManagePoll();
   });
 
   // Hide floating button action (Minimizes to rotating ball)
@@ -1424,19 +1454,18 @@ function openPanel(which){
   if(which==="hack"){
     hackPanel.classList.add("show");
     settingPanel.classList.remove("show");
-    startPredPoll();
   } else {
     settingPanel.classList.add("show");
     hackPanel.classList.remove("show");
-    stopPredPoll();
   }
+  checkAndManagePoll();
 }
 function closePanel(){
   overlay.classList.remove("show");
   hackPanel.classList.remove("show");
   settingPanel.classList.remove("show");
   activePanel=null;
-  stopPredPoll();
+  checkAndManagePoll();
 }
 
 fabToggle.addEventListener("click",()=>{ fabOpen ? (closeFab(), closePanel()) : openFab(); });
