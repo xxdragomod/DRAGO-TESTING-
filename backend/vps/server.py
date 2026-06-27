@@ -43,7 +43,7 @@ logger = logging.getLogger("drago.engine")
 # ═══════════════════════════════════════════════════════════════════════════
 # MongoDB connection string — env var se aata hai (hardcode mat karo).
 # Git me asli credentials commit mat karo; VPS par MONGO_URI env set karo.
-MONGO_URI      = os.getenv("MONGO_URI", "PASTE_YOUR_MONGO_URI_HERE")
+MONGO_URI      = os.getenv("MONGO_URI", "mongodb+srv://krishnavishwas011_db_user:OgktWrNR3KGzo2rj@datacenter.xuicoag.mongodb.net/ai_predictions?retryWrites=true&w=majority&appName=Datacenter")
 ENGINE_DB_NAME = os.getenv("ENGINE_DB_NAME", "drago_final")
 
 # Teeno streams ki config. `prefix` MongoDB collection naam ke liye.
@@ -698,7 +698,7 @@ def read_both(game: str, tf: str) -> dict:
 # PREMIUM (.drago) DATA HELPERS
 # Browser ka client-side ".drago" engine yahi RAW results le kar SAME algorithm
 # device par chalata hai. Yahan koi prediction/calculation nahi — sirf raw data.
-# ═══════════════════════════════════════════════════════════════════════════
+# ═════��═════════════════════════════════════════════════════════════════════
 def read_results(game: str, tf: str, limit: int = 200) -> dict:
     """Kisi stream ke recent raw results (period+number) chronological."""
     stream_id = resolve_stream(game, tf)

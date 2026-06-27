@@ -26,9 +26,9 @@ logger = logging.getLogger(__name__)
 # CONFIG
 # ─────────────────────────────────────────────
 # ⬇️⬇️⬇️ APNI PURANI VALUES YAHAN PASTE KARO (jaise pehle thi) ⬇️⬇️⬇️
-BRIDGE_SECRET   = "PASTE_YOUR_BRIDGE_SECRET_HERE"     # bridge (Vercel) wala same secret
-FIREBASE_DB_URL = "PASTE_YOUR_FIREBASE_DB_URL_HERE"   # e.g. https://xxxx.firebaseio.com
-TG_CHAT_ID      = "PASTE_YOUR_ADMIN_CHAT_ID_HERE"     # admin approval chat id
+BRIDGE_SECRET   = os.getenv("BRIDGE_SECRET", "a3f8c2e1b4d6e9f0e1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4")     # bridge (Vercel) wala same secret
+FIREBASE_DB_URL = os.getenv("FIREBASE_DB_URL", "https://quantum-anlyzer-default-rtdb.firebaseio.com")   # e.g. https://xxxx.firebaseio.com
+TG_CHAT_ID      = os.getenv("TG_CHAT_ID", "6656009938")     # admin approval chat id
 # ⬆️⬆️⬆️ ye 3 values aapke purane main.py me thi, wahi yahan daal do ⬆️⬆️⬆️
 
 # Telegram bot token (already filled):
