@@ -1,0 +1,11 @@
+{
+  "drago": true,
+  "name": "Drago Frequency Calc",
+  "version": 1,
+  "method": "frequency",
+  "config": {
+    "window": 30,
+    "conf_floor": 50,
+    "conf_cap": 90
+  }
+}

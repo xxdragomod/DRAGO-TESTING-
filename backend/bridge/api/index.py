@@ -157,6 +157,79 @@ async def api_predict(payload: dict, request: Request):
         raise HTTPException(400, "Missing uid or session_signature.")
     return await fwd("/calculate", payload, request)
 
+# ── FREE PLAN ─────────────────────────────────
+@app.post("/api/activate-free-plan")
+async def api_activate_free(payload: dict, request: Request):
+    uid = payload.get("uid")
+    sig = payload.get("session_signature")
+    if not uid or not sig:
+        raise HTTPException(400, "Missing uid or session_signature.")
+    body = {"uid": uid, "session_signature": sig}
+    if payload.get("plan_index") is not None:
+        body["plan_index"] = payload["plan_index"]
+    return await fwd("/activate-free-plan", body, request)
+
+# ── PREDICTION (self-learning engine) — PAID ──
+@app.post("/api/prediction")
+async def api_prediction(payload: dict, request: Request):
+    uid  = payload.get("uid")
+    sig  = payload.get("session_signature")
+    game = payload.get("game")
+    tf   = payload.get("timeframe")
+    if not uid or not sig:
+        raise HTTPException(400, "Missing uid or session_signature.")
+    if not game or not tf:
+        raise HTTPException(400, "Missing game or timeframe.")
+    body = {
+        "uid": uid,
+        "session_signature": sig,
+        "game": str(game).strip(),
+        "timeframe": str(tf).strip(),
+    }
+    if payload.get("target") is not None:
+        body["target"] = str(payload["target"]).strip()
+    # game page frequently polls -> thoda higher limit
+    return await fwd("/get-prediction", body, request, rl_limit=40)
+
+# ── PREMIUM (.drago) — RAW RESULTS (free + paid) ──
+# Browser apni .drago file ke calculation se khud prediction banata hai;
+# ye routes sirf raw lottery results (period+number) forward karte hain.
+@app.post("/api/results-latest")
+async def api_results_latest(payload: dict, request: Request):
+    uid  = payload.get("uid")
+    sig  = payload.get("session_signature")
+    game = payload.get("game")
+    tf   = payload.get("timeframe")
+    if not uid or not sig:
+        raise HTTPException(400, "Missing uid or session_signature.")
+    if not game or not tf:
+        raise HTTPException(400, "Missing game or timeframe.")
+    return await fwd("/results-latest", {
+        "uid": uid, "session_signature": sig,
+        "game": str(game).strip(), "timeframe": str(tf).strip(),
+    }, request, rl_limit=40)
+
+@app.post("/api/results-history")
+async def api_results_history(payload: dict, request: Request):
+    uid  = payload.get("uid")
+    sig  = payload.get("session_signature")
+    game = payload.get("game")
+    tf   = payload.get("timeframe")
+    if not uid or not sig:
+        raise HTTPException(400, "Missing uid or session_signature.")
+    if not game or not tf:
+        raise HTTPException(400, "Missing game or timeframe.")
+    body = {
+        "uid": uid, "session_signature": sig,
+        "game": str(game).strip(), "timeframe": str(tf).strip(),
+    }
+    if payload.get("limit") is not None:
+        try:
+            body["limit"] = int(payload["limit"])
+        except Exception:
+            pass
+    return await fwd("/results-history", body, request, rl_limit=40)
+
 # ── GAMES (read) ──────────────────────────────
 @app.post("/api/games")
 async def api_games(payload: dict, request: Request):
