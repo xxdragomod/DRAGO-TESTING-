@@ -202,7 +202,7 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
 
 <!-- Main -->
 <div class="content-box">
-  <img src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" class="logo" alt="Logo">
+  <img src="/images/logo.jpg" class="logo" alt="Logo">
   <p class="plan-title" id="planTitle">Select Your Plan</p>
   <p class="plan-desc" id="planDesc">Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.</p>
 
@@ -422,7 +422,7 @@ function renderSlides(){
   const c=document.getElementById("sliderContent"); c.innerHTML="";
   plans.forEach((p,i)=>{
     if(!p) return;
-    const feats=(p.f||[]).map(f=>`<div class="feature-item"><img src="https://i.ibb.co/99rjSgLp/20260613-092804.png" alt="">${esc(f)}</div>`).join("");
+    const feats=(p.f||[]).map(f=>`<div class="feature-item"><img src="/images/feature-check.png" alt="">${esc(f)}</div>`).join("");
     let badge="";
     if(pendingIdx===i)            badge=`<div class="pending-badge">⏳ Processing</div>`;
     else if(subStatus==="active" && activeIdx===i) badge=`<div class="current-badge">✓ Current</div>`;
@@ -526,10 +526,10 @@ function renderPayContent(d){
     const note=("Payment for "+(d.plan_name||"")).trim();
     const ps=`pa=${encodeURIComponent(d.upi)}&pn=${encodeURIComponent(payee)}&am=${encodeURIComponent(amt)}&cu=INR&tn=${encodeURIComponent(note)}`;
     const apps=[
-      {n:"PhonePe",   i:"https://i.ibb.co/gFDmbNFN/db4253052cfc0f80ac281486c19f9d57.jpg", s:"phonepe://pay"},
-      {n:"Google Pay",i:"https://i.ibb.co/Mxz0x8rj/605abdb7af3405c6b20a426b1e128322.jpg",  s:"tez://upi/pay"},
-      {n:"Paytm",     i:"https://i.ibb.co/Q7yw1K8m/9e11dbb937797b818d37fe9f9d2fcd6e.jpg",   s:"paytmmp://pay"},
-      {n:"Super Money",i:"https://i.ibb.co/wNxkvgZs/Screenshot-20260613-135126-Google.png",s:"supermoney://upi/pay"},
+      {n:"PhonePe",   i:"/images/phonepe.svg", s:"phonepe://pay"},
+      {n:"Google Pay",i:"/images/google-pay.svg",  s:"tez://upi/pay"},
+      {n:"Paytm",     i:"/images/paytm.svg",   s:"paytmmp://pay"},
+      {n:"Super Money",i:"/images/supermoney.png",s:"supermoney://upi/pay"},
     ];
     ar.innerHTML=apps.map(a=>`<a class="app-btn" href="javascript:void(0)"
       onclick="openApp('${esc(a.s)}','${encodeURIComponent(ps)}','${esc(a.n)}','${esc(a.i)}')">

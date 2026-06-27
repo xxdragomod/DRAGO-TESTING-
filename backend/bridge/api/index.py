@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 # ⬇️⬇️⬇️ APNI PURANI VALUES YAHAN PASTE KARO (jaise pehle thi) ⬇️⬇️⬇️
-VPS_URL       = "PASTE_YOUR_VPS_URL_HERE"          # e.g. http://1.2.3.4:8000
-BRIDGE_SECRET = "PASTE_YOUR_BRIDGE_SECRET_HERE"    # VPS wale main.py se bilkul SAME
+VPS_URL       = os.getenv("VPS_URL", "http://2.56.246.128:30289")          # e.g. http://1.2.3.4:8000
+BRIDGE_SECRET = os.getenv("BRIDGE_SECRET", "a3f8c2e1b4d6e9f0e1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4")    # VPS wale main.py se bilkul SAME
 # ⬆️⬆️⬆️ dono values aapke purane index.py me thi, wahi yahan daal do ⬆️⬆️⬆️
 
 app.add_middleware(

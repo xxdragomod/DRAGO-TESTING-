@@ -239,7 +239,7 @@ input:checked + .slider:before{transform:translateX(26px);}
 <div class="full-ov" id="ovNoLink"><div class="ov-icon">&#128279;</div><div class="ov-title">Link Not Found</div><div class="ov-desc">Is game ka link available nahi hai. Wapas jao.</div><a href="/game" class="ov-link">Back to Games</a></div>
 <div class="hero-bar">
   <button class="back-btn" id="backBtn" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button>
-  <img class="hero-logo" src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" alt="Drago Predictor">
+  <img class="hero-logo" src="/images/logo.jpg" alt="Drago Predictor">
   <div class="hero-info"><span class="hero-sub">Drago Predictor</span><span class="hero-title" id="heroTitle">Game</span></div>
 </div>
 <div class="frame-wrap">
@@ -257,7 +257,7 @@ input:checked + .slider:before{transform:translateX(26px);}
 <div id="injectorWidget" style="display:none;">
   <div id="widgetCard" class="widget-card">
     <div class="widget-header">
-      <img class="widget-logo" src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" alt="logo">
+      <img class="widget-logo" src="/images/logo.jpg" alt="logo">
       <span class="widget-title">Drago Predictor</span>
     </div>
     <div class="widget-period-badge" id="widgetPeriod">PERIOD: —</div>
@@ -272,7 +272,7 @@ input:checked + .slider:before{transform:translateX(26px);}
     </div>
   </div>
   <div id="widgetBall" class="widget-ball" style="display:none;">
-    <img class="widget-ball-logo" id="widgetBallLogo" src="https://i.ibb.co/1tLZMhZD/20260625-140159.png" alt="server-logo">
+    <img class="widget-ball-logo" id="widgetBallLogo" src="/images/server-prime.png" alt="server-logo">
   </div>
 </div>
 
@@ -295,15 +295,15 @@ input:checked + .slider:before{transform:translateX(26px);}
   <div class="panel-head"><div class="panel-title-main">SETTING</div></div>
   <div class="set-wrap">
     <button class="premium-server-btn" id="premiumSrvBtn">
-      <img class="premium-server-img" src="https://i.ibb.co/PGQq37Rn/20260625-140319.png" alt="Premium Server">
+      <img class="premium-server-img" src="/images/premium-server.png" alt="Premium Server">
       <span class="premium-server-text">I want to use my<br>premium server</span>
     </button>
     <input type="file" id="dragoFile" accept=".drago" style="display:none">
     <div id="dragoStatus" class="drago-status" style="display:none"></div>
     <div class="set-section-label">Available Servers</div>
     <div class="servers-row">
-      <div class="server-select-btn" id="srvSize" data-srv="size"><img class="server-select-img" src="https://i.ibb.co/1tLZMhZD/20260625-140159.png" alt="Prime"><span class="server-select-text">PRIME</span></div>
-      <div class="server-select-btn" id="srvColor" data-srv="color"><img class="server-select-img" src="https://i.ibb.co/fdcdwsGT/20260625-140109.png" alt="Nova"><span class="server-select-text">NOVA</span></div>
+      <div class="server-select-btn" id="srvSize" data-srv="size"><img class="server-select-img" src="/images/server-prime.png" alt="Prime"><span class="server-select-text">PRIME</span></div>
+      <div class="server-select-btn" id="srvColor" data-srv="color"><img class="server-select-img" src="/images/server-nova.png" alt="Nova"><span class="server-select-text">NOVA</span></div>
     </div>
     <div class="injector-row"><span class="injector-label">INJECTOR</span><label class="switch"><input type="checkbox" id="injectorToggle"><span class="slider"></span></label></div>
     <div class="set-info"><i class="fa-solid fa-circle-info set-info-ic"></i><span class="set-info-txt">Injector toggle on karne par screen par live drifting box floating dynamic predict karega. Switch off karne par ye gayab ho jayega.</span></div>
@@ -328,7 +328,7 @@ function loadFrame(url){ const frame=document.getElementById("gameFrame"),loader
 function showToast(msg){ let t=document.createElement('div'); t.style.cssText='position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(26,26,46,0.95);backdrop-filter:blur(8px);color:#fff;padding:12px 24px;border-radius:16px;font-size:12px;font-weight:800;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.2);transition:opacity 0.3s,transform 0.3s;opacity:0;text-align:center;white-space:nowrap;'; t.innerText=msg; document.body.appendChild(t); t.offsetHeight; t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(-20px)'; setTimeout(()=>t.remove(),300); },3000); }
 function getServer(){ return localStorage.getItem("_pred_srv")||"color"; }
 function setServer(s){ localStorage.setItem("_pred_srv",s); }
-const CALL_META={GREEN:{img:"https://i.ibb.co/8nF8ZwD4/1770796863859-316fd738-2c08-4a2f-a306-c88d5f75891b.png"},RED:{img:"https://i.ibb.co/6RqjsgDz/1770796950403-a8434662-f5cf-446a-9e7d-11c950273688.png"},BIG:{img:"https://i.ibb.co/Vk9pTW8/1770190123131-24e81887-a75f-4cd8-aa8f-de3b3e9b4468.png"},SMALL:{img:"https://i.ibb.co/0VByJkGF/1770189526625-c1b6c510-cf81-4589-a305-86430a66146a.png"}};
+const CALL_META={GREEN:{img:"/images/call-green.png"},RED:{img:"/images/call-red.png"},BIG:{img:"/images/call-big.png"},SMALL:{img:"/images/call-small.png"}};
 const R_SM=26,CIRC_SM=2*Math.PI*R_SM;
 function buildSmallRing(pct,stroke,id){ const offset=CIRC_SM-(pct/100)*CIRC_SM; return `<svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%"><circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/><circle ${id?`id="${id}"`:''}  cx="34" cy="34" r="${R_SM}" fill="none" stroke="${stroke}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${CIRC_SM.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" transform="rotate(-90 34 34)" style="transition:stroke-dashoffset .5s ease"/></svg>`; }
 function badgePct(badge){ const b=(badge||"").toLowerCase(); if(b.includes("diamond")||b.includes("plat")) return 100; if(b.includes("gold")) return 75; if(b.includes("silver")) return 50; if(b.includes("bronze")) return 25; return 40; }
@@ -338,7 +338,7 @@ function getTimerRemaining(){ const now=Math.floor(Date.now()/1000); return _tfS
 function tickTimer(){ const rem=getTimerRemaining(),pct=(rem/_tfSecs)*100,offset=CIRC_SM-(pct/100)*CIRC_SM,mins=Math.floor(rem/60),secs=rem%60,str=mins>0?`${mins}:${String(secs).padStart(2,'0')}`:`${secs}s`,fillEl=document.getElementById('tmr-fill'),valEl=document.getElementById('tmr-val'); if(!fillEl||!valEl){ stopTimerTick(); return; } fillEl.setAttribute('stroke-dashoffset',offset.toFixed(2)); valEl.textContent=str; if(lastRem===1&&rem===_tfSecs){ setTimeout(()=>{ loadPrediction(); },1000); } lastRem=rem; }
 function startTimerTick(){ _tfSecs=parseTfSecs(predTf)||60; lastRem=-1; tickTimer(); if(timerTmr) return; timerTmr=setInterval(tickTimer,1000); }
 function stopTimerTick(){ if(timerTmr){ clearInterval(timerTmr); timerTmr=null; } }
-function updateFloatingWidget(res){ const call=(res.prediction||"WAIT").toUpperCase(),period=res.period||"—",meta=CALL_META[call]; const wp=document.getElementById('widgetPeriod'); if(wp) wp.textContent="PERIOD: "+period; const wpb=document.getElementById('widgetPredBox'); if(wpb){ wpb.innerHTML=meta?`<img src="${meta.img}" class="widget-pred-img" alt="${call}">`:`<div class="widget-pred-wait">WAIT</div>`; } const bl=document.getElementById('widgetBallLogo'); if(bl) bl.src=getServer()==="size"?"https://i.ibb.co/1tLZMhZD/20260625-140159.png":"https://i.ibb.co/fdcdwsGT/20260625-140109.png"; }
+function updateFloatingWidget(res){ const call=(res.prediction||"WAIT").toUpperCase(),period=res.period||"—",meta=CALL_META[call]; const wp=document.getElementById('widgetPeriod'); if(wp) wp.textContent="PERIOD: "+period; const wpb=document.getElementById('widgetPredBox'); if(wpb){ wpb.innerHTML=meta?`<img src="${meta.img}" class="widget-pred-img" alt="${call}">`:`<div class="widget-pred-wait">WAIT</div>`; } const bl=document.getElementById('widgetBallLogo'); if(bl) bl.src=getServer()==="size"?"/images/server-prime.png":"/images/server-nova.png"; }
 function renderPredCard(d){ const call=(d.prediction||"WAIT").toUpperCase(),conf=Math.round(d.confidence||0),wr=Math.round(d.win_rate||0),badge=d.badge||"—",period=d.period||"—",meta=CALL_META[call],lvlPct=badgePct(badge),tfSecs=parseTfSecs(predTf)||60,initRem=tfSecs-(Math.floor(Date.now()/1000)%tfSecs),initPct=(initRem/tfSecs)*100,initMins=Math.floor(initRem/60),initSecs=initRem%60,initStr=initMins>0?`${initMins}:${String(initSecs).padStart(2,'0')}`:`${initSecs}s`; let imageUI=`<div class="pred-img-wait"><i class="fa-solid fa-clock" style="margin-right:10px;"></i> WAIT</div>`; if(meta) imageUI=`<img src="${meta.img}" class="pred-img-large" alt="${call}">`; return `<div class="pred-image-container">${imageUI}</div><div style="display:flex;justify-content:center;width:100%;"><div class="pred-period-badge"><i class="fa-solid fa-hashtag"></i> Period : ${period}</div></div><div class="pred-card-main"><div class="pill-progress-card"><div class="pill-progress-header"><span class="pill-progress-lbl">Confidence</span><span class="pill-progress-text">${conf}%</span></div><div class="pill-track"><div class="pill-fill" style="width:${conf}%"></div></div></div><div class="pred-meters-row"><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(lvlPct,"#7C5CFC","")}<div class="pred-meter-val">${badge}<div class="pred-meter-sub">Level</div></div></div><span class="pred-meter-lbl">Level</span></div><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(wr,"#7C5CFC","")}<div class="pred-meter-val">${wr}%<div class="pred-meter-sub">WR</div></div></div><span class="pred-meter-lbl">Win Rate</span></div><div class="pred-meter-card"><div class="pred-meter-ring"><svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%"><circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/><circle id="tmr-fill" cx="34" cy="34" r="${R_SM}" fill="none" stroke="#7C5CFC" stroke-width="11" stroke-linecap="round" stroke-dasharray="${CIRC_SM.toFixed(2)}" stroke-dashoffset="${(CIRC_SM-(initPct/100)*CIRC_SM).toFixed(2)}" transform="rotate(-90 34 34)" style="transition:stroke-dashoffset .5s ease"/></svg><div class="pred-meter-val" id="tmr-val">${initStr}<div class="pred-meter-sub">left</div></div></div><span class="pred-meter-lbl">Timer</span></div></div></div>`; }
 function applyServerUI(){ const s=getServer(),isColor=s==="color",c=document.getElementById("srvColor"),z=document.getElementById("srvSize"); if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); } }
 /* ═══════════════════════════════════════════════════════════════════
