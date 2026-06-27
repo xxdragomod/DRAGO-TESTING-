@@ -300,7 +300,7 @@ input:checked + .slider:before{transform:translateX(26px);}
     </button>
     <input type="file" id="dragoFile" accept=".drago" style="display:none">
     <div id="dragoStatus" class="drago-status" style="display:none"></div>
-    <div class="set-section-label">Available Servers</div>
+    <div class="set-section-label">Available Servers <span style="font-size:9px;color:#7C5CFC;font-weight:900;background:rgba(124,92,252,0.12);padding:2px 7px;border-radius:8px;margin-left:4px;">PAID</span></div>
     <div class="servers-row">
       <div class="server-select-btn" id="srvSize" data-srv="size"><img class="server-select-img" src="/images/server-prime.png" alt="Prime"><span class="server-select-text">PRIME</span></div>
       <div class="server-select-btn" id="srvColor" data-srv="color"><img class="server-select-img" src="/images/server-nova.png" alt="Nova"><span class="server-select-text">NOVA</span></div>
@@ -312,14 +312,14 @@ input:checked + .slider:before{transform:translateX(26px);}
 
 <script>
 const API = "https://flask-hello-world-nu-sooty-63.vercel.app";
-let pollTmr=null, gameLink="", predGame="", predTf="", predTmr=null;
+let pollTmr=null, gameLink="", predGame="", predTf="", predTmr=null, isPaid=false;
 function ud(){ try{ return JSON.parse(localStorage.getItem("_ud")||"null"); }catch(e){ return null; } }
 function auth(){ const u=ud(); if(!u||!u.uid||!u.session_signature) return null; return {uid:u.uid,session_signature:u.session_signature}; }
 function goLogin(){ localStorage.removeItem("_ud"); window.location.replace("/"); }
 async function apiFetch(path,body){ const r=await fetch(API+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); const d=await r.json().catch(()=>({})); if(!r.ok){ const e=new Error(d.detail||"Error "+r.status); e.status=r.status; e.detail=d.detail||""; throw e; } return d; }
 async function withRefresh(cb){ try{ return await cb(); }catch(e){ if(e.status===403&&e.detail==="session_expired"){ const a=auth(); if(!a){ goLogin(); return; } try{ const d=await apiFetch("/api/refresh-session",a); if(d.session_signature){ const u=ud(); u.session_signature=d.session_signature; localStorage.setItem("_ud",JSON.stringify(u)); } return await cb(); }catch(e2){ if(e2.status===403){ goLogin(); return; } throw e2; } } throw e; } }
 function hideOvs(){ ["ovBanned","ovBlocked","ovPaused","ovExpired","ovNoLink"].forEach(id=>document.getElementById(id).classList.remove("show")); }
-function handleStatus(as,ss){ if(as==="banned"){stopPoll();hideOvs();document.getElementById("ovBanned").classList.add("show");return false;} if(as==="blocked"){stopPoll();hideOvs();document.getElementById("ovBlocked").classList.add("show");return false;} if(as==="paused"){stopPoll();hideOvs();document.getElementById("ovPaused").classList.add("show");return false;} if(ss!=="active"&&ss!=="free"){stopPoll();hideOvs();document.getElementById("ovExpired").classList.add("show");return false;} hideOvs(); return true; }
+function handleStatus(as,ss){ isPaid=(ss==="active"); applyServerUI(); if(as==="banned"){stopPoll();hideOvs();document.getElementById("ovBanned").classList.add("show");return false;} if(as==="blocked"){stopPoll();hideOvs();document.getElementById("ovBlocked").classList.add("show");return false;} if(as==="paused"){stopPoll();hideOvs();document.getElementById("ovPaused").classList.add("show");return false;} if(ss!=="active"&&ss!=="free"){stopPoll();hideOvs();document.getElementById("ovExpired").classList.add("show");return false;} hideOvs(); return true; }
 function startPoll(){ if(pollTmr) return; pollTmr=setInterval(doPoll,15000); }
 function stopPoll(){ if(pollTmr){ clearInterval(pollTmr); pollTmr=null; } }
 async function doPoll(){ const a=auth(); if(!a) return; try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); handleStatus(d.account_status,d.subscription_status); }catch(e){} }
@@ -340,7 +340,7 @@ function startTimerTick(){ _tfSecs=parseTfSecs(predTf)||60; lastRem=-1; tickTime
 function stopTimerTick(){ if(timerTmr){ clearInterval(timerTmr); timerTmr=null; } }
 function updateFloatingWidget(res){ const call=(res.prediction||"WAIT").toUpperCase(),period=res.period||"—",meta=CALL_META[call]; const wp=document.getElementById('widgetPeriod'); if(wp) wp.textContent="PERIOD: "+period; const wpb=document.getElementById('widgetPredBox'); if(wpb){ wpb.innerHTML=meta?`<img src="${meta.img}" class="widget-pred-img" alt="${call}">`:`<div class="widget-pred-wait">WAIT</div>`; } const bl=document.getElementById('widgetBallLogo'); if(bl) bl.src=getServer()==="size"?"/images/server-prime.png":"/images/server-nova.png"; }
 function renderPredCard(d){ const call=(d.prediction||"WAIT").toUpperCase(),conf=Math.round(d.confidence||0),wr=Math.round(d.win_rate||0),badge=d.badge||"—",period=d.period||"—",meta=CALL_META[call],lvlPct=badgePct(badge),tfSecs=parseTfSecs(predTf)||60,initRem=tfSecs-(Math.floor(Date.now()/1000)%tfSecs),initPct=(initRem/tfSecs)*100,initMins=Math.floor(initRem/60),initSecs=initRem%60,initStr=initMins>0?`${initMins}:${String(initSecs).padStart(2,'0')}`:`${initSecs}s`; let imageUI=`<div class="pred-img-wait"><i class="fa-solid fa-clock" style="margin-right:10px;"></i> WAIT</div>`; if(meta) imageUI=`<img src="${meta.img}" class="pred-img-large" alt="${call}">`; return `<div class="pred-image-container">${imageUI}</div><div style="display:flex;justify-content:center;width:100%;"><div class="pred-period-badge"><i class="fa-solid fa-hashtag"></i> Period : ${period}</div></div><div class="pred-card-main"><div class="pill-progress-card"><div class="pill-progress-header"><span class="pill-progress-lbl">Confidence</span><span class="pill-progress-text">${conf}%</span></div><div class="pill-track"><div class="pill-fill" style="width:${conf}%"></div></div></div><div class="pred-meters-row"><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(lvlPct,"#7C5CFC","")}<div class="pred-meter-val">${badge}<div class="pred-meter-sub">Level</div></div></div><span class="pred-meter-lbl">Level</span></div><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(wr,"#7C5CFC","")}<div class="pred-meter-val">${wr}%<div class="pred-meter-sub">WR</div></div></div><span class="pred-meter-lbl">Win Rate</span></div><div class="pred-meter-card"><div class="pred-meter-ring"><svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%"><circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/><circle id="tmr-fill" cx="34" cy="34" r="${R_SM}" fill="none" stroke="#7C5CFC" stroke-width="11" stroke-linecap="round" stroke-dasharray="${CIRC_SM.toFixed(2)}" stroke-dashoffset="${(CIRC_SM-(initPct/100)*CIRC_SM).toFixed(2)}" transform="rotate(-90 34 34)" style="transition:stroke-dashoffset .5s ease"/></svg><div class="pred-meter-val" id="tmr-val">${initStr}<div class="pred-meter-sub">left</div></div></div><span class="pred-meter-lbl">Timer</span></div></div></div>`; }
-function applyServerUI(){ const s=getServer(),isColor=s==="color",c=document.getElementById("srvColor"),z=document.getElementById("srvSize"); if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); } }
+function applyServerUI(){ const s=getServer(),isColor=s==="color",c=document.getElementById("srvColor"),z=document.getElementById("srvSize"); if(!c||!z) return; const drago=dragoActive(); c.classList.toggle("active",isColor&&!drago); z.classList.toggle("active",!isColor&&!drago); [c,z].forEach(el=>{ el.style.position="relative"; let lock=el.querySelector(".srv-lock"); if(!isPaid){ el.style.opacity="0.6"; if(!lock){ lock=document.createElement("span"); lock.className="srv-lock"; lock.innerHTML='<i class="fa-solid fa-lock"></i>'; lock.style.cssText="position:absolute;top:6px;right:8px;font-size:11px;color:#7C5CFC;"; el.appendChild(lock); } } else { el.style.opacity="1"; if(lock) lock.remove(); } }); }
 /* ═══════════════════════════════════════════════════════════════════
    PREMIUM (.drago) — CLIENT-SIDE CALCULATION ENGINE
    User apni .drago file upload karta hai (sirf calculation/method, koi API
@@ -356,6 +356,14 @@ function dgLevelBadge(lv){ return ({1:"🟢L1",2:"🟡L2",3:"🟠L3",4:"🔴L4"}
 function dragoFile(){ try{ return JSON.parse(localStorage.getItem("_drago")||"null"); }catch(e){ return null; } }
 function dragoActive(){ return localStorage.getItem("_drago_on")==="1" && !!dragoFile(); }
 function setDragoActive(on){ localStorage.setItem("_drago_on", on?"1":"0"); }
+/* .drago file khud apna target decide karti hai (color / size / both).
+   "both" hone par user choti toggle se switch kar sakta hai. */
+function dragoTargetMode(){ const f=dragoFile()||{}; let t=(f.target||(f.config&&f.config.target)||"color").toString().toLowerCase();
+  if(t==="size"||t==="big"||t==="bigsmall"||t==="big-small"||t==="prime") return "size";
+  if(t==="both"||t==="any"||t==="all") return "both";
+  return "color"; }
+function dragoTarget(){ const m=dragoTargetMode(); if(m!=="both") return m; return localStorage.getItem("_drago_tgt")==="size"?"size":"color"; }
+function setDragoTarget(t){ localStorage.setItem("_drago_tgt", t==="size"?"size":"color"); }
 
 /* Method 1 — SELF LEARNING (server.py ka exact algorithm, browser me port) */
 function dgSelfLearning(cfg, target, nums){
@@ -433,12 +441,60 @@ function dgStreak(cfg, target, nums){
   if(p) return {prediction:label(p.L),confidence:p.conf,win_rate:wr,badge:"🟢L1",period:np};
   return {prediction:"WAIT",confidence:0,win_rate:wr,badge:"🟢L1",period:np}; }
 
+/* Method 4 — ADVANCED MULTI-LAYER ENSEMBLE
+   Ek "bada" calculation: kai independent layers (Markov context 1-5,
+   multi-window frequency, streak/anti-streak, EWMA bias, alternation).
+   Har layer apni online accuracy track karta hai aur uske hisaab se uska
+   vote weight milta hai (self-weighting soft-vote). Jitne zyada layers
+   agree karein, confidence utni high. Multi-layer = zyada stable. */
+function dgAdvanced(cfg, target, nums){
+  const CL=cfg.context_lengths||[1,2,3,4,5], WINS=cfg.windows||[8,20,40,80],
+        FLOOR=cfg.conf_floor||52, CAP=cfg.conf_cap||94, MIN=cfg.min_observations||2,
+        DECAY=cfg.decay||0.97, SMOOTH=cfg.laplace||0.5, ALPHA=cfg.ewma_alpha||0.25,
+        STH=cfg.streak_threshold||3, LRATE=cfg.layer_lr||0.04;
+  const A=target==='color'?'G':'B', B=target==='color'?'R':'S';
+  const letter=(n)=>target==='color'?dgColorLetter(n):dgSizeLetter(n);
+  const label =(l)=>target==='color'?(l==='G'?'GREEN':'RED'):(l==='B'?'BIG':'SMALL');
+  const seq=[]; let markov={}, ewma=0.5, wins=0, total=0, consec=0, level=1, pending=null;
+  /* layer accuracy (EWMA) — har layer ka weight isi se banta */
+  const lw={}; const names=[]; CL.forEach(n=>names.push("mk"+n)); WINS.forEach(w=>names.push("fr"+w)); names.push("streak","ewma","alt");
+  names.forEach(n=>lw[n]={acc:0.5,n:0});
+  function mkCell(p){ markov[p]=markov[p]||{}; markov[p][A]=markov[p][A]||0; markov[p][B]=markov[p][B]||0; return markov[p]; }
+  /* har layer ka {pick, prob} (prob = us pick ki probability 0.5-1) */
+  function layerVotes(){ const v={};
+    for(const n of CL){ if(seq.length<n){ v["mk"+n]=null; continue; } const p=seq.slice(-n).join(''), c=markov[p];
+      if(!c||(c[A]+c[B])<MIN){ v["mk"+n]=null; continue; } const tot=c[A]+c[B]+2*SMOOTH, pa=(c[A]+SMOOTH)/tot, pk=pa>=0.5?A:B; v["mk"+n]={pick:pk,prob:Math.max(pa,1-pa)}; }
+    for(const w of WINS){ const arr=seq.slice(-w); if(!arr.length){ v["fr"+w]=null; continue; } const ca=arr.filter(x=>x===A).length, cb=arr.length-ca, pk=ca>=cb?A:B; v["fr"+w]={pick:pk,prob:Math.max(ca,cb)/arr.length}; }
+    if(seq.length){ let run=1; const last=seq[seq.length-1]; for(let i=seq.length-2;i>=0&&seq[i]===last;i--) run++;
+      const pk=run>=STH?(last===A?B:A):last; v.streak={pick:pk,prob:Math.min(0.5+Math.min(run,6)*0.07,0.95)}; } else v.streak=null;
+    { const pk=ewma>=0.5?A:B; v.ewma={pick:pk,prob:Math.max(ewma,1-ewma)}; }
+    if(seq.length>=2){ const a=seq[seq.length-1],b=seq[seq.length-2]; const pk=a!==b?(a===A?B:A):a; v.alt={pick:pk,prob:0.58}; } else v.alt=null;
+    return v; }
+  function aggregate(v){ let sa=0,sb=0,agreeA=0,agreeB=0,active=0;
+    for(const n in v){ const vote=v[n]; if(!vote) continue; const wgt=Math.max(0.05,lw[n].acc); const s=(vote.prob-0.5)*2*wgt; active++;
+      if(vote.pick===A){ sa+=s; agreeA++; } else { sb+=s; agreeB++; } }
+    if(!active) return null; const pickA=sa>=sb, pick=pickA?A:B, lead=Math.abs(sa-sb), agree=(pickA?agreeA:agreeB)/active;
+    let conf=50+lead*22+agree*14; conf=Math.round(Math.max(FLOOR,Math.min(conf,CAP)));
+    return {pick,conf}; }
+  for(const rec of nums){ const al=letter(+rec.number);
+    if(pending){ const v=pending.votes; total++; const correct=pending.pick===al; if(correct) wins++;
+      for(const n in v){ const vote=v[n]; if(!vote) continue; const hit=vote.pick===al?1:0; lw[n].acc=(1-LRATE)*lw[n].acc+LRATE*hit; lw[n].n++; }
+      if(correct){ consec=0; level=1; } else { consec++; level=Math.min(consec+1,4); } }
+    /* update markov with decay */
+    for(const n of CL){ if(seq.length>=n){ const p=seq.slice(-n).join(''); const c=mkCell(p); c[A]*=DECAY; c[B]*=DECAY; c[al]+=1; } }
+    ewma=(1-ALPHA)*ewma+ALPHA*(al===A?1:0); seq.push(al);
+    const v=layerVotes(), agg=aggregate(v); pending=agg?{pick:agg.pick,conf:agg.conf,votes:v}:null; }
+  const wr=total?Math.round(wins/total*1000)/10:0, np=dgNextPeriod(nums[nums.length-1].period);
+  if(pending) return {prediction:label(pending.pick),confidence:pending.conf,win_rate:wr,badge:dgLevelBadge(level),period:np};
+  return {prediction:"WAIT",confidence:0,win_rate:wr,badge:dgLevelBadge(level),period:np}; }
+
 /* Dispatcher — .drago file ka "method" choose karta hai (default self-learning) */
 function runDragoEngine(drago, target, nums){
   if(!drago||!nums||!nums.length) return null;
   const cfg=drago.config||{}, method=(drago.method||drago.engine||"self-learning").toLowerCase();
   if(method==="frequency") return dgFrequency(cfg,target,nums);
   if(method==="streak")    return dgStreak(cfg,target,nums);
+  if(method==="advanced"||method==="multi-layer"||method==="multilayer"||method==="ensemble"||method==="pro") return dgAdvanced(cfg,target,nums);
   return dgSelfLearning(cfg,target,nums);
 }
 
@@ -455,16 +511,16 @@ async function loadPredictionPremium(body){
       if(dl&&dl.result&&dl.result.period){ const lp=String(dl.result.period);
         if(!results.length||String(results[results.length-1].period)!==lp){ results=results.concat([{period:lp,number:dl.result.number}]); } } }catch(e){}
     if(!results.length){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
-    const res=runDragoEngine(drago,getServer(),results);
+    const res=runDragoEngine(drago,dragoTarget(),results);
     if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
     body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res);
   }catch(e){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Premium prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; }
 }
 
-async function loadPrediction(){ const body=document.getElementById("predBody"); if(dragoActive()){ return loadPredictionPremium(body); } if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">📊</span><span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span></div>`; return; } const a=auth(); if(!a){ goLogin(); return; } try{ const d=await withRefresh(()=>apiFetch("/api/prediction",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,target:getServer()})); if(!d) return; const res=d.result||{}; if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; } body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res); }catch(e){ if(e&&e.status===403){ const msg=(e.detail||"").toString(); if(msg.indexOf("upgrade")>=0){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic" style="font-size:40px">🔒</span><span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span><a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a></div>`; checkAndManagePoll(); return; } return; } body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; } }
+async function loadPrediction(){ const body=document.getElementById("predBody"); if(dragoActive()){ return loadPredictionPremium(body); } if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">📊</span><span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span></div>`; return; } const a=auth(); if(!a){ goLogin(); return; } if(!isPaid){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🧮</span><span class="pred-msg-txt"><b style="color:#7C5CFC">PRIME &amp; NOVA</b> servers sirf paid plan ke liye hain.<br>Free mein apni <b>.drago calculation file</b> use karo.</span><button class="pred-upgrade-btn" id="freeAttachBtn"><i class="fa-solid fa-folder-open"></i> Use My Calculation</button><a class="pred-upgrade-btn" style="margin-top:8px;background:transparent;border:1.5px solid #7C5CFC;color:#7C5CFC;" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade for Servers</a></div>`; const fb=document.getElementById("freeAttachBtn"); if(fb) fb.addEventListener("click",()=>{ const inp=document.getElementById("dragoFile"); if(inp){ inp.value=""; inp.click(); } }); stopTimerTick(); return; } try{ const d=await withRefresh(()=>apiFetch("/api/prediction",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,target:getServer()})); if(!d) return; const res=d.result||{}; if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; } body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res); }catch(e){ if(e&&e.status===403){ const msg=(e.detail||"").toString(); if(msg.indexOf("upgrade")>=0){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic" style="font-size:40px">🔒</span><span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span><a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a></div>`; checkAndManagePoll(); return; } return; } body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; } }
 function shouldPollPredictions(){ return (activePanel==="hack")||document.getElementById("injectorToggle").checked; }
 function checkAndManagePoll(){ applyServerUI(); if(shouldPollPredictions()){ if(!predTmr){ loadPrediction(); predTmr=setInterval(loadPrediction,10000); } }else{ if(predTmr){ clearInterval(predTmr); predTmr=null; } stopTimerTick(); } }
-function wireServerSelect(){ document.querySelectorAll(".server-select-btn").forEach(el=>{ el.addEventListener("click",()=>{ setServer(el.dataset.srv); applyServerUI(); const body=document.getElementById("predBody"); if(body) body.innerHTML=`<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>`; loadPrediction(); }); }); }
+function wireServerSelect(){ document.querySelectorAll(".server-select-btn").forEach(el=>{ el.addEventListener("click",()=>{ if(!isPaid){ showToast("PRIME & NOVA sirf paid plan ke liye. Free mein apni .drago calculation file use karo."); return; } if(dragoActive()){ setDragoActive(false); renderDragoStatus(); showToast("Aapki calculation off. Ab server prediction chalegi."); } setServer(el.dataset.srv); applyServerUI(); const body=document.getElementById("predBody"); if(body) body.innerHTML=`<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>`; loadPrediction(); }); }); }
 function makeElementDraggable(el){ let p1=0,p2=0,p3=0,p4=0,isDrag=false; el.addEventListener('mousedown',mDown); el.addEventListener('touchstart',tStart,{passive:false}); function mDown(e){ if(e.target.tagName==='BUTTON'||e.target.closest('button')) return; isDrag=false; p3=e.clientX; p4=e.clientY; document.addEventListener('mouseup',close); document.addEventListener('mousemove',mMove); } function tStart(e){ if(e.target.tagName==='BUTTON'||e.target.closest('button')) return; isDrag=false; p3=e.touches[0].clientX; p4=e.touches[0].clientY; document.addEventListener('touchend',close); document.addEventListener('touchmove',tMove,{passive:false}); } function mMove(e){ e.preventDefault(); isDrag=true; p1=p3-e.clientX; p2=p4-e.clientY; p3=e.clientX; p4=e.clientY; move(el.offsetTop-p2,el.offsetLeft-p1); } function tMove(e){ e.preventDefault(); isDrag=true; const t=e.touches[0]; p1=p3-t.clientX; p2=p4-t.clientY; p3=t.clientX; p4=t.clientY; move(el.offsetTop-p2,el.offsetLeft-p1); } function move(top,left){ el.style.top=Math.max(0,Math.min(top,window.innerHeight-el.offsetHeight))+"px"; el.style.left=Math.max(0,Math.min(left,window.innerWidth-el.offsetWidth))+"px"; } function close(){ document.removeEventListener('mouseup',close); document.removeEventListener('mousemove',mMove); document.removeEventListener('touchend',close); document.removeEventListener('touchmove',tMove); if(!isDrag){ const ball=document.getElementById('widgetBall'),card=document.getElementById('widgetCard'); if(ball&&ball.style.display!=='none'){ ball.style.display='none'; card.style.display='flex'; } } } }
 function wireInjectorToggle(){ const toggle=document.getElementById('injectorToggle'),widget=document.getElementById('injectorWidget'),card=document.getElementById('widgetCard'),ball=document.getElementById('widgetBall'); toggle.addEventListener('change',()=>{ if(toggle.checked){ widget.style.display='block'; card.style.display='flex'; ball.style.display='none'; }else{ widget.style.display='none'; } checkAndManagePoll(); }); document.getElementById('widgetExitBtn').addEventListener('click',()=>{ widget.style.display='none'; toggle.checked=false; checkAndManagePoll(); }); document.getElementById('widgetHideBtn').addEventListener('click',()=>{ card.style.display='none'; ball.style.display='flex'; }); makeElementDraggable(widget); }
 const fabContainer=document.getElementById("fabContainer"),fabToggle=document.getElementById("fabToggle"),fabLeft=document.getElementById("fabLeft"),fabRight=document.getElementById("fabRight"),hackBtn=document.getElementById("hackBtn"),settingBtn=document.getElementById("settingBtn"),overlay=document.getElementById("panelOverlay"),hackPanel=document.getElementById("hackPanel"),settingPanel=document.getElementById("settingPanel");
@@ -478,10 +534,15 @@ hackBtn.addEventListener("click",()=>{ openPanel("hack"); });
 settingBtn.addEventListener("click",()=>{ openPanel("setting"); });
 overlay.addEventListener("click",()=>{ closePanel(); });
 function renderDragoStatus(){ const el=document.getElementById("dragoStatus"); if(!el) return; const f=dragoFile();
-  if(dragoActive()&&f){ const nm=f.name||"Premium Calculation", mth=(f.method||f.engine||"self-learning"); el.style.display="block";
-    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.4);border-radius:14px;padding:10px 12px;margin-top:10px;"><i class="fa-solid fa-circle-check" style="color:#22c55e;font-size:18px;"></i><div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${nm}</div><div style="font-size:10px;color:#a78bfa;font-weight:700;">PREMIUM ACTIVE · ${mth}</div></div><button id="dragoRemoveBtn" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-weight:800;font-size:11px;padding:6px 10px;border-radius:10px;cursor:pointer;">Remove</button></div>`;
-    const rb=document.getElementById("dragoRemoveBtn"); if(rb) rb.addEventListener("click",()=>{ setDragoActive(false); renderDragoStatus(); showToast("Premium server off. Ab normal server prediction chalegi."); loadPrediction(); });
-  } else { el.style.display="none"; el.innerHTML=""; } }
+  if(dragoActive()&&f){ const nm=f.name||"Premium Calculation", mth=(f.method||f.engine||"self-learning").toLowerCase(), both=dragoTargetMode()==="both", tgt=dragoTarget();
+    const tbtn=(t,lbl)=>`<button class="drago-tgt-btn" data-tgt="${t}" style="flex:1;padding:8px;border-radius:10px;font-weight:800;font-size:11px;cursor:pointer;border:1.5px solid ${tgt===t?'#7C5CFC':'rgba(124,92,252,0.3)'};background:${tgt===t?'rgba(124,92,252,0.15)':'transparent'};color:${tgt===t?'#7C5CFC':'#a78bfa'};">${lbl}</button>`;
+    const toggle = both ? `<div style="display:flex;gap:8px;margin-top:10px;">${tbtn('color','GREEN / RED')}${tbtn('size','BIG / SMALL')}</div>` : `<div style="font-size:10px;color:#a78bfa;font-weight:700;margin-top:6px;">Target: ${tgt==='size'?'BIG / SMALL':'GREEN / RED'}</div>`;
+    el.style.display="block";
+    el.innerHTML=`<div style="background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.4);border-radius:14px;padding:10px 12px;margin-top:10px;"><div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-circle-check" style="color:#22c55e;font-size:18px;"></i><div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${nm}</div><div style="font-size:10px;color:#a78bfa;font-weight:700;">PREMIUM ACTIVE · ${mth}</div></div><button id="dragoRemoveBtn" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-weight:800;font-size:11px;padding:6px 10px;border-radius:10px;cursor:pointer;">Remove</button></div>${toggle}</div>`;
+    const rb=document.getElementById("dragoRemoveBtn"); if(rb) rb.addEventListener("click",()=>{ setDragoActive(false); renderDragoStatus(); showToast(isPaid?"Calculation off. Ab server prediction chalegi.":"Calculation off. Free mein dobara file upload karke use karo."); loadPrediction(); });
+    el.querySelectorAll(".drago-tgt-btn").forEach(b=>b.addEventListener("click",()=>{ setDragoTarget(b.dataset.tgt); renderDragoStatus(); loadPrediction(); }));
+  } else { el.style.display="none"; el.innerHTML=""; }
+  applyServerUI(); }
 function wireDrago(){ const btn=document.getElementById("premiumSrvBtn"), inp=document.getElementById("dragoFile");
   btn.addEventListener("click",()=>{ if(dragoActive()){ showToast("Premium server already active hai. Dusri file ke liye Remove karke wapas upload karo."); return; } inp.value=""; inp.click(); });
   inp.addEventListener("change",()=>{ const file=inp.files&&inp.files[0]; if(!file) return;
@@ -490,8 +551,9 @@ function wireDrago(){ const btn=document.getElementById("premiumSrvBtn"), inp=do
     reader.onload=()=>{ let data=null; try{ data=JSON.parse(reader.result); }catch(e){ data=null; }
       if(!data||data.drago!==true){ showToast("Invalid .drago file. Calculation file galat ya corrupt hai."); return; }
       if(!data.name) data.name=file.name.replace(/\.drago$/i,"");
+      localStorage.removeItem("_drago_tgt");
       localStorage.setItem("_drago",JSON.stringify(data)); setDragoActive(true); renderDragoStatus();
-      showToast("Premium server attached! Prediction ab aapki calculation se aayegi."); loadPrediction(); };
+      showToast("Calculation attached! Prediction ab aapki file se aayegi."); openPanel("hack"); loadPrediction(); };
     reader.onerror=()=>showToast("File read nahi ho payi. Dobara try karo.");
     reader.readAsText(file); });
   renderDragoStatus(); }

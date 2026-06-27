@@ -1,0 +1,19 @@
+{
+  "drago": true,
+  "name": "Drago Advanced Multi-Layer",
+  "version": 2,
+  "method": "advanced",
+  "target": "both",
+  "config": {
+    "context_lengths": [1, 2, 3, 4, 5],
+    "windows": [8, 20, 40, 80],
+    "min_observations": 2,
+    "decay": 0.97,
+    "laplace": 0.5,
+    "ewma_alpha": 0.25,
+    "streak_threshold": 3,
+    "layer_lr": 0.04,
+    "conf_floor": 52,
+    "conf_cap": 94
+  }
+}
