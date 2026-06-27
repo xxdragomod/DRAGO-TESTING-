@@ -298,6 +298,8 @@ input:checked + .slider:before{transform:translateX(26px);}
       <img class="premium-server-img" src="https://i.ibb.co/PGQq37Rn/20260625-140319.png" alt="Premium Server">
       <span class="premium-server-text">I want to use my<br>premium server</span>
     </button>
+    <input type="file" id="dragoFile" accept=".drago" style="display:none">
+    <div id="dragoStatus" class="drago-status" style="display:none"></div>
     <div class="set-section-label">Available Servers</div>
     <div class="servers-row">
       <div class="server-select-btn" id="srvSize" data-srv="size"><img class="server-select-img" src="https://i.ibb.co/1tLZMhZD/20260625-140159.png" alt="Prime"><span class="server-select-text">PRIME</span></div>
@@ -339,7 +341,127 @@ function stopTimerTick(){ if(timerTmr){ clearInterval(timerTmr); timerTmr=null; 
 function updateFloatingWidget(res){ const call=(res.prediction||"WAIT").toUpperCase(),period=res.period||"—",meta=CALL_META[call]; const wp=document.getElementById('widgetPeriod'); if(wp) wp.textContent="PERIOD: "+period; const wpb=document.getElementById('widgetPredBox'); if(wpb){ wpb.innerHTML=meta?`<img src="${meta.img}" class="widget-pred-img" alt="${call}">`:`<div class="widget-pred-wait">WAIT</div>`; } const bl=document.getElementById('widgetBallLogo'); if(bl) bl.src=getServer()==="size"?"https://i.ibb.co/1tLZMhZD/20260625-140159.png":"https://i.ibb.co/fdcdwsGT/20260625-140109.png"; }
 function renderPredCard(d){ const call=(d.prediction||"WAIT").toUpperCase(),conf=Math.round(d.confidence||0),wr=Math.round(d.win_rate||0),badge=d.badge||"—",period=d.period||"—",meta=CALL_META[call],lvlPct=badgePct(badge),tfSecs=parseTfSecs(predTf)||60,initRem=tfSecs-(Math.floor(Date.now()/1000)%tfSecs),initPct=(initRem/tfSecs)*100,initMins=Math.floor(initRem/60),initSecs=initRem%60,initStr=initMins>0?`${initMins}:${String(initSecs).padStart(2,'0')}`:`${initSecs}s`; let imageUI=`<div class="pred-img-wait"><i class="fa-solid fa-clock" style="margin-right:10px;"></i> WAIT</div>`; if(meta) imageUI=`<img src="${meta.img}" class="pred-img-large" alt="${call}">`; return `<div class="pred-image-container">${imageUI}</div><div style="display:flex;justify-content:center;width:100%;"><div class="pred-period-badge"><i class="fa-solid fa-hashtag"></i> Period : ${period}</div></div><div class="pred-card-main"><div class="pill-progress-card"><div class="pill-progress-header"><span class="pill-progress-lbl">Confidence</span><span class="pill-progress-text">${conf}%</span></div><div class="pill-track"><div class="pill-fill" style="width:${conf}%"></div></div></div><div class="pred-meters-row"><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(lvlPct,"#7C5CFC","")}<div class="pred-meter-val">${badge}<div class="pred-meter-sub">Level</div></div></div><span class="pred-meter-lbl">Level</span></div><div class="pred-meter-card"><div class="pred-meter-ring">${buildSmallRing(wr,"#7C5CFC","")}<div class="pred-meter-val">${wr}%<div class="pred-meter-sub">WR</div></div></div><span class="pred-meter-lbl">Win Rate</span></div><div class="pred-meter-card"><div class="pred-meter-ring"><svg viewBox="0 0 68 68" style="position:absolute;inset:0;width:100%;height:100%"><circle cx="34" cy="34" r="${R_SM}" fill="none" stroke="#e2e8f0" stroke-width="11"/><circle id="tmr-fill" cx="34" cy="34" r="${R_SM}" fill="none" stroke="#7C5CFC" stroke-width="11" stroke-linecap="round" stroke-dasharray="${CIRC_SM.toFixed(2)}" stroke-dashoffset="${(CIRC_SM-(initPct/100)*CIRC_SM).toFixed(2)}" transform="rotate(-90 34 34)" style="transition:stroke-dashoffset .5s ease"/></svg><div class="pred-meter-val" id="tmr-val">${initStr}<div class="pred-meter-sub">left</div></div></div><span class="pred-meter-lbl">Timer</span></div></div></div>`; }
 function applyServerUI(){ const s=getServer(),isColor=s==="color",c=document.getElementById("srvColor"),z=document.getElementById("srvSize"); if(c&&z){ c.classList.toggle("active",isColor); z.classList.toggle("active",!isColor); } }
-async function loadPrediction(){ const body=document.getElementById("predBody"); if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">📊</span><span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span></div>`; return; } const a=auth(); if(!a){ goLogin(); return; } try{ const d=await withRefresh(()=>apiFetch("/api/prediction",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,target:getServer()})); if(!d) return; const res=d.result||{}; if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; } body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res); }catch(e){ if(e&&e.status===403){ const msg=(e.detail||"").toString(); if(msg.indexOf("upgrade")>=0){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic" style="font-size:40px">🔒</span><span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span><a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a></div>`; checkAndManagePoll(); return; } return; } body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; } }
+/* ═══════════════════════════════════════════════════════════════════
+   PREMIUM (.drago) — CLIENT-SIDE CALCULATION ENGINE
+   User apni .drago file upload karta hai (sirf calculation/method, koi API
+   nahi). Data wahi server se aata hai (/api/results-history & /api/results-latest),
+   par PREDICTION device par hi .drago ke method se banti hai. Free + paid dono.
+   ═══════════════════════════════════════════════════════════════════ */
+function dgColorLetter(n){ n=+n; return (n===1||n===3||n===5||n===7||n===9)?'G':'R'; }
+function dgSizeLetter(n){ return (+n>=5)?'B':'S'; }
+function dgNextPeriod(p){ try{ return (BigInt(String(p).trim())+1n).toString(); }catch(e){ const x=parseInt(p,10); return isNaN(x)?String(p):String(x+1); } }
+function dgLevelBadge(lv){ return ({1:"🟢L1",2:"🟡L2",3:"🟠L3",4:"🔴L4"})[lv]||"🟢L1"; }
+
+/* Loaded .drago file (parsed). null => premium off. */
+function dragoFile(){ try{ return JSON.parse(localStorage.getItem("_drago")||"null"); }catch(e){ return null; } }
+function dragoActive(){ return localStorage.getItem("_drago_on")==="1" && !!dragoFile(); }
+function setDragoActive(on){ localStorage.setItem("_drago_on", on?"1":"0"); }
+
+/* Method 1 — SELF LEARNING (server.py ka exact algorithm, browser me port) */
+function dgSelfLearning(cfg, target, nums){
+  const CL=cfg.context_lengths||[1,2,3,4], MIN=cfg.min_observations||2,
+        DECAY=cfg.decay||0.96, ALPHA=cfg.ewma_alpha||0.30,
+        FLOOR=cfg.conf_floor||50, CAP=cfg.conf_cap||92,
+        SWITCH=cfg.loss_switch_bias||[0,0.10,0.22,0.35];
+  const letter=(n)=>target==='color'?dgColorLetter(n):dgSizeLetter(n);
+  const label =(l)=>target==='color'?(l==='G'?'GREEN':'RED'):(l==='B'?'BIG':'SMALL');
+  let mem={}, hist=[], wins=0, total=0, consec=0, level=1, pending=null;
+  const cell=(p,l)=>{ (mem[p]=mem[p]||{}); return (mem[p][l]=mem[p][l]||{w:0,l:0,total:0,wt:0,acc:0.5,plays:0}); };
+  const opp=()=>{ if(!hist.length) return target==='color'?'G':'B'; const last=hist[hist.length-1];
+    return target==='color'?(last==='G'?'R':'G'):(last==='B'?'S':'B'); };
+  function fallback(sb,op){ const recent=hist.slice(-20), a=target==='color'?'G':'B', b=target==='color'?'R':'S';
+    const ca=recent.filter(x=>x===a).length, cb=recent.filter(x=>x===b).length;
+    const sa=ca+(op===a?sb*10:0), sb2=cb+(op===b?sb*10:0), L=sa>=sb2?a:b;
+    const tot=(ca+cb)||1, prob=Math.max(ca,cb)/tot, conf=Math.round(Math.max(FLOOR,Math.min(prob*100,CAP)));
+    return {pattern:'*',pred_letter:L,label:label(L),conf}; }
+  function predictNext(){ const sb=SWITCH[level-1]||0, op=opp(); let best=null,bs=-1;
+    for(const Lc of CL){ if(hist.length<Lc) continue; const pat=hist.slice(-Lc).join(''); const counts=mem[pat]; if(!counts) continue;
+      let wtAll=0; for(const k in counts) wtAll+=counts[k].wt; if(!wtAll) wtAll=1;
+      for(const lt in counts){ const s=counts[lt]; if(s.total<MIN) continue;
+        const freq=s.wt/wtAll, wAcc=Math.min(s.plays,8)/8;
+        let prob=(1-wAcc)*freq + wAcc*(0.5*freq+0.5*s.acc);
+        prob += (lt!==op? -sb*0.5 : sb*0.5); prob=Math.max(0.01,Math.min(prob,0.99));
+        const score=prob*Math.log(s.wt+1.5)*(1+Lc*0.06);
+        if(score>bs){ bs=score; best={pattern:pat,pred_letter:lt,label:label(lt),conf:Math.round(Math.max(FLOOR,Math.min(prob*100,CAP)))}; } } }
+    if(!best && hist.length>=1) best=fallback(sb,op); return best; }
+  for(const rec of nums){ const n=+rec.number, al=letter(n);
+    if(pending){ const correct=pending.label===label(al); total++; if(correct) wins++;
+      const e=cell(pending.pattern,pending.pred_letter); correct?e.w++:e.l++; e.plays++;
+      e.acc=(1-ALPHA)*e.acc+ALPHA*(correct?1:0);
+      if(correct){ consec=0; level=1; } else { consec++; level=Math.min(consec+1,4); } pending=null; }
+    for(const Lc of CL){ if(hist.length>=Lc){ const pat=hist.slice(-Lc).join('');
+      mem[pat]=mem[pat]||{}; for(const k in mem[pat]) mem[pat][k].wt*=DECAY; const c=cell(pat,al); c.total++; c.wt+=1; } }
+    hist.push(al); pending=predictNext(); }
+  const wr=total?Math.round(wins/total*1000)/10:0, lastP=nums[nums.length-1].period, np=dgNextPeriod(lastP);
+  if(pending) return {prediction:pending.label,confidence:pending.conf,win_rate:wr,badge:dgLevelBadge(level),period:np};
+  return {prediction:"WAIT",confidence:0,win_rate:wr,badge:dgLevelBadge(level),period:np}; }
+
+/* Method 2 — FREQUENCY (recent window me jo zyada aaya wahi) */
+function dgFrequency(cfg, target, nums){
+  const W=cfg.window||30, FLOOR=cfg.conf_floor||50, CAP=cfg.conf_cap||92;
+  const letter=(n)=>target==='color'?dgColorLetter(n):dgSizeLetter(n);
+  const label =(l)=>target==='color'?(l==='G'?'GREEN':'RED'):(l==='B'?'BIG':'SMALL');
+  const a=target==='color'?'G':'B', b=target==='color'?'R':'S';
+  let wins=0,total=0;
+  const predAt=(arr)=>{ const w=arr.slice(-W); const ca=w.filter(x=>x===a).length, cb=w.filter(x=>x===b).length;
+    if(!w.length) return null; const L=ca>=cb?a:b, prob=Math.max(ca,cb)/((ca+cb)||1);
+    return {L,conf:Math.round(Math.max(FLOOR,Math.min(prob*100,CAP)))}; };
+  const seq=[];
+  for(const rec of nums){ const al=letter(+rec.number);
+    const p=predAt(seq); if(p){ total++; if(label(p.L)===label(al)) wins++; } seq.push(al); }
+  const p=predAt(seq), wr=total?Math.round(wins/total*1000)/10:0, np=dgNextPeriod(nums[nums.length-1].period);
+  if(p) return {prediction:label(p.L),confidence:p.conf,win_rate:wr,badge:"🟢L1",period:np};
+  return {prediction:"WAIT",confidence:0,win_rate:wr,badge:"🟢L1",period:np}; }
+
+/* Method 3 — STREAK (chalti hui streak ka continuation / reversal) */
+function dgStreak(cfg, target, nums){
+  const mode=(cfg.streak_mode||"reverse"), TH=cfg.streak_threshold||2,
+        FLOOR=cfg.conf_floor||50, CAP=cfg.conf_cap||92;
+  const letter=(n)=>target==='color'?dgColorLetter(n):dgSizeLetter(n);
+  const label =(l)=>target==='color'?(l==='G'?'GREEN':'RED'):(l==='B'?'BIG':'SMALL');
+  const flip=(l)=>target==='color'?(l==='G'?'R':'G'):(l==='B'?'S':'B');
+  let wins=0,total=0;
+  const predAt=(arr)=>{ if(!arr.length) return null; const last=arr[arr.length-1]; let run=0;
+    for(let i=arr.length-1;i>=0&&arr[i]===last;i--) run++;
+    let L=last; if(run>=TH){ L=(mode==="reverse")?flip(last):last; }
+    const conf=Math.round(Math.max(FLOOR,Math.min((0.5+Math.min(run,5)*0.08)*100,CAP)));
+    return {L,conf}; };
+  const seq=[];
+  for(const rec of nums){ const al=letter(+rec.number);
+    const p=predAt(seq); if(p){ total++; if(label(p.L)===label(al)) wins++; } seq.push(al); }
+  const p=predAt(seq), wr=total?Math.round(wins/total*1000)/10:0, np=dgNextPeriod(nums[nums.length-1].period);
+  if(p) return {prediction:label(p.L),confidence:p.conf,win_rate:wr,badge:"🟢L1",period:np};
+  return {prediction:"WAIT",confidence:0,win_rate:wr,badge:"🟢L1",period:np}; }
+
+/* Dispatcher — .drago file ka "method" choose karta hai (default self-learning) */
+function runDragoEngine(drago, target, nums){
+  if(!drago||!nums||!nums.length) return null;
+  const cfg=drago.config||{}, method=(drago.method||drago.engine||"self-learning").toLowerCase();
+  if(method==="frequency") return dgFrequency(cfg,target,nums);
+  if(method==="streak")    return dgStreak(cfg,target,nums);
+  return dgSelfLearning(cfg,target,nums);
+}
+
+/* Premium prediction loader — server prediction ki jagah .drago se banata hai */
+async function loadPredictionPremium(body){
+  if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">📊</span><span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span></div>`; return; }
+  const a=auth(); if(!a){ goLogin(); return; }
+  const drago=dragoFile();
+  try{
+    const dh=await withRefresh(()=>apiFetch("/api/results-history",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,limit:200}));
+    if(!dh) return;
+    let results=(dh.result&&dh.result.results)||[];
+    try{ const dl=await withRefresh(()=>apiFetch("/api/results-latest",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf}));
+      if(dl&&dl.result&&dl.result.period){ const lp=String(dl.result.period);
+        if(!results.length||String(results[results.length-1].period)!==lp){ results=results.concat([{period:lp,number:dl.result.number}]); } } }catch(e){}
+    if(!results.length){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
+    const res=runDragoEngine(drago,getServer(),results);
+    if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
+    body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res);
+  }catch(e){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Premium prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; }
+}
+
+async function loadPrediction(){ const body=document.getElementById("predBody"); if(dragoActive()){ return loadPredictionPremium(body); } if(!predGame||!predTf){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">📊</span><span class="pred-msg-txt">Is game ke liye prediction available nahi hai.</span></div>`; return; } const a=auth(); if(!a){ goLogin(); return; } try{ const d=await withRefresh(()=>apiFetch("/api/prediction",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,target:getServer()})); if(!d) return; const res=d.result||{}; if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; } body.innerHTML=renderPredCard(res); startTimerTick(); updateFloatingWidget(res); }catch(e){ if(e&&e.status===403){ const msg=(e.detail||"").toString(); if(msg.indexOf("upgrade")>=0){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic" style="font-size:40px">🔒</span><span class="pred-msg-txt">Prediction sirf <b style="color:#7C5CFC">paid plan</b> ke saath milti hai.<br>Free plan mein sirf games access hain.</span><a class="pred-upgrade-btn" href="/payment"><i class="fa-solid fa-crown"></i> Upgrade Plan</a></div>`; checkAndManagePoll(); return; } return; } body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">🔄</span><span class="pred-msg-txt">Prediction load nahi ho payi.<br>Auto-retry ho rahi hai...</span></div>`; } }
 function shouldPollPredictions(){ return (activePanel==="hack")||document.getElementById("injectorToggle").checked; }
 function checkAndManagePoll(){ applyServerUI(); if(shouldPollPredictions()){ if(!predTmr){ loadPrediction(); predTmr=setInterval(loadPrediction,10000); } }else{ if(predTmr){ clearInterval(predTmr); predTmr=null; } stopTimerTick(); } }
 function wireServerSelect(){ document.querySelectorAll(".server-select-btn").forEach(el=>{ el.addEventListener("click",()=>{ setServer(el.dataset.srv); applyServerUI(); const body=document.getElementById("predBody"); if(body) body.innerHTML=`<div class="pred-loading"><div class="spinner"></div><span class="loader-text">Switching server...</span></div>`; loadPrediction(); }); }); }
@@ -355,7 +477,25 @@ fabToggle.addEventListener("click",()=>{ fabOpen?(closeFab(),closePanel()):openF
 hackBtn.addEventListener("click",()=>{ openPanel("hack"); });
 settingBtn.addEventListener("click",()=>{ openPanel("setting"); });
 overlay.addEventListener("click",()=>{ closePanel(); });
-async function init(){ const a=auth(); if(!a){ goLogin(); return; } const params=new URLSearchParams(window.location.search),gameName=params.get("name")||"Game"; gameLink=params.get("link")||""; predGame=(params.get("game")||"").toLowerCase(); predTf=(params.get("tf")||"").toLowerCase(); document.getElementById("heroTitle").textContent=gameName; document.getElementById("fbTitle").textContent=gameName; document.title=gameName+" — Drago Predictor"; applyServerUI(); wireServerSelect(); wireInjectorToggle(); document.getElementById('premiumSrvBtn').addEventListener('click',()=>{ showToast("Abhi ye feature add nahi hua hai, bahut jald hone wala hai."); }); document.getElementById("backBtn").addEventListener("click",()=>{ window.history.length>1?window.history.back():window.location.href="/game"; }); if(gameLink) document.getElementById("fbBtn").href=gameLink; if(!gameLink){ hideAuthOverlay(); document.getElementById("ovNoLink").classList.add("show"); return; } try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); if(!handleStatus(d.account_status||"active",d.subscription_status||"none")){ hideAuthOverlay(); return; } startPoll(); }catch(e){ startPoll(); } hideAuthOverlay(); loadFrame(gameLink); }
+function renderDragoStatus(){ const el=document.getElementById("dragoStatus"); if(!el) return; const f=dragoFile();
+  if(dragoActive()&&f){ const nm=f.name||"Premium Calculation", mth=(f.method||f.engine||"self-learning"); el.style.display="block";
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:10px;background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.4);border-radius:14px;padding:10px 12px;margin-top:10px;"><i class="fa-solid fa-circle-check" style="color:#22c55e;font-size:18px;"></i><div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${nm}</div><div style="font-size:10px;color:#a78bfa;font-weight:700;">PREMIUM ACTIVE · ${mth}</div></div><button id="dragoRemoveBtn" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-weight:800;font-size:11px;padding:6px 10px;border-radius:10px;cursor:pointer;">Remove</button></div>`;
+    const rb=document.getElementById("dragoRemoveBtn"); if(rb) rb.addEventListener("click",()=>{ setDragoActive(false); renderDragoStatus(); showToast("Premium server off. Ab normal server prediction chalegi."); loadPrediction(); });
+  } else { el.style.display="none"; el.innerHTML=""; } }
+function wireDrago(){ const btn=document.getElementById("premiumSrvBtn"), inp=document.getElementById("dragoFile");
+  btn.addEventListener("click",()=>{ if(dragoActive()){ showToast("Premium server already active hai. Dusri file ke liye Remove karke wapas upload karo."); return; } inp.value=""; inp.click(); });
+  inp.addEventListener("change",()=>{ const file=inp.files&&inp.files[0]; if(!file) return;
+    if(!/\.drago$/i.test(file.name)){ showToast("Galat file. Sirf .drago file upload karo."); return; }
+    const reader=new FileReader();
+    reader.onload=()=>{ let data=null; try{ data=JSON.parse(reader.result); }catch(e){ data=null; }
+      if(!data||data.drago!==true){ showToast("Invalid .drago file. Calculation file galat ya corrupt hai."); return; }
+      if(!data.name) data.name=file.name.replace(/\.drago$/i,"");
+      localStorage.setItem("_drago",JSON.stringify(data)); setDragoActive(true); renderDragoStatus();
+      showToast("Premium server attached! Prediction ab aapki calculation se aayegi."); loadPrediction(); };
+    reader.onerror=()=>showToast("File read nahi ho payi. Dobara try karo.");
+    reader.readAsText(file); });
+  renderDragoStatus(); }
+async function init(){ const a=auth(); if(!a){ goLogin(); return; } const params=new URLSearchParams(window.location.search),gameName=params.get("name")||"Game"; gameLink=params.get("link")||""; predGame=(params.get("game")||"").toLowerCase(); predTf=(params.get("tf")||"").toLowerCase(); document.getElementById("heroTitle").textContent=gameName; document.getElementById("fbTitle").textContent=gameName; document.title=gameName+" — Drago Predictor"; applyServerUI(); wireServerSelect(); wireInjectorToggle(); wireDrago(); document.getElementById("backBtn").addEventListener("click",()=>{ window.history.length>1?window.history.back():window.location.href="/game"; }); if(gameLink) document.getElementById("fbBtn").href=gameLink; if(!gameLink){ hideAuthOverlay(); document.getElementById("ovNoLink").classList.add("show"); return; } try{ const d=await withRefresh(()=>apiFetch("/api/account-status",a)); if(!handleStatus(d.account_status||"active",d.subscription_status||"none")){ hideAuthOverlay(); return; } startPoll(); }catch(e){ startPoll(); } hideAuthOverlay(); loadFrame(gameLink); }
 init();
 </script>
 </body>

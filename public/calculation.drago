@@ -1,0 +1,15 @@
+{
+  "drago": true,
+  "name": "Drago Self-Learning Calc",
+  "version": 1,
+  "method": "self-learning",
+  "config": {
+    "context_lengths": [1, 2, 3, 4],
+    "min_observations": 2,
+    "decay": 0.96,
+    "ewma_alpha": 0.30,
+    "conf_floor": 50,
+    "conf_cap": 92,
+    "loss_switch_bias": [0, 0.10, 0.22, 0.35]
+  }
+}

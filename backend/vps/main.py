@@ -10,6 +10,15 @@ import hmac as _hmac
 import hashlib, os, time, logging, threading, datetime, json, base64, re
 from collections import defaultdict
 
+# Prediction engine (server.py) — same process, same FastAPI app
+import server
+from server import (
+    router as prediction_router,
+    start_prediction_engine,
+    read_prediction, read_both, engine_status_payload,
+    read_results, read_latest_result,
+)
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -134,6 +143,17 @@ def check_active(user: dict):
     s = user.get("status", "active")
     if s in ("banned", "blocked", "paused"):
         raise HTTPException(403, s)
+
+def require_paid(user: dict):
+    """Prediction sirf PAID active plan ko. Free / none / expired ko block."""
+    check_active(user)
+    sub = user.get("subscription_status", "none")
+    if sub != "active":
+        # free, none, expired, rejected — sabko prediction se rok do
+        raise HTTPException(403, "upgrade_required")
+    exp = int(user.get("plan_expires_at") or 0)
+    if exp and exp < int(time.time() * 1000):
+        raise HTTPException(403, "upgrade_required")
 
 def ist_now(ts_ms: int) -> str:
     dt = datetime.datetime.utcfromtimestamp(ts_ms / 1000) + datetime.timedelta(hours=5, minutes=30)
@@ -345,7 +365,7 @@ def handle_message(msg: dict):
 
 # ─────────────────────────────────────────────
 # TELEGRAM CALLBACK HANDLER
-# ─────────────────────────────────────────────
+# ────────────────────────────���────────────────
 def handle_callback(cb_id: str, data: str, chat_id, msg_id, cb_from: dict = None):
     try:
         if data == "done":
@@ -508,12 +528,22 @@ def _polling_loop():
 # ─────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(_app):
+    # 1) Telegram bot polling (auth/payment)
     t = threading.Thread(target=_polling_loop, daemon=True, name="tg-poll")
     t.start()
     logger.info("Telegram polling thread started.")
+
+    # 2) Prediction engine — 3 streams (TRX-1m, Wingo-1m, Wingo-30s)
+    #    background threads me chalu, server ke saath-saath.
+    try:
+        start_prediction_engine()
+        logger.info("Prediction engine streams started.")
+    except Exception as e:
+        logger.error(f"Prediction engine start failed: {e}")
+
     yield
 
-# ─────────────────────────────────────────────
+# ──────��──────────────────────────────────────
 # APP + CORS
 # ─────────────────────────────────────────────
 app = FastAPI(lifespan=lifespan)
@@ -525,6 +555,9 @@ app.add_middleware(
     allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["X-Bridge-Secret", "Content-Type"],
 )
+
+# Prediction endpoints (/api/prediction/...) — server.py se
+app.include_router(prediction_router)
 
 # ─────────────────────────────────────────────
 # MODELS
@@ -551,6 +584,23 @@ class CalcReq(BaseModel):
     uid: str
     session_signature: str
     data: dict
+
+class PredictReq(BaseModel):
+    uid: str
+    session_signature: str
+    game: str                      # "trx" | "wingo"
+    timeframe: str                 # "1m" | "30s"
+    target: str | None = None      # "color" | "size" | None (dono)
+
+# ── PREMIUM (.drago) DATA MODELS ──────────────
+# Browser ka client-side ".drago" engine yahi RAW results le kar SAME algorithm
+# device par chalata hai. Free + paid dono ke liye open (sirf active user).
+class ResultsReq(BaseModel):
+    uid: str
+    session_signature: str
+    game: str                      # "trx" | "wingo"
+    timeframe: str                 # "1m" | "30s"
+    limit: int | None = 200        # kitne recent results (max 300)
 
 # ── GAME MODELS ───────────────────────────────
 class GamesReq(BaseModel):
@@ -969,6 +1019,69 @@ def calculate(req: CalcReq, request: Request,
     except Exception as e:
         logger.error(f"calculate: {e}")
         raise HTTPException(500, "Calculation failed.")
+
+
+# ── PREDICTION (self-learning engine) — PAID ──
+@app.post("/get-prediction")
+def get_prediction(req: PredictReq, request: Request,
+                   _auth: bool = Depends(verify_bridge)):
+    check_rate_limit(request, limit=40)   # game page polls this frequently
+    if not verify_session_sig(req.uid, req.session_signature):
+        raise HTTPException(403, "session_expired")
+    user = get_user(req.uid)
+    require_paid(user)                     # sirf PAID active plan (free block)
+    try:
+        if req.target:
+            data = read_prediction(req.game, req.timeframe, req.target)
+        else:
+            data = read_both(req.game, req.timeframe)
+        return {"status": "success", "result": data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"get-prediction: {e}")
+        raise HTTPException(500, "Prediction failed.")
+
+
+# ─────────────────────────────────────────────
+# PREMIUM (.drago) — RAW RESULTS (free + paid)
+# Yahan koi prediction/calculation NAHI hoti. Browser apni .drago file ke
+# calculation se khud prediction banata hai; ye sirf raw lottery results deta.
+# ─────────────────────────────────────────────
+@app.post("/results-latest")
+def results_latest(req: ResultsReq, request: Request,
+                   _auth: bool = Depends(verify_bridge)):
+    check_rate_limit(request, limit=40)
+    if not verify_session_sig(req.uid, req.session_signature):
+        raise HTTPException(403, "session_expired")
+    user = get_user(req.uid)
+    check_active(user)                     # active hona kaafi (free bhi allowed)
+    try:
+        data = read_latest_result(req.game, req.timeframe)
+        return {"status": "success", "result": data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"results-latest: {e}")
+        raise HTTPException(500, "Results fetch failed.")
+
+
+@app.post("/results-history")
+def results_history(req: ResultsReq, request: Request,
+                    _auth: bool = Depends(verify_bridge)):
+    check_rate_limit(request, limit=40)
+    if not verify_session_sig(req.uid, req.session_signature):
+        raise HTTPException(403, "session_expired")
+    user = get_user(req.uid)
+    check_active(user)                     # active hona kaafi (free bhi allowed)
+    try:
+        data = read_results(req.game, req.timeframe, req.limit or 200)
+        return {"status": "success", "result": data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"results-history: {e}")
+        raise HTTPException(500, "Results fetch failed.")
 
 
 # ─────────────────────────────────────────────
