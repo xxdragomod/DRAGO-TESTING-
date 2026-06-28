@@ -488,10 +488,61 @@ function dgAdvanced(cfg, target, nums){
   if(pending) return {prediction:label(pending.pick),confidence:pending.conf,win_rate:wr,badge:dgLevelBadge(level),period:np};
   return {prediction:"WAIT",confidence:0,win_rate:wr,badge:dgLevelBadge(level),period:np}; }
 
+/* Method 5 — CUSTOM CODE: .drago file ke andar likha hua aapka apna JS engine chalata hai.
+   File me "method":"custom" aur ek "code" string ho. Code ko ye milta hai:
+     data.results   -> newest-first list [{issue,period,number,color,colors,primary,size}]
+     data.history   -> oldest-first wahi list
+     data.apiData   -> {data:{list:[...]}}  (DragoAnalyzer style — paste-and-run compatible)
+     data.target    -> 'color' | 'size'
+     helpers        -> {colorOf,sizeOf,nextPeriod}
+   Code return kare in me se koi bhi shape:
+     {prediction:"GREEN"} | {color:"green"} | {size:"big"}
+     ya DragoAnalyzer.analyze() jaisa {prediction:{color,confidence,reason}}.
+   NOTE: code aapki khud ki uploaded file se aata hai (aapka apna calculation),
+   isliye ise client-side run kiya jata hai. */
+function dgCustom(drago, target, nums){
+  const np=dgNextPeriod(nums[nums.length-1].period);
+  const code=(drago.code||drago.script||drago.js||"").toString();
+  if(!code.trim()) return {prediction:"WAIT",confidence:0,win_rate:0,badge:"🟢L1",period:np,reason:"File me 'code' nahi mila."};
+  const rich=nums.map(r=>{ const num=+r.number;
+    const colors=(num===0)?['red','violet']:(num===5)?['green','violet']:(num%2===0?['red']:['green']);
+    return { issue:String(r.period), issueNumber:String(r.period), period:String(r.period), number:num,
+      color:colors.join(','), colors:colors, primary:colors[0], size:(num>=5?'big':'small') }; });
+  const newestFirst=rich.slice().reverse();
+  const data={ results:newestFirst, newestFirst:newestFirst, history:rich, target:target,
+    apiData:{ data:{ list:newestFirst.map(x=>({issueNumber:x.issue,number:String(x.number),color:x.color})) } } };
+  const helpers={ colorOf:(n)=>dgColorLetter(n)==='G'?'green':'red', sizeOf:(n)=>dgSizeLetter(n)==='B'?'big':'small', nextPeriod:dgNextPeriod };
+  let out=null;
+  try{
+    const runner=new Function('data','helpers','"use strict";\n'+code+
+      '\nreturn (typeof dragoPredict==="function")?dragoPredict(data,helpers)'+
+      ':(typeof predict==="function")?predict(data,helpers)'+
+      ':(typeof analyze==="function")?analyze(data.apiData)'+
+      ':(typeof DragoAnalyzer!=="undefined"&&DragoAnalyzer.analyze)?DragoAnalyzer.analyze(data.apiData):null;');
+    out=runner(data,helpers);
+  }catch(e){ console.log("[v0] custom .drago error:",e&&e.message);
+    return {prediction:"WAIT",confidence:0,win_rate:0,badge:"⚠️ERR",period:np,reason:"Code error: "+((e&&e.message)||"unknown")}; }
+  return dgNormalizeCustom(out,target,np);
+}
+function dgNormalizeCustom(out,target,np){
+  const wrap=(p,c,extra)=>Object.assign({prediction:p,confidence:Math.round(Math.max(0,Math.min(c||0,99))),win_rate:0,badge:"🟢L1",period:np},extra||{});
+  if(!out||typeof out!=="object") return wrap("WAIT",0);
+  let o=out; if(o.prediction&&typeof o.prediction==="object") o=o.prediction;
+  const conf=o.confidence||o.conf||out.confidence||0, reason=o.reason||out.reason||"";
+  const v=(o.prediction||o.color||o.size||o.result||"").toString().toLowerCase().trim();
+  let pred=null;
+  if(target==='color'){ if(v.includes('green')||v==='g') pred='GREEN'; else if(v.includes('red')||v==='r') pred='RED'; }
+  else { if(v.includes('big')||v==='b') pred='BIG'; else if(v.includes('small')||v==='s') pred='SMALL'; }
+  if(!pred) return wrap("WAIT",0,{reason:reason});
+  return wrap(pred,conf||55,{reason:reason});
+}
+
 /* Dispatcher — .drago file ka "method" choose karta hai (default self-learning) */
 function runDragoEngine(drago, target, nums){
   if(!drago||!nums||!nums.length) return null;
   const cfg=drago.config||{}, method=(drago.method||drago.engine||"self-learning").toLowerCase();
+  const hasCode=!!(drago.code||drago.script||drago.js);
+  if(method==="custom"||method==="code"||hasCode) return dgCustom(drago,target,nums);
   if(method==="frequency") return dgFrequency(cfg,target,nums);
   if(method==="streak")    return dgStreak(cfg,target,nums);
   if(method==="advanced"||method==="multi-layer"||method==="multilayer"||method==="ensemble"||method==="pro") return dgAdvanced(cfg,target,nums);
