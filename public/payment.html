@@ -101,6 +101,11 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
 .welcome-text{font-size:10px;font-weight:600;color:#888}
 .user-name{font-size:14px;font-weight:900;color:#1a1a2e;text-transform:uppercase;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+/* History Button */
+#historyBtn{position:fixed;top:16px;right:14px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#fff;border:1.5px solid #DDD6FE;box-shadow:0 4px 12px rgba(124,58,237,.12);z-index:100;cursor:pointer;transition:transform .15s}
+#historyBtn:active{transform:scale(.92)}
+#historyBtn svg{stroke:#7C3AED;fill:none}
+
 /* Full-screen overlays */
 .full-ov{display:none;position:fixed;inset:0;z-index:3000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff)}
 .full-ov.show{display:flex}
@@ -173,6 +178,14 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
   </div>
 </div>
 
+<!-- History Icon -->
+<div id="historyBtn" onclick="openHistoryModal()" title="Active Plan Status">
+  <svg viewBox="0 0 24 24" width="22" height="22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </svg>
+</div>
+
 <!-- Status overlays -->
 <div class="full-ov" id="ovBanned">
   <div class="ov-icon">🚫</div>
@@ -206,7 +219,7 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
     <img src="https://i.ibb.co/Cp6rPPxp/20260218-115056.png" class="logo" alt="Logo" border="0">
   </a>
   <p class="plan-title" id="planTitle">Select Your Plan</p>
-  <p class="plan-desc" id="planDesc">Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.</p>
+  <p class="plan-desc" id="planDesc">Subscribe today to unlock advanced tools, real-time market insights, and premium support—empowering you to trade smarter and stay ahead every day.</p>
 
   <p class="upgrade-head" id="upgradeHead" style="display:none">Upgrade Your Plan</p>
 
@@ -227,6 +240,21 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
   </div>
 
   <button class="home-btn" onclick="goHome()">🏠 Back to Home</button>
+</div>
+
+<!-- History Modal -->
+<div class="modal-bg" id="historyModal" style="z-index: 1600;">
+  <div class="pay-hero">
+    <button class="pay-hero-back" onclick="closeHistoryModal()" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <span class="pay-hero-title">Subscription Status</span>
+  </div>
+  <div class="pay-modal" style="text-align: left; padding-top: 16px;">
+    <h3 style="margin-bottom: 16px; text-align: center;">Subscription History</h3>
+    <div id="historyContent"></div>
+    <button class="close-btn" onclick="closeHistoryModal()">Close</button>
+  </div>
 </div>
 
 <!-- Payment page -->
@@ -411,12 +439,11 @@ function renderActivePlan(){
   if(isActive){
     head.style.display="block";
     title.textContent="Manage Your Plan";
-    desc.textContent="Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.";
   } else {
     head.style.display="none";
     title.textContent="Select Your Plan";
-    desc.textContent="Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.";
   }
+  desc.textContent="Subscribe today to unlock advanced tools, real-time market insights, and premium support—empowering you to trade smarter and stay ahead every day.";
 }
 
 // ── Render ──
@@ -542,7 +569,57 @@ function renderPayContent(d){
   }
 }
 
-  function closeModal(){ document.getElementById("payModal").classList.remove("show"); document.body.style.overflow=""; }
+function closeModal(){ document.getElementById("payModal").classList.remove("show"); document.body.style.overflow=""; }
+
+// ── Subscription Status / History Modal ──
+function openHistoryModal() {
+  const content = document.getElementById("historyContent");
+  let html = "";
+  
+  const isActive = subStatus === "active" && !!activeName;
+  const dl = daysLeft();
+  
+  if (isActive) {
+    html += `
+      <div style="background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="font-size: 11px; font-weight: 800; color: #16A34A; text-transform: uppercase; letter-spacing: 0.5px;">Active Plan</div>
+        <div style="font-size: 18px; font-weight: 900; color: #1E293B; margin-top: 4px;">${esc(activeName)}</div>
+        <div style="font-size: 13px; font-weight: 700; color: #4B5563; margin-top: 2px;">Duration: ${esc(activeDur)}</div>
+        <div style="font-size: 12px; font-weight: 600; color: #4B5563; margin-top: 8px; border-top: 1px dashed #BBF7D0; padding-top: 8px;">
+          📅 Expires: <span style="font-weight: 800; color: #1E293B;">${fmtDate(activeExpiry)}</span> (${dl} days left)
+        </div>
+      </div>
+    `;
+  } else {
+    html += `
+      <div style="background: #F3F4F6; border: 1.5px solid #E5E7EB; border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: center; color: #6B7280; font-size: 13px; font-weight: 700;">
+        No active subscription found.
+      </div>
+    `;
+  }
+  
+  if (pendingIdx !== null && plans[pendingIdx]) {
+    const p = plans[pendingIdx];
+    html += `
+      <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 14px;">
+        <div style="font-size: 11px; font-weight: 800; color: #D97706; text-transform: uppercase; letter-spacing: 0.5px;">Pending Verification</div>
+        <div style="font-size: 16px; font-weight: 900; color: #1E293B; margin-top: 4px;">${esc(p.p)} ${esc(p.d)}</div>
+        <p style="font-size: 11px; font-weight: 600; color: #78350F; margin-top: 6px; line-height: 1.4;">
+          ⏳ Aapka payment check kiya ja raha hai. Verification hone ke baad plan active ho jayega.
+        </p>
+      </div>
+    `;
+  }
+  
+  content.innerHTML = html;
+  document.getElementById("historyModal").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeHistoryModal() {
+  document.getElementById("historyModal").classList.remove("show");
+  document.body.style.overflow = "";
+}
 
 // ── Submit UTR ──
 window.submitUtr=async function(){
@@ -562,6 +639,9 @@ window.submitUtr=async function(){
       pendingIdx=curPlanIdx; renderSlides();
       document.getElementById("statusBar").style.display="block";
       document.getElementById("checkBtn").style.display="block";
+      
+      // Payment modal ko instant close karne ke liye:
+      closeModal();
     } else {
       msg.className="utr-msg err"; msg.textContent="Submit fail hua. Dobara try karo.";
       btn.disabled=false; btn.textContent="Submit UTR";
