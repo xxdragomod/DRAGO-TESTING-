@@ -57,7 +57,7 @@ body{
   width:100%;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px; /* Gap thoda sa badhakar 12px kiya gaya hai */
+  gap:12px; 
   margin-bottom:22px;
 }
 
@@ -133,7 +133,7 @@ body{
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 19px; /* Dono rows ke beech ka vertical gap thoda aur badhakar 19px kiya */
+  gap: 19px; 
 }
 .results-scroll-wrapper.is-msg {
   display: block;
@@ -143,23 +143,37 @@ body{
   width:100%;
   display:flex;
   flex-direction:row;
-  gap: 15px; /* Platform cards ke beech ka horizontal gap thoda aur badhakar 15px kiya */
+  gap: 15px; 
   overflow-x:auto;overflow-y:hidden;
   padding:6px 2px 14px;
   scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
-  scroll-snap-type:x proximity;
+  scroll-snap-type: x mandatory; /* Magnatic snap scroll features activate kiya */
 }
 .results-scroll::-webkit-scrollbar{display:none}
+
+/* ── Result card entries fade-in transition ── */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 .result-card{
   width:110px; 
   flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;gap:9px;
-  cursor:pointer;scroll-snap-align:start;
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;
+  scroll-snap-align: start; /* Har card slide hone par start point par snap hoga */
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1);
   -webkit-tap-highlight-color:transparent;
+  animation: cardFadeIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) both; /* Fade-in load-in smooth animation */
 }
 .result-card:active{transform:scale(.95)}
 .phone-frame{
@@ -363,7 +377,6 @@ function handleStatus(as, ss){
   hideOvs(); return true;
 }
 
-// Polling interval updated securely
 function startPoll(){ if(pollTmr) return; pollTmr = setInterval(doPoll, 15000); }
 function stopPoll(){ if(pollTmr){ clearInterval(pollTmr); pollTmr=null; } }
 async function doPoll(){
@@ -445,7 +458,6 @@ function renderGames(list){
   
   wrapper.classList.remove("is-msg");
   
-  // Independent rows created here
   const row1 = document.createElement("div");
   row1.className = "results-scroll";
   const row2 = document.createElement("div");
@@ -454,6 +466,10 @@ function renderGames(list){
   list.forEach((g, index)=>{
     const card = document.createElement("div");
     card.className = "result-card";
+    
+    // Cards load hone par unme staggered sequential delay add kiya
+    card.style.animationDelay = `${index * 40}ms`;
+    
     card.onclick = ()=>{
       const dest = g.link || (g.slug ? "/game/"+g.slug : null);
       if(!dest) return;
@@ -473,7 +489,6 @@ function renderGames(list){
     const name   = document.createElement("div"); name.className   = "result-name";  name.textContent = g.name;
     card.appendChild(frame); card.appendChild(name);
     
-    // Split the platforms cleanly into row 1 and row 2
     if(index % 2 === 0) {
       row1.appendChild(card);
     } else {
