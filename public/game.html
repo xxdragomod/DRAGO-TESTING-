@@ -57,7 +57,7 @@ body{
   width:100%;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px; /* Gap ko original se 2px kam rakha hai */
+  gap:12px; /* Gap thoda sa badhakar 12px kiya gaya hai */
   margin-bottom:22px;
 }
 
@@ -133,7 +133,7 @@ body{
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 17px; /* Dono rows ke beech ka vertical gap (16px + 1px) */
+  gap: 19px; /* Dono rows ke beech ka vertical gap thoda aur badhakar 19px kiya */
 }
 .results-scroll-wrapper.is-msg {
   display: block;
@@ -143,7 +143,7 @@ body{
   width:100%;
   display:flex;
   flex-direction:row;
-  gap:13px; /* Platform cards ke beech ka horizontal gap (12px + 1px) */
+  gap: 15px; /* Platform cards ke beech ka horizontal gap thoda aur badhakar 15px kiya */
   overflow-x:auto;overflow-y:hidden;
   padding:6px 2px 14px;
   scroll-behavior:smooth;
@@ -154,7 +154,7 @@ body{
 .results-scroll::-webkit-scrollbar{display:none}
 
 .result-card{
-  width:110px; /* Platform card ka size chota kiya (128px se 110px) */
+  width:110px; 
   flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;gap:9px;
   cursor:pointer;scroll-snap-align:start;
@@ -163,16 +163,16 @@ body{
 }
 .result-card:active{transform:scale(.95)}
 .phone-frame{
-  width:110px; /* Frame ka width chota kiya */
+  width:110px; 
   aspect-ratio:9/18.5;
   background:none;border-radius:20px;padding:0;box-shadow:none;position:relative;
 }
 .phone-screen{width:100%;height:100%;border-radius:16px;overflow:hidden;background:none}
 .phone-screen img{width:100%;height:100%;object-fit:cover;display:block}
 .result-name{
-  font-size:13px;font-weight:900;color:#4b5563; /* Original template wala font-size aur boldness */
+  font-size:13px;font-weight:900;color:#4b5563; 
   text-transform:uppercase;text-align:center;letter-spacing:.3px;
-  line-height:1.2;max-width:110px; /* Width ko frame size ke sath sync kiya */
+  line-height:1.2;max-width:110px; 
 }
 
 .results-empty{width:100%;text-align:center;padding:40px 20px;font-size:13px;font-weight:700;color:#9ca3af}
@@ -363,6 +363,7 @@ function handleStatus(as, ss){
   hideOvs(); return true;
 }
 
+// Polling interval updated securely
 function startPoll(){ if(pollTmr) return; pollTmr = setInterval(doPoll, 15000); }
 function stopPoll(){ if(pollTmr){ clearInterval(pollTmr); pollTmr=null; } }
 async function doPoll(){
@@ -444,7 +445,7 @@ function renderGames(list){
   
   wrapper.classList.remove("is-msg");
   
-  // Independent slide rows
+  // Independent rows created here
   const row1 = document.createElement("div");
   row1.className = "results-scroll";
   const row2 = document.createElement("div");
@@ -472,7 +473,7 @@ function renderGames(list){
     const name   = document.createElement("div"); name.className   = "result-name";  name.textContent = g.name;
     card.appendChild(frame); card.appendChild(name);
     
-    // Distribute equally between Row 1 and Row 2
+    // Split the platforms cleanly into row 1 and row 2
     if(index % 2 === 0) {
       row1.appendChild(card);
     } else {
