@@ -134,17 +134,17 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin-text{font-size:13px;color:#9CA3AF;font-weight:600}
 
-/* QR Glow wrapper */
+/* QR Glow wrapper - Thicker Border Animation (Mota) */
 .qr-glow-wrap {
   position: relative;
-  width: 204px;
-  height: 204px;
+  width: 208px;
+  height: 208px;
   margin: 0 auto 16px;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  padding: 2px;
+  padding: 4px; /* Thicker rotating neon border */
   background: #f3f4f6;
-  box-shadow: 0 4px 12px rgba(139,92,246,0.1);
+  box-shadow: 0 4px 12px rgba(139,92,246,0.15);
 }
 .qr-glow-wrap::before {
   content: '';
@@ -319,7 +319,7 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
     </div>
     <div id="payContent" style="display:none">
       
-      <!-- QR code with rotating light animation wrapper -->
+      <!-- QR code with thicker rotating light animation wrapper -->
       <div class="qr-glow-wrap">
         <div id="payQr"></div>
       </div>
