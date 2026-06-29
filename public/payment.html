@@ -134,12 +134,21 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin-text{font-size:13px;color:#9CA3AF;font-weight:600}
 
-.qr-img{width:200px;height:200px;border-radius:12px;border:2px solid #f3f4f6;object-fit:contain;margin:0 auto 14px;display:block}
-.no-qr{width:200px;height:200px;margin:0 auto 14px;border-radius:12px;border:2px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px;font-weight:600;padding:10px}
+/* QR wrapper with spinning ring */
+.qr-wrap{position:relative;width:220px;height:220px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
+.qr-spin-ring{position:absolute;inset:0;border-radius:16px;pointer-events:none}
+.qr-spin-ring::before,.qr-spin-ring::after{content:"";position:absolute;inset:-5px;border-radius:18px;border:2.5px solid transparent}
+.qr-spin-ring::before{border-top-color:#8B5CF6;border-right-color:#5B6AF0;animation:qrSpin 2.2s linear infinite}
+.qr-spin-ring::after{border-bottom-color:#a78bfa;border-left-color:#818cf8;animation:qrSpin 2.2s linear infinite reverse;opacity:.55}
+@keyframes qrSpin{to{transform:rotate(360deg)}}
+.qr-img{width:200px;height:200px;border-radius:12px;border:2px solid #f3f4f6;object-fit:contain;display:block}
+.no-qr{width:200px;height:200px;border-radius:12px;border:2px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px;font-weight:600;padding:10px}
 
 /* UPI app buttons */
 .apps-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:nowrap}
-.app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:12px;padding:10px 6px;flex:1;cursor:pointer;transition:transform .12s,border-color .12s;text-decoration:none;color:#374151}
+.app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:12px;padding:10px 6px;flex:1;cursor:pointer;transition:transform .12s,border-color .12s;text-decoration:none;color:#374151;position:relative;overflow:hidden}
+.app-btn::after{content:"";position:absolute;right:-6px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;border:2px solid transparent;border-top-color:#8B5CF6;border-right-color:#a78bfa;animation:appSpin 1.4s linear infinite}
+@keyframes appSpin{to{transform:rotate(360deg)}}
 .app-btn:active{transform:scale(.93)}
 .app-btn img{width:30px;height:30px;border-radius:7px;object-fit:contain}
 .app-btn span{font-size:9px;font-weight:700;white-space:nowrap}
@@ -544,7 +553,7 @@ function renderPayContent(d){
   document.getElementById("payContent").style.display="block";
   // QR
   const qw=document.getElementById("payQr");
-  qw.innerHTML=d.qr?`<img src="${esc(d.qr)}" class="qr-img" onerror="this.parentElement.innerHTML='<div class=\\'no-qr\\'>QR not available</div>'">`:
+  qw.innerHTML=d.qr?`<div class="qr-wrap"><div class="qr-spin-ring"></div><img src="${esc(d.qr)}" class="qr-img" onerror="this.parentElement.outerHTML='<div class=\\'no-qr\\'>QR not available</div>'"></div>`:
                     `<div class="no-qr">QR not set for this plan</div>`;
   // Apps
   const ar=document.getElementById("appsRow"), nu=document.getElementById("noUpi");
