@@ -134,88 +134,15 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin-text{font-size:13px;color:#9CA3AF;font-weight:600}
 
-/* Glow animation wraps */
-.qr-glow-wrap {
-  position: relative;
-  width: 204px;
-  height: 204px;
-  margin: 0 auto 16px;
-  border-radius: 14px;
-  overflow: hidden;
-  padding: 2px;
-  background: #f3f4f6;
-  box-shadow: 0 4px 12px rgba(139,92,246,0.1);
-}
-.qr-glow-wrap::before {
-  content: '';
-  position: absolute;
-  inset: -20px;
-  background: conic-gradient(from 0deg, transparent 40%, #8B5CF6 70%, #5B6AF0 100%);
-  animation: border-rotate 6s linear infinite;
-  z-index: 1;
-}
-#payQr {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-}
-.qr-img, .no-qr {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 12px;
-  border: none !important;
-  margin: 0 !important;
-  object-fit: contain;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-}
+.qr-img{width:200px;height:200px;border-radius:12px;border:2px solid #f3f4f6;object-fit:contain;margin:0 auto 14px;display:block}
+.no-qr{width:200px;height:200px;margin:0 auto 14px;border-radius:12px;border:2px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px;font-weight:600;padding:10px}
 
-.apps-glow-wrap {
-  position: relative;
-  width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  padding: 2px;
-  background: #f3f4f6;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 12px rgba(139,92,246,0.1);
-}
-.apps-glow-wrap::before {
-  content: '';
-  position: absolute;
-  top: -150%;
-  left: -150%;
-  width: 400%;
-  height: 400%;
-  background: conic-gradient(from 0deg, transparent 40%, #8B5CF6 70%, #5B6AF0 100%);
-  animation: border-rotate 6s linear infinite;
-  z-index: 1;
-}
-.apps-row {
-  position: relative;
-  z-index: 2;
-  background: #fff;
-  border-radius: 12px;
-  padding: 8px 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: nowrap;
-  margin-bottom: 0 !important;
-}
-
-@keyframes border-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
+/* UPI app buttons */
+.apps-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:nowrap}
+.app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:12px;padding:10px 6px;flex:1;cursor:pointer;transition:transform .12s,border-color .12s;text-decoration:none;color:#374151}
+.app-btn:active{transform:scale(.93)}
+.app-btn img{width:30px;height:30px;border-radius:7px;object-fit:contain}
+.app-btn span{font-size:9px;font-weight:700;white-space:nowrap}
 .no-upi{font-size:12px;color:#9CA3AF;font-weight:600;text-align:center;margin-bottom:14px;padding:10px;background:#F9FAFB;border-radius:10px}
 
 /* UTR input */
@@ -347,17 +274,8 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
       <div class="spin-text">Loading payment details...</div>
     </div>
     <div id="payContent" style="display:none">
-      
-      <!-- QR code with rotating light animation wrapper -->
-      <div class="qr-glow-wrap">
-        <div id="payQr"></div>
-      </div>
-
-      <!-- Payment Apps Box with rotating light animation wrapper -->
-      <div class="apps-glow-wrap" id="appsGlowWrap">
-        <div class="apps-row" id="appsRow"></div>
-      </div>
-
+      <div id="payQr"></div>
+      <div class="apps-row" id="appsRow"></div>
       <div class="no-upi" id="noUpi" style="display:none">UPI not set. Contact support.</div>
       <p class="pay-hint">Scan QR or tap an app to pay, then enter your UTR below.</p>
       <div class="utr-box">
@@ -629,9 +547,9 @@ function renderPayContent(d){
   qw.innerHTML=d.qr?`<img src="${esc(d.qr)}" class="qr-img" onerror="this.parentElement.innerHTML='<div class=\\'no-qr\\'>QR not available</div>'">`:
                     `<div class="no-qr">QR not set for this plan</div>`;
   // Apps
-  const ar=document.getElementById("appsRow"), agw=document.getElementById("appsGlowWrap"), nu=document.getElementById("noUpi");
+  const ar=document.getElementById("appsRow"), nu=document.getElementById("noUpi");
   if(d.upi){
-    agw.style.display="block"; nu.style.display="none";
+    ar.style.display="flex"; nu.style.display="none";
     const am=(d.price||"").match(/[\d.]+/); const amt=am?am[0]:"";
     const payee=d.upi.split("@")[0]||"Merchant";
     const note=("Payment for "+(d.plan_name||"")).trim();
@@ -647,7 +565,7 @@ function renderPayContent(d){
       <img src="${esc(a.i)}" alt="${esc(a.n)}" onerror="this.style.display='none'">
       <span>${esc(a.n)}</span></a>`).join("");
   } else {
-    agw.style.display="none"; nu.style.display="block";
+    ar.style.display="none"; nu.style.display="block";
   }
 }
 
@@ -716,13 +634,13 @@ window.submitUtr=async function(){
     const d=await withRefresh(()=>api("/api/submit-utr",{...a,plan_index:curPlanIdx,utr}));
     if(d.status==="success"){
       msg.className="utr-msg ok";
-      msg.textContent="✅ UTR submit ho gaya! Verification ke baad plan active ho jayega.";
+      msg.textContent="✅ UTR submit ho gaya! Verification ke baad plan activate ho jayega.";
       btn.textContent="Submitted ✓";
       pendingIdx=curPlanIdx; renderSlides();
       document.getElementById("statusBar").style.display="block";
       document.getElementById("checkBtn").style.display="block";
       
-      // Payment modal close
+      // Payment modal ko instant close karne ke liye:
       closeModal();
     } else {
       msg.className="utr-msg err"; msg.textContent="Submit fail hua. Dobara try karo.";
