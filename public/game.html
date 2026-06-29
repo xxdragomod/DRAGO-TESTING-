@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game — Drago Predictor</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 @view-transition{navigation:auto}
@@ -57,7 +57,7 @@ body{
   width:100%;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px; /* Original 12px se 2px kam kiya */
+  gap:10px; 
   margin-bottom:22px;
 }
 
@@ -82,7 +82,7 @@ body{
 }
 .game-card img{
   width:100%;
-  height:38px; /* Original 44px se thoda chota kiya */
+  height:38px; 
   object-fit:contain;object-position:center;
   border-radius:8px;transition:transform .3s ease;
 }
@@ -126,27 +126,37 @@ body{
 .period-select:active{transform:scale(.95)}
 .period-select option{color:#1a1a2e;background:#fff;font-weight:700}
 
-/* ── Game cards carousel ── */
+/* ── Game cards carousel rows container ── */
 .results-section{width:100%;display:none;animation:fadeUp .3s ease both}
 .results-section.show{display:block}
+
+/* Wrapper to hold independent sliding rows */
+.results-scroll-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 17px; /* Dono rows ke beech ka gap 16px se badhakar 17px kiya */
+}
+.results-scroll-wrapper.is-msg {
+  display: block;
+}
+
 .results-scroll{
   width:100%;
-  display:grid;
-  grid-auto-flow:column;
-  grid-template-rows:auto auto;
-  gap:16px 12px; /* Row and column gap dono ko pehle se 2px kam kiya (Original: 18px 14px) */
+  display:flex;
+  flex-direction:row;
+  gap:13px; /* Cards ke beech ka gap 12px se badhakar 13px kiya */
   overflow-x:auto;overflow-y:hidden;
-  padding:6px 2px 14px;
+  padding:6px 2px 10px;
   scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
   scroll-snap-type:x proximity;
 }
 .results-scroll::-webkit-scrollbar{display:none}
-.results-scroll.is-msg{display:block}
 
 .result-card{
-  width:110px; /* Original 128px se thoda compact kiya */
+  width:110px; 
   flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;gap:7px;
   cursor:pointer;scroll-snap-align:start;
@@ -155,7 +165,7 @@ body{
 }
 .result-card:active{transform:scale(.96)}
 .phone-frame{
-  width:110px; /* Card size ke sath proportional kiya */
+  width:110px; 
   aspect-ratio:9/18.5;
   background:none;border-radius:20px;padding:0;box-shadow:none;position:relative;
 }
@@ -260,7 +270,7 @@ body{
     <img src="/images/logo.jpg" alt="Drago Predictor" class="hero-img">
     <div class="hero-text">
       <h2>Game Predictor</h2>
-      <p>Apna game aur period select karo.</p>
+      <p>Select your game & period to continue.</p> <!-- Text badal diya gaya hai -->
     </div>
   </div>
 
@@ -296,10 +306,10 @@ body{
     </div>
   </div>
 
-  <!-- Results carousel -->
+  <!-- Results carousel rows wrapper -->
   <div class="results-section" id="resultsSection">
     <div class="section-label" style="margin-bottom:12px">Select Platform</div>
-    <div class="results-scroll" id="resultsScroll"></div>
+    <div class="results-scroll-wrapper" id="resultsScroll"></div>
   </div>
 
 </div><!-- /page-wrap -->
@@ -425,15 +435,24 @@ async function loadGames(){
 }
 
 function renderGames(list){
-  const scroll = document.getElementById("resultsScroll");
+  const wrapper = document.getElementById("resultsScroll");
+  wrapper.innerHTML = "";
+  
   if(!list.length){
-    scroll.classList.add("is-msg");
-    scroll.innerHTML = '<div class="results-empty">No platforms available yet.</div>';
+    wrapper.classList.add("is-msg");
+    wrapper.innerHTML = '<div class="results-empty">No platforms available yet.</div>';
     return;
   }
-  scroll.classList.remove("is-msg");
-  scroll.innerHTML = "";
-  list.forEach(g=>{
+  
+  wrapper.classList.remove("is-msg");
+  
+  // Independent slide ke liye do separate row elements banaye hain
+  const row1 = document.createElement("div");
+  row1.className = "results-scroll";
+  const row2 = document.createElement("div");
+  row2.className = "results-scroll";
+  
+  list.forEach((g, index)=>{
     const card = document.createElement("div");
     card.className = "result-card";
     card.onclick = ()=>{
@@ -454,8 +473,19 @@ function renderGames(list){
     const frame  = document.createElement("div"); frame.className  = "phone-frame";  frame.appendChild(screen);
     const name   = document.createElement("div"); name.className   = "result-name";  name.textContent = g.name;
     card.appendChild(frame); card.appendChild(name);
-    scroll.appendChild(card);
+    
+    // Cards ko row 1 aur row 2 me divide kiya gaya hai
+    if(index % 2 === 0) {
+      row1.appendChild(card);
+    } else {
+      row2.appendChild(card);
+    }
   });
+  
+  wrapper.appendChild(row1);
+  if(row2.children.length > 0) {
+    wrapper.appendChild(row2);
+  }
 }
 
 window.selectGame = function(type){
