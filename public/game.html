@@ -154,7 +154,8 @@ body{
 .results-scroll::-webkit-scrollbar{display:none}
 
 .result-card{
-  width:128px;flex-shrink:0;
+  width:110px; /* Platform card ka size chota kiya (128px se 110px) */
+  flex-shrink:0;
   display:flex;flex-direction:column;align-items:center;gap:9px;
   cursor:pointer;scroll-snap-align:start;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1);
@@ -162,15 +163,16 @@ body{
 }
 .result-card:active{transform:scale(.95)}
 .phone-frame{
-  width:128px;aspect-ratio:9/18.5;
-  background:none;border-radius:24px;padding:0;box-shadow:none;position:relative;
+  width:110px; /* Frame ka width chota kiya */
+  aspect-ratio:9/18.5;
+  background:none;border-radius:20px;padding:0;box-shadow:none;position:relative;
 }
-.phone-screen{width:100%;height:100%;border-radius:19px;overflow:hidden;background:none}
+.phone-screen{width:100%;height:100%;border-radius:16px;overflow:hidden;background:none}
 .phone-screen img{width:100%;height:100%;object-fit:cover;display:block}
 .result-name{
-  font-size:13px;font-weight:900;color:#4b5563;
+  font-size:13px;font-weight:900;color:#4b5563; /* Original template wala font-size aur boldness */
   text-transform:uppercase;text-align:center;letter-spacing:.3px;
-  line-height:1.2;max-width:128px;
+  line-height:1.2;max-width:110px; /* Width ko frame size ke sath sync kiya */
 }
 
 .results-empty{width:100%;text-align:center;padding:40px 20px;font-size:13px;font-weight:700;color:#9ca3af}
@@ -442,7 +444,7 @@ function renderGames(list){
   
   wrapper.classList.remove("is-msg");
   
-  // Independent slide rendering rows
+  // Independent slide rows
   const row1 = document.createElement("div");
   row1.className = "results-scroll";
   const row2 = document.createElement("div");
