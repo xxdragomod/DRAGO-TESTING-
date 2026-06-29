@@ -181,7 +181,7 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
   to { transform: rotate(360deg); }
 }
 
-/* UPI app buttons (animation removed) */
+/* UPI app buttons */
 .apps-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:nowrap}
 .app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:12px;padding:10px 6px;flex:1;cursor:pointer;transition:transform .12s,border-color .12s;text-decoration:none;color:#374151}
 .app-btn:active{transform:scale(.93)}
@@ -415,7 +415,8 @@ function stopPoll(){ if(pollTmr){clearInterval(pollTmr);pollTmr=null;} }
 async function doPoll(){
   const a=auth(); if(!a) return;
   try{
-    const d=await withRefresh(()=>api("/api/account-status",a));
+    // Polling /api/plans directly for 100% accurate pending_plan_index details
+    const d=await withRefresh(()=>api("/api/plans",a));
     if(!handleStatus(d.account_status,d.subscription_status)) return;
     
     // Check transitions from pending to active (approved state change)
@@ -424,8 +425,16 @@ async function doPoll(){
       pendingIdx=null;
       document.getElementById("statusBar").style.display="none";
       document.getElementById("checkBtn").style.display="none";
+      
+      subStatus=d.subscription_status||"none";
+      activeIdx=(d.active_plan_index===undefined?null:d.active_plan_index);
+      activeName=d.active_plan||"";
+      activeDur=d.active_plan_duration||"";
+      activeExpiry=d.plan_expires_at||0;
+      
       closeModal();
-      loadPlans();
+      renderActivePlan();
+      renderSlides();
     }
   }catch(e){}
 }
@@ -692,7 +701,7 @@ window.submitUtr=async function(){
       document.getElementById("statusBar").style.display="block";
       document.getElementById("checkBtn").style.display="block";
       
-      // Close the modal instantly upon submission
+      // Modal close immediately
       closeModal();
     } else {
       msg.className="utr-msg err"; msg.textContent="Submit fail hua. Dobara try karo.";
@@ -711,18 +720,28 @@ window.manualCheck=async function(){
   btn.disabled=true; btn.textContent="Checking...";
   msg.style.color="#9CA3AF"; msg.textContent="";
   const a=auth(); if(!a){goLogin();return;}
-  try{
-    const d=await withRefresh(()=>api("/api/account-status",a));
+  try {
+    const d=await withRefresh(()=>api("/api/plans",a));
     const as=d.account_status||"active", ss=d.subscription_status||"none";
     if(!handleStatus(as,ss)){return;}
-    // Approved → plan activate ho gaya, banner refresh karo
-    if(ss==="active"){
+    
+    const newPendingIdx = d.pending_plan_index ?? null;
+    if(newPendingIdx === null && ss === "active"){
       msg.style.color="#059669";
       msg.textContent="✅ Plan activate ho gaya!";
       pendingIdx=null;
       document.getElementById("statusBar").style.display="none";
       document.getElementById("checkBtn").style.display="none";
-      loadPlans();
+      
+      plans=d.plans||[];
+      subStatus=d.subscription_status||"none";
+      activeIdx=(d.active_plan_index===undefined?null:d.active_plan_index);
+      activeName=d.active_plan||"";
+      activeDur=d.active_plan_duration||"";
+      activeExpiry=d.plan_expires_at||0;
+      
+      renderActivePlan();
+      renderSlides();
       return;
     }
     // Still pending
