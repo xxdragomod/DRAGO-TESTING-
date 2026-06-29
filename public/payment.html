@@ -5,161 +5,591 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Select Plan — Quantum Analyzer</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 @view-transition{navigation:auto}
-::view-transition-old(root){animation:vtOut .22s cubic-bezier(.4,0,.2,1) both}
-::view-transition-new(root){animation:vtIn .26s cubic-bezier(.22,1,.36,1) both}
-@keyframes vtOut{to{opacity:0;transform:translateY(-8px)}}
-@keyframes vtIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);font-family:'Montserrat',sans-serif;display:flex;justify-content:center;align-items:center;padding:80px 0 40px}
-.content-box{width:100%;max-width:440px;padding:0 16px 40px;display:flex;flex-direction:column;align-items:center;animation:fadeUp .45s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-/* Staggered reveal of inner elements on load */
-.content-box>*{animation:revealUp .55s cubic-bezier(.22,1,.36,1) both}
-.content-box>*:nth-child(1){animation-delay:.05s}
-.content-box>*:nth-child(2){animation-delay:.13s}
-.content-box>*:nth-child(3){animation-delay:.21s}
-.content-box>*:nth-child(4){animation-delay:.29s}
-.content-box>*:nth-child(5){animation-delay:.37s}
-.content-box>*:nth-child(6){animation-delay:.45s}
-.content-box>*:nth-child(7){animation-delay:.53s}
-@keyframes revealUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
- .logo{width:120px;height:auto;margin-bottom:10px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
-@keyframes popIn{from{opacity:0;transform:scale(.75)}to{opacity:1;transform:scale(1)}}
-.plan-title{font-size:20px;font-weight:900;color:#8B5CF6;margin-bottom:4px}
-.plan-desc{font-size:12px;color:#6b7280;text-align:center;margin-bottom:16px;line-height:1.4}
+::view-transition-old(root){animation:vtOut .2s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(root){animation:vtIn .25s cubic-bezier(.22,1,.36,1) both}
+@keyframes vtOut{to{opacity:0;transform:scale(0.98)}}
+@keyframes vtIn{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:scale(1)}}
 
-/* Active plan banner */
-.active-card{display:none;width:100%;background:linear-gradient(135deg,#7C3AED,#5B6AF0);border-radius:18px;padding:14px 16px;color:#fff;box-shadow:0 8px 22px rgba(124,58,237,.28);margin-bottom:6px;position:relative;overflow:hidden}
-.active-card.show{display:block}
-.active-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.active-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;opacity:.8}
-.active-name{font-size:17px;font-weight:900;margin-top:2px;line-height:1.1}
-.active-pill{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.active-meta{display:flex;gap:8px}
-.meta-box{flex:1;background:rgba(255,255,255,.13);border-radius:10px;padding:8px 10px}
-.meta-k{font-size:8px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
-.meta-v{font-size:12px;font-weight:900;margin-top:2px}
-.upgrade-head{font-size:12px;font-weight:800;color:#6b7280;width:100%;text-align:left;margin:10px 0 -6px;text-transform:uppercase;letter-spacing:.5px}
+body {
+  min-height: 100vh;
+  background-color: #F8FAFC;
+  background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.03) 0px, transparent 50%);
+  font-family: 'Montserrat', sans-serif;
+  color: #0F172A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 16px 40px;
+}
 
-/* Current plan badge on slider card */
-.current-badge{position:absolute;top:12px;right:14px;background:#10B981;color:#fff;font-size:9px;font-weight:900;padding:3px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.content-box {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+}
 
-/* Carry-over hint */
-.carry-hint{display:none;background:#ECFDF5;border:1.5px solid #A7F3D0;color:#047857;font-size:12px;font-weight:700;border-radius:12px;padding:10px 12px;margin-bottom:12px;text-align:center;line-height:1.4}
-.carry-hint.show{display:block}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-/* Back to home button */
-.home-btn{background:#fff;color:#7C3AED;border:1.5px solid #DDD6FE;padding:9px 20px;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;margin-top:14px;width:auto;align-self:center;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px rgba(124,58,237,.07);transition:transform .15s,background .15s}
-.home-btn:active{transform:scale(.98)}
-.home-btn:hover{background:#F5F3FF;border-color:#C4B5FD}
+.logo {
+  width: 90px;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
-/* Swiper */
-.swiper{width:100%;padding:14px 0}
+.plan-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
 
-/* Cards */
-.card{background:#f8f7ff;border-radius:20px;padding:19px 18px;width:95%;max-width:400px;margin:0 auto;border:2px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.06);cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,border-color .2s;position:relative;user-select:none}
-.card:active{transform:scale(.96)}
-.card.selected{border:2px solid #8B5CF6;box-shadow:0 8px 24px rgba(139,92,246,.22);transform:scale(1.015)}
-.header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
-.price-main{font-weight:900;font-size:18px;color:#8B5CF6}
-.discount-text{font-size:11px;font-weight:800;color:#333}
-.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.feature-item{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;color:#374151}
-.feature-item img{width:22px;height:22px;animation:breathe 2.4s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(.82);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+.plan-desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748B;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
 
-/* Pending badge */
-.pending-badge{position:absolute;top:12px;right:14px;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-size:9px;font-weight:900;padding:3px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.upgrade-head {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6366F1;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
 
-/* Continue button */
-.action-row{display:flex;align-items:stretch;gap:8px;width:100%;margin-top:12px}
-.btn{background:linear-gradient(135deg,#7C3AED,#5B6AF0);color:#fff;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;flex:1;box-shadow:0 6px 16px rgba(124,58,237,.3);transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .15s}
-.btn:active{transform:scale(.96)}
-.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
-.slider-err{width:100%;text-align:center;padding:40px 0;font-size:13px;font-weight:600;color:#EF4444}
-.slider-loading{width:100%;text-align:center;padding:40px 0;font-size:13px;font-weight:600;color:#9CA3AF}
+/* Swiper Slider Setup */
+.swiper {
+  width: 100%;
+  padding: 10px 0 24px;
+}
 
-/* Status check — compact floating pill */
-.status-bar{display:none;margin-top:10px;width:100%}
-.status-bar-inner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FFF7ED;border:1.5px solid #FED7AA;border-radius:30px;padding:8px 10px 8px 14px}
-.status-bar-label{font-size:11px;font-weight:700;color:#B45309;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.status-bar-btn{background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;border:none;padding:7px 16px;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;transition:transform .15s,opacity .15s;flex-shrink:0;box-shadow:0 6px 16px rgba(217,119,6,.3)}
-.status-bar-btn:active{transform:scale(.94)}
-.status-bar-btn:disabled{opacity:.55;cursor:not-allowed}
-.status-bar-msg{font-size:11px;margin-top:5px;font-weight:600;text-align:center;padding:0 4px}
+/* Flat Premium Card */
+.card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  width: 96%;
+  margin: 0 auto;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(.22,1,.36,1);
+  position: relative;
+  user-select: none;
+}
 
-/* Profile banner */
-#profileBanner{position:fixed;top:16px;left:14px;display:flex;align-items:center;gap:10px;z-index:100;opacity:0;transform:translateX(-20px);transition:opacity .4s,transform .4s}
-#profileBanner.show{opacity:1;transform:translateX(0)}
-#avatarWrap img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block}
-.avatar-fallback{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#5B6AF0);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff}
-.profile-info{display:flex;flex-direction:column;line-height:1.3}
-.welcome-text{font-size:10px;font-weight:600;color:#888}
-.user-name{font-size:14px;font-weight:900;color:#1a1a2e;text-transform:uppercase;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card:hover {
+  border-color: #CBD5E1;
+}
 
-/* Full-screen overlays */
-.full-ov{display:none;position:fixed;inset:0;z-index:3000;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(180deg,#c3caff,#e2e5ff 40%,#fff)}
-.full-ov.show{display:flex}
-.ov-icon{font-size:54px;margin-bottom:14px}
-.ov-title{font-size:22px;font-weight:900;color:#1E293B;margin-bottom:10px}
-.ov-desc{font-size:14px;color:#6b7280;max-width:320px;line-height:1.6;margin-bottom:20px}
-.ov-link{display:inline-block;background:linear-gradient(135deg,#7C3AED,#5B6AF0);color:#fff;text-decoration:none;padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px}
-.ov-retry{margin-top:10px;background:#f3f4f6;border:none;padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;color:#374151}
+.card.selected {
+  border-color: #6366F1;
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+}
 
-/* Payment page (full screen, no dark backdrop) */
-.modal-bg{display:none;position:fixed;inset:0;background:linear-gradient(180deg,#dce2ff 0%,#fff 38%);z-index:1500;flex-direction:column;align-items:center;overflow-y:auto}
-.modal-bg.show{display:flex}
-/* Hero header */
-.pay-hero{width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;position:sticky;top:0;z-index:5}
-.pay-hero-back{width:42px;height:42px;border-radius:50%;background:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(124,58,237,.12);flex-shrink:0;transition:transform .15s}
-.pay-hero-back:active{transform:scale(.92)}
-.pay-hero-back svg{width:20px;height:20px;stroke:#7C3AED}
-.pay-hero-title{font-size:22px;font-weight:900;color:#1E293B;letter-spacing:.3px}
-.pay-modal{background:#fff;width:100%;max-width:420px;border-radius:20px;padding:24px 20px;text-align:center;animation:slideUp .3s ease-out;margin:6px auto 30px}
-@keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
-.pay-modal h3{font-size:18px;font-weight:900;color:#1E293B;margin-bottom:4px}
-.pay-amount{font-size:24px;font-weight:900;color:#8B5CF6;margin-bottom:16px}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
 
-.modal-spinner{display:flex;flex-direction:column;align-items:center;padding:30px 0;gap:14px}
-.spin-ring{width:44px;height:44px;border:4px solid rgba(139,92,246,.2);border-top-color:#8B5CF6;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin-text{font-size:13px;color:#9CA3AF;font-weight:600}
+.price-main {
+  font-weight: 700;
+  font-size: 20px;
+  color: #0F172A;
+}
 
-.qr-img{width:200px;height:200px;border-radius:12px;border:2px solid #f3f4f6;object-fit:contain;margin:0 auto 14px;display:block}
-.no-qr{width:200px;height:200px;margin:0 auto 14px;border-radius:12px;border:2px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px;font-weight:600;padding:10px}
+.discount-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #10B981;
+  background: #ECFDF5;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
 
-/* UPI app buttons */
-.apps-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:nowrap}
-.app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:12px;padding:10px 6px;flex:1;cursor:pointer;transition:transform .12s,border-color .12s;text-decoration:none;color:#374151}
-.app-btn:active{transform:scale(.93)}
-.app-btn img{width:30px;height:30px;border-radius:7px;object-fit:contain}
-.app-btn span{font-size:9px;font-weight:700;white-space:nowrap}
-.no-upi{font-size:12px;color:#9CA3AF;font-weight:600;text-align:center;margin-bottom:14px;padding:10px;background:#F9FAFB;border-radius:10px}
+/* Features Grid */
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-/* UTR input */
-.utr-box{margin-top:16px;text-align:left}
-.utr-box label{display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px}
-.utr-box input{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #E5E7EB;background:#F9FAFB;font-size:14px;font-weight:700;color:#374151;font-family:monospace;outline:none;transition:border-color .15s}
-.utr-box input:focus{border-color:#8B5CF6;background:#fff}
-.utr-sub-btn{background:linear-gradient(135deg,#7C3AED,#5B6AF0);color:#fff;border:none;padding:12px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;width:100%;margin-top:10px;box-shadow:0 5px 15px rgba(124,58,237,.3)}
-.utr-sub-btn:disabled{opacity:.55;cursor:not-allowed}
-.utr-msg{font-size:12px;font-weight:700;margin-top:8px;text-align:center;display:none}
-.utr-msg.ok{color:#059669;display:block}
-.utr-msg.err{color:#DC2626;display:block}
-.pay-hint{font-size:11px;color:#9CA3AF;margin-top:4px;line-height:1.4}
-.close-btn{background:#F3F4F6;color:#6b7280;border:none;padding:12px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;width:100%;margin-top:14px}
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #475569;
+}
 
-/* App loading ring overlay */
-#appRingOv{display:none;position:fixed;inset:0;background:rgba(17,24,39,.6);z-index:2500;align-items:center;justify-content:center;flex-direction:column}
-#appRingOv.show{display:flex}
-.ring-wrap{position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center}
-.ring-wrap::before{content:"";position:absolute;inset:0;border-radius:50%;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin .8s linear infinite}
-.ring-logo{width:56px;height:56px;border-radius:14px;object-fit:contain;background:#fff;padding:6px}
-.ring-text{color:#fff;font-size:13px;font-weight:700;margin-top:16px}
+/* Modern SVG Checkmark Replacement */
+.check-icon {
+  width: 16px;
+  height: 16px;
+  color: #6366F1;
+  flex-shrink: 0;
+}
+
+/* Current Plan Badges - Sleek & Flat */
+.current-badge, .pending-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.current-badge {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.pending-badge {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+/* Action Bar & Buttons */
+.action-row {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn {
+  background: #6366F1;
+  color: #FFFFFF;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn:hover {
+  background: #4F46E5;
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.btn:active {
+  transform: scale(.98);
+}
+
+.btn:disabled {
+  background: #E2E8F0;
+  color: #94A3B8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Status Panel */
+.status-bar {
+  display: none;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.status-bar-msg {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #B45309;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.status-bar-btn {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.status-bar-btn:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+/* Back to Home Button */
+.home-btn {
+  background: transparent;
+  color: #64748B;
+  border: none;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: color 0.15s;
+}
+
+.home-btn:hover {
+  color: #475569;
+}
+
+/* Profile Banner - Fixed Top Left */
+#profileBanner {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: all .3s cubic-bezier(.22,1,.36,1);
+}
+
+#profileBanner.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#avatarWrap img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6366F1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFF;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-text {
+  font-size: 9px;
+  font-weight: 600;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+/* Minimal Payment Interface (Flat sheet) */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #FFFFFF;
+  z-index: 1500;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.modal-bg.show {
+  display: flex;
+}
+
+.pay-hero {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.pay-hero-back {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pay-hero-back:hover {
+  background: #E2E8F0;
+}
+
+.pay-hero-back svg {
+  width: 16px;
+  height: 16px;
+  stroke: #475569;
+}
+
+.pay-hero-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.pay-modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 16px 40px;
+  text-align: center;
+}
+
+.pay-modal h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748B;
+  margin-bottom: 4px;
+}
+
+.pay-amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 16px;
+}
+
+.carry-hint {
+  display: none;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #1E40AF;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+.carry-hint.show {
+  display: block;
+}
+
+.qr-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.apps-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.app-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 12px 6px;
+  flex: 1;
+  cursor: pointer;
+  text-decoration: none;
+  color: #475569;
+  transition: all 0.15s;
+}
+
+.app-btn:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.app-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.app-btn span {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Sleek UTR Field */
+.utr-box {
+  text-align: left;
+}
+
+.utr-box label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.utr-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #D1D5DB;
+  background: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0F172A;
+  outline: none;
+}
+
+.utr-box input:focus {
+  border-color: #6366F1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.utr-sub-btn {
+  background: #0F172A;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: background 0.15s;
+}
+
+.utr-sub-btn:hover {
+  background: #1E293B;
+}
+
+.utr-msg {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+  display: none;
+}
+
+.utr-msg.ok { color: #059669; display: block; }
+.utr-msg.err { color: #DC2626; display: block; }
+
+.pay-hint {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 12px;
+}
+
+/* Spinner */
+.modal-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.spin-ring {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #E2E8F0;
+  border-top-color: #6366F1;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Universal Fallback Overlays */
+.full-ov {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: #FFFFFF;
+}
+
+.full-ov.show { display: flex; }
+.ov-icon { font-size: 40px; margin-bottom: 12px; }
+.ov-title { font-size: 18px; font-weight: 700; color: #0F172A; margin-bottom: 8px; }
+.ov-desc { font-size: 13px; color: #64748B; max-width: 280px; line-height: 1.5; margin-bottom: 20px; }
+.ov-link { display: inline-block; background: #6366F1; color: #FFF; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 13px; }
+
+/* Deep Link Overlay */
+#appRingOv {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 2500;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#appRingOv.show { display: flex; }
+.ring-wrap {
+  background: #FFF;
+  padding: 14px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.ring-logo { width: 44px; height: 44px; display: block; }
+.ring-text { color: #FFF; font-size: 12px; font-weight: 600; margin-top: 12px; }
 </style>
 </head>
 <body>
@@ -200,14 +630,15 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
   <button class="ov-retry" onclick="dismissRejection()">Try Again</button>
 </div>
 
-<!-- Main -->
+<!-- Main Section -->
 <div class="content-box">
   <img src="/images/logo.jpg" class="logo" alt="Logo">
-  <p class="plan-title" id="planTitle">Select Your Plan</p>
-  <p class="plan-desc" id="planDesc">Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.</p>
+  <h2 class="plan-title" id="planTitle">Select Your Plan</h2>
+  <p class="plan-desc" id="planDesc">Unlock premium signals, real-time insights, and premium support to maximize your returns.</p>
 
   <p class="upgrade-head" id="upgradeHead" style="display:none">Upgrade Your Plan</p>
 
+  <!-- Swiper Grid -->
   <div class="swiper">
     <div class="swiper-wrapper" id="sliderContent">
       <div class="slider-loading">Loading plans...</div>
@@ -219,7 +650,6 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
     <button class="status-bar-btn" id="checkBtn" onclick="manualCheck()" style="display:none">Check Status</button>
   </div>
 
-  <!-- Shown after UTR submit or if pending payment exists -->
   <div class="status-bar" id="statusBar">
     <div class="status-bar-msg" id="checkMsg"></div>
   </div>
@@ -227,52 +657,53 @@ body{min-height:100vh;background:linear-gradient(180deg,#dce2ff 0%,#fff 100%);fo
   <button class="home-btn" onclick="goHome()">🏠 Back to Home</button>
 </div>
 
-<!-- Payment page -->
+<!-- Sleek Payment Modal -->
 <div class="modal-bg" id="payModal">
   <div class="pay-hero">
     <button class="pay-hero-back" onclick="closeModal()" aria-label="Back">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     </button>
     <span class="pay-hero-title">Drago Predictor</span>
   </div>
+  
   <div class="pay-modal">
-    <h3 id="payName"></h3>
-    <div class="pay-amount" id="payPrice"></div>
+    <h3 id="payName">Standard Monthly</h3>
+    <div class="pay-amount" id="payPrice">₹999</div>
     <div class="carry-hint" id="carryHint"></div>
+    
     <div class="modal-spinner" id="paySpinner">
       <div class="spin-ring"></div>
-      <div class="spin-text">Loading payment details...</div>
     </div>
+    
     <div id="payContent" style="display:none">
       <div id="payQr"></div>
       <div class="apps-row" id="appsRow"></div>
-      <div class="no-upi" id="noUpi" style="display:none">UPI not set. Contact support.</div>
-      <p class="pay-hint">Scan QR or tap an app to pay, then enter your UTR below.</p>
+      <div class="no-upi" id="noUpi" style="display:none">UPI details not configured. Contact Support.</div>
+      <p class="pay-hint">Pay using any UPI app above, then paste your UTR below.</p>
+      
       <div class="utr-box">
-        <label>Enter UTR / Transaction ID</label>
-        <input type="text" id="utrInput" placeholder="e.g. 123456789012" inputmode="numeric" autocomplete="off">
-        <button class="utr-sub-btn" id="utrBtn" onclick="submitUtr()">Submit UTR</button>
+        <label>UTR / Transaction ID</label>
+        <input type="text" id="utrInput" placeholder="Enter 12-digit UPI UTR" inputmode="numeric" maxlength="12" autocomplete="off">
+        <button class="utr-sub-btn" id="utrBtn" onclick="submitUtr()">Submit & Activate</button>
         <div class="utr-msg" id="utrMsg"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- App loading ring -->
+<!-- Custom App Redirecting Loader -->
 <div id="appRingOv">
   <div class="ring-wrap"><img id="ringLogo" class="ring-logo" src="" alt=""></div>
-  <div class="ring-text" id="ringText">Opening app...</div>
+  <div class="ring-text" id="ringText">Opening UPI App...</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
 const API = "https://flask-hello-world-nu-sooty-63.vercel.app";
 
-// ── State ──
 let plans=[], selIdx=0, curPlanIdx=null, pendingIdx=null, sw=null, pollTmr=null;
 let subStatus="none", activeIdx=null, activeName="", activeDur="", activeExpiry=0;
 
-// ── Helpers ──
 function ud(){ try{return JSON.parse(localStorage.getItem("_ud")||"null");}catch(e){return null;} }
 function auth(){
   const u=ud();
@@ -308,28 +739,19 @@ async function withRefresh(cb){
 }
 
 function goLogin(){ localStorage.removeItem("_ud"); window.location.replace("/"); }
-
-// ── Overlays ──
 function hideOvs(){ ["ovBanned","ovBlocked","ovPaused","ovRejected"].forEach(id=>document.getElementById(id).classList.remove("show")); }
 
-// Returns false if should stop (ban/block/redirect)
 function handleStatus(as, ss){
   if(as==="banned")          { stopPoll(); hideOvs(); document.getElementById("ovBanned").classList.add("show");   return false; }
   if(as==="blocked")         { stopPoll(); hideOvs(); document.getElementById("ovBlocked").classList.add("show");  return false; }
   if(as==="paused")          { stopPoll(); hideOvs(); document.getElementById("ovPaused").classList.add("show");   return false; }
   if(ss==="rejected")        { stopPoll(); hideOvs(); document.getElementById("ovRejected").classList.add("show"); return false; }
-  // NOTE: active subscribers are NOT redirected here — this is the plan page,
-  // they should be able to view their active plan and upgrade.
   hideOvs(); return true;
 }
 
 function goHome(){ window.location.href="/home"; }
+window.dismissRejection=function(){ document.getElementById("ovRejected").classList.remove("show"); };
 
-window.dismissRejection=function(){
-  document.getElementById("ovRejected").classList.remove("show");
-};
-
-// ── Polling ──
 function startPoll(){ if(pollTmr) return; pollTmr=setInterval(doPoll,15000); }
 function stopPoll(){ if(pollTmr){clearInterval(pollTmr);pollTmr=null;} }
 async function doPoll(){
@@ -337,7 +759,6 @@ async function doPoll(){
   try{
     const d=await withRefresh(()=>api("/api/account-status",a));
     if(!handleStatus(d.account_status,d.subscription_status)) return;
-    // Pending payment just got approved → refresh banner + clear pending bar.
     if(pendingIdx!==null && d.subscription_status==="active"){
       pendingIdx=null;
       document.getElementById("statusBar").style.display="none";
@@ -348,7 +769,6 @@ async function doPoll(){
   }catch(e){}
 }
 
-// ── Profile ──
 function loadProfile(){
   const u=ud(); if(!u||!u.name) return;
   const b=document.getElementById("profileBanner");
@@ -362,15 +782,15 @@ function loadProfile(){
   b.style.display="flex";
   setTimeout(()=>b.classList.add("show"),50);
 }
+
 function mkAvatar(el,name){
   const d=document.createElement("div"); d.className="avatar-fallback";
   d.textContent=(name||"U").charAt(0).toUpperCase(); el.appendChild(d);
 }
 
-// ── Load plans ──
 async function loadPlans(){
   const a=auth(); if(!a){ goLogin(); return; }
-  try{
+  try {
     const d=await withRefresh(()=>api("/api/plans",a));
     if(!handleStatus(d.account_status,d.subscription_status)) return;
     plans=d.plans||[];
@@ -384,23 +804,18 @@ async function loadPlans(){
     renderSlides();
     if(pendingIdx!==null){ document.getElementById("statusBar").style.display="block"; document.getElementById("checkBtn").style.display="block"; }
     startPoll();
-  }catch(e){
+  } catch(e) {
     document.getElementById("sliderContent").innerHTML=
       `<div class="slider-err">${navigator.onLine?"Server error. Page refresh karo.":"Internet nahi hai."}</div>`;
     document.getElementById("continueBtn").disabled=true;
   }
 }
 
-// ── Active plan helpers ──
 function daysLeft(){
   if(!activeExpiry) return 0;
   return Math.max(0, Math.ceil((activeExpiry - Date.now())/86400000));
 }
-function fmtDate(ms){
-  if(!ms) return "—";
-  try{ return new Date(ms).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}); }
-  catch(e){ return "—"; }
-}
+
 function renderActivePlan(){
   const isActive = subStatus==="active" && !!activeName;
   const head=document.getElementById("upgradeHead");
@@ -409,30 +824,45 @@ function renderActivePlan(){
   if(isActive){
     head.style.display="block";
     title.textContent="Manage Your Plan";
-    desc.textContent="Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.";
   } else {
     head.style.display="none";
     title.textContent="Select Your Plan";
-    desc.textContent="Subscribe today and unlock powerful tools, real-time insights, and premium support to trade smarter every day.";
   }
 }
 
-// ── Render ──
 function renderSlides(){
   const c=document.getElementById("sliderContent"); c.innerHTML="";
   plans.forEach((p,i)=>{
     if(!p) return;
-    const feats=(p.f||[]).map(f=>`<div class="feature-item"><img src="/images/feature-check.png" alt="">${esc(f)}</div>`).join("");
+    
+    // Sleek vector standard SVGs used instead of external images for cleaner look
+    const feats=(p.f||[]).map(f=>`
+      <div class="feature-item">
+        <svg class="check-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        ${esc(f)}
+      </div>
+    `).join("");
+    
     let badge="";
-    if(pendingIdx===i)            badge=`<div class="pending-badge">⏳ Processing</div>`;
-    else if(subStatus==="active" && activeIdx===i) badge=`<div class="current-badge">✓ Current</div>`;
+    if(pendingIdx===i)            badge=`<div class="pending-badge">Processing</div>`;
+    else if(subStatus==="active" && activeIdx===i) badge=`<div class="current-badge">Active</div>`;
+    
     c.innerHTML+=`<div class="swiper-slide"><div class="card" data-i="${i}">${badge}
-      <div class="header-row"><div class="price-main">${esc(p.p)} ${esc(p.d)}</div><div class="discount-text">${esc(p.discount||"")}</div></div>
+      <div class="header-row"><div class="price-main">${esc(p.p)} <span style="font-size: 13px; font-weight: 500; color: #64748B;">/ ${esc(p.d)}</span></div><div class="discount-text">${esc(p.discount||"")}</div></div>
       <div class="features-grid">${feats}</div></div></div>`;
   });
+  
   if(sw){sw.destroy(true,true);}
-  sw=new Swiper(".swiper",{loop:plans.length>1,centeredSlides:true,slidesPerView:1.1,spaceBetween:10,autoplay:{delay:500,disableOnInteraction:false},speed:1000});
-  setTimeout(()=>{if(sw&&sw.autoplay)sw.autoplay.stop();},2000);
+  sw=new Swiper(".swiper",{
+    loop: plans.length>1,
+    centeredSlides: true,
+    slidesPerView: 1.1,
+    spaceBetween: 14,
+    speed: 800
+  });
+  
   document.querySelectorAll(".card").forEach(c=>{
     c.addEventListener("click",()=>selectPlan(parseInt(c.dataset.i,10)));
   });
@@ -448,17 +878,14 @@ function selectPlan(i){
   const p=plans[i], btn=document.getElementById("continueBtn");
   if(!p) return;
   btn.disabled=false;
-  if(p.p==="FREE"){ btn.textContent="Continue with Free Plan"; return; }
+  if(p.p==="FREE"){ btn.textContent="Activate Free Plan"; return; }
   if(subStatus==="active"){
-    btn.textContent = (activeIdx===i)
-      ? `Renew — ${p.p} ${p.d||""}`.trim()
-      : `Upgrade — ${p.p} ${p.d||""}`.trim();
+    btn.textContent = (activeIdx===i) ? `Renew — ${p.p}` : `Upgrade — ${p.p}`;
   } else {
-    btn.textContent=`Continue — ${p.p} ${p.d||""}`.trim();
+    btn.textContent=`Continue with ${p.p}`;
   }
 }
 
-// ── Continue ──
 document.getElementById("continueBtn").addEventListener("click",async()=>{
   const p=plans[selIdx]; if(!p) return;
   if(p.p==="FREE"){
@@ -467,12 +894,8 @@ document.getElementById("continueBtn").addEventListener("click",async()=>{
     const a=auth();
     if(!a){ goLogin(); return; }
     try{
-      // Tell backend to activate free plan
       await withRefresh(()=>api("/api/activate-free-plan",{...a, plan_index: p.index ?? selIdx}));
-    }catch(e){
-      // Even if API fails (e.g. endpoint not yet added), just redirect to home
-    }
-    // Update local subscription_status so auto-login routes correctly next time
+    }catch(e){}
     try{
       const u=ud(); if(u){ u.subscription_status="free"; localStorage.setItem("_ud",JSON.stringify(u)); }
     }catch(e){}
@@ -482,22 +905,23 @@ document.getElementById("continueBtn").addEventListener("click",async()=>{
   openPayModal(p);
 });
 
-// ── Pay modal ──
 async function openPayModal(p){
   curPlanIdx=p.index;
-  document.getElementById("payName").textContent=`${p.p||""} ${p.d||""}`.trim();
+  document.getElementById("payName").textContent=`${p.p||""} Plan`.toUpperCase();
   document.getElementById("payPrice").textContent=p.p||"";
-  // Carry-over hint
+  
   const ch=document.getElementById("carryHint"); const dl=daysLeft();
   if(subStatus==="active" && dl>0){
-    ch.textContent=`➕ Aapke baaki ${dl} din is naye plan me add ho jayenge.`;
+    ch.textContent=`➕ Baaki ${dl} din is naye plan me auto-add ho jayenge.`;
     ch.classList.add("show");
   } else { ch.classList.remove("show"); ch.textContent=""; }
+  
   document.getElementById("paySpinner").style.display="flex";
   document.getElementById("payContent").style.display="none";
   document.getElementById("utrInput").value="";
   const m=document.getElementById("utrMsg"); m.className="utr-msg"; m.textContent="";
-  const b=document.getElementById("utrBtn"); b.disabled=false; b.textContent="Submit UTR";
+  const b=document.getElementById("utrBtn"); b.disabled=false; b.textContent="Submit & Verify";
+  
   const pm=document.getElementById("payModal");
   pm.classList.add("show"); pm.scrollTop=0; document.body.style.overflow="hidden";
   const a=auth(); if(!a){closeModal();goLogin();return;}
@@ -506,18 +930,18 @@ async function openPayModal(p){
     renderPayContent(d);
   }catch(e){
     document.getElementById("paySpinner").innerHTML=
-      `<div class="spin-text" style="color:#DC2626">${navigator.onLine?"Server error. Close and retry.":"No internet."}</div>`;
+      `<div class="spin-text" style="color:#DC2626; font-size:12px; font-weight:600;">Server error. Please retry.</div>`;
   }
 }
 
 function renderPayContent(d){
   document.getElementById("paySpinner").style.display="none";
   document.getElementById("payContent").style.display="block";
-  // QR
+  
   const qw=document.getElementById("payQr");
-  qw.innerHTML=d.qr?`<img src="${esc(d.qr)}" class="qr-img" onerror="this.parentElement.innerHTML='<div class=\\'no-qr\\'>QR not available</div>'">`:
+  qw.innerHTML=d.qr?`<img src="${esc(d.qr)}" class="qr-img" onerror="this.parentElement.innerHTML='<div class=\\'no-qr\\'>QR loading failed</div>'">`:
                     `<div class="no-qr">QR not set for this plan</div>`;
-  // Apps
+  
   const ar=document.getElementById("appsRow"), nu=document.getElementById("noUpi");
   if(d.upi){
     ar.style.display="flex"; nu.style.display="none";
@@ -533,76 +957,67 @@ function renderPayContent(d){
     ];
     ar.innerHTML=apps.map(a=>`<a class="app-btn" href="javascript:void(0)"
       onclick="openApp('${esc(a.s)}','${encodeURIComponent(ps)}','${esc(a.n)}','${esc(a.i)}')">
-      <img src="${esc(a.i)}" alt="${esc(a.n)}" onerror="this.style.display='none'">
+      <img src="${esc(a.i)}" alt="${esc(a.n)}" onerror="this.style.opacity='0.4'">
       <span>${esc(a.n)}</span></a>`).join("");
   } else {
     ar.style.display="none"; nu.style.display="block";
   }
 }
 
-  function closeModal(){ document.getElementById("payModal").classList.remove("show"); document.body.style.overflow=""; }
+function closeModal(){ document.getElementById("payModal").classList.remove("show"); document.body.style.overflow=""; }
 
-// ── Submit UTR ──
 window.submitUtr=async function(){
   const utr=document.getElementById("utrInput").value.trim();
   const msg=document.getElementById("utrMsg"), btn=document.getElementById("utrBtn");
   msg.className="utr-msg"; msg.textContent="";
-  if(!utr){ msg.className="utr-msg err"; msg.textContent="UTR / Transaction ID daalna zaroori hai."; return; }
-  btn.disabled=true; btn.textContent="Submitting...";
+  if(!utr){ msg.className="utr-msg err"; msg.textContent="Kripya valid 12-digit UTR enter karein."; return; }
+  btn.disabled=true; btn.textContent="Verifying...";
   const a=auth();
-  if(!a){ msg.className="utr-msg err"; msg.textContent="Session expired. Login karo."; btn.disabled=false; btn.textContent="Submit UTR"; return; }
+  if(!a){ msg.className="utr-msg err"; msg.textContent="Session expired. Login karo."; btn.disabled=false; btn.textContent="Submit & Verify"; return; }
   try{
     const d=await withRefresh(()=>api("/api/submit-utr",{...a,plan_index:curPlanIdx,utr}));
     if(d.status==="success"){
       msg.className="utr-msg ok";
-      msg.textContent="✅ UTR submit ho gaya! Verification ke baad plan activate ho jayega.";
-      btn.textContent="Submitted ✓";
+      msg.textContent="✅ UTR submitted! It will activate automatically after validation.";
+      btn.textContent="Verification Pending ✓";
       pendingIdx=curPlanIdx; renderSlides();
       document.getElementById("statusBar").style.display="block";
       document.getElementById("checkBtn").style.display="block";
     } else {
-      msg.className="utr-msg err"; msg.textContent="Submit fail hua. Dobara try karo.";
-      btn.disabled=false; btn.textContent="Submit UTR";
+      msg.className="utr-msg err"; msg.textContent="Failed. Please try again.";
+      btn.disabled=false; btn.textContent="Submit & Verify";
     }
   }catch(e){
     msg.className="utr-msg err";
     msg.textContent=e.status===400?(e.detail||"Invalid UTR."):(navigator.onLine?"Server error.":"Internet nahi hai.");
-    btn.disabled=false; btn.textContent="Submit UTR";
+    btn.disabled=false; btn.textContent="Submit & Verify";
   }
 };
 
-// ── Manual status check ──
 window.manualCheck=async function(){
   const btn=document.getElementById("checkBtn"), msg=document.getElementById("checkMsg");
-  btn.disabled=true; btn.textContent="Checking...";
-  msg.style.color="#9CA3AF"; msg.textContent="";
+  btn.disabled=true; btn.textContent="Checking Status...";
   const a=auth(); if(!a){goLogin();return;}
   try{
     const d=await withRefresh(()=>api("/api/account-status",a));
     const as=d.account_status||"active", ss=d.subscription_status||"none";
     if(!handleStatus(as,ss)){return;}
-    // Approved → plan activate ho gaya, banner refresh karo
     if(ss==="active"){
-      msg.style.color="#059669";
-      msg.textContent="✅ Plan activate ho gaya!";
+      msg.textContent="✅ Success! Your plan is activated.";
       pendingIdx=null;
       document.getElementById("statusBar").style.display="none";
       document.getElementById("checkBtn").style.display="none";
       loadPlans();
       return;
     }
-    // Still pending
-    msg.style.color="#F59E0B";
-    msg.textContent="⏳ Abhi bhi pending hai. Admin se check karo.";
+    msg.textContent="⏳ Status: Still Pending Verification. Our admin is reviewing.";
   }catch(e){
-    msg.style.color="#DC2626";
-    msg.textContent=navigator.onLine?"Server error. Try again.":"Internet nahi hai.";
+    msg.textContent="Network error. Try again.";
   } finally {
-    btn.disabled=false; btn.textContent="Check Status";
+    btn.disabled=false; btn.textContent="Check Status Again";
   }
 };
 
-// ── UPI app deep link ──
 let _appTmr=null;
 function hideAppRing(){
   document.getElementById("appRingOv").classList.remove("show");
@@ -622,10 +1037,9 @@ window.openApp=function(scheme,ep,name,icon){
   window.addEventListener("blur",_onVis);
   const fb=setTimeout(()=>{ if(!document.hidden) window.location.href=fallback; },1500);
   _appTmr=setTimeout(()=>{ clearTimeout(fb); hideAppRing(); },6000);
-  window.location.href=link; // sync — must be in user gesture
+  window.location.href=link;
 };
 
-// ── Init ──
 loadProfile();
 loadPlans();
 </script>
