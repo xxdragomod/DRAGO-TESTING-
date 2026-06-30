@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -500,6 +501,15 @@ function dgAdvanced(cfg, target, nums){
      ya DragoAnalyzer.analyze() jaisa {prediction:{color,confidence,reason}}.
    NOTE: code aapki khud ki uploaded file se aata hai (aapka apna calculation),
    isliye ise client-side run kiya jata hai. */
+/* Custom-engine win/loss + level tracking — localStorage me persist hota hai
+   (key game+timeframe+target ke hisaab se alag), taaki tab close/reopen karne
+   par bhi win-rate aur level history bani rahe. */
+function dgCustomStatsKey(target){ return "_drago_custom_stats_"+(predGame||"g")+"_"+(predTf||"t")+"_"+target; }
+function dgCustomLoadStats(target){
+  try{ const raw=localStorage.getItem(dgCustomStatsKey(target)); if(!raw) return {wins:0,total:0,consec:0,level:1,pendingPeriod:null,pendingPred:null};
+    const s=JSON.parse(raw); return Object.assign({wins:0,total:0,consec:0,level:1,pendingPeriod:null,pendingPred:null},s); }
+  catch(e){ return {wins:0,total:0,consec:0,level:1,pendingPeriod:null,pendingPred:null}; } }
+function dgCustomSaveStats(target,s){ try{ localStorage.setItem(dgCustomStatsKey(target),JSON.stringify(s)); }catch(e){} }
 function dgCustom(drago, target, nums){
   const np=dgNextPeriod(nums[nums.length-1].period);
   const code=(drago.code||drago.script||drago.js||"").toString();
@@ -509,6 +519,21 @@ function dgCustom(drago, target, nums){
     return { issue:String(r.period), issueNumber:String(r.period), period:String(r.period), number:num,
       color:colors.join(','), colors:colors, primary:colors[0], size:(num>=5?'big':'small') }; });
   const newestFirst=rich.slice().reverse();
+
+  /* Pichli baar jo prediction bani thi (pendingPeriod/pendingPred), use ab
+     latest actual result se compare karo aur wins/total/level update karo —
+     yahi piece pehle missing thi isliye level + win-rate kabhi badalte nahi the. */
+  let stats=dgCustomLoadStats(target);
+  const lastActual=rich[rich.length-1]; // sabse naya actual result jo aa chuka hai
+  if(lastActual && stats.pendingPeriod!==null && String(stats.pendingPeriod)===String(lastActual.period)){
+    const actualLabel = target==='color' ? (lastActual.colors[0]) : lastActual.size; // 'green'/'red' ya 'big'/'small'
+    const predLabel=(stats.pendingPred||"").toString().toLowerCase();
+    const correct = predLabel && actualLabel && predLabel.indexOf(actualLabel.slice(0,1))===0 || predLabel===actualLabel;
+    stats.total++;
+    if(correct){ stats.wins++; stats.consec=0; stats.level=1; } else { stats.consec++; stats.level=Math.min(stats.consec+1,4); }
+    stats.pendingPeriod=null; stats.pendingPred=null;
+  }
+
   const data={ results:newestFirst, newestFirst:newestFirst, history:rich, target:target,
     apiData:{ data:{ list:newestFirst.map(x=>({issueNumber:x.issue,number:String(x.number),color:x.color})) } } };
   const helpers={ colorOf:(n)=>dgColorLetter(n)==='G'?'green':'red', sizeOf:(n)=>dgSizeLetter(n)==='B'?'big':'small', nextPeriod:dgNextPeriod };
@@ -521,11 +546,20 @@ function dgCustom(drago, target, nums){
       ':(typeof DragoAnalyzer!=="undefined"&&DragoAnalyzer.analyze)?DragoAnalyzer.analyze(data.apiData):null;');
     out=runner(data,helpers);
   }catch(e){ console.log("[v0] custom .drago error:",e&&e.message);
-    return {prediction:"WAIT",confidence:0,win_rate:0,badge:"⚠️ERR",period:np,reason:"Code error: "+((e&&e.message)||"unknown")}; }
-  return dgNormalizeCustom(out,target,np);
+    dgCustomSaveStats(target,stats);
+    return {prediction:"WAIT",confidence:0,win_rate:stats.total?Math.round(stats.wins/stats.total*1000)/10:0,badge:dgLevelBadge(stats.level),period:np,reason:"Code error: "+((e&&e.message)||"unknown")}; }
+  const res=dgNormalizeCustom(out,target,np,stats);
+
+  /* Naye prediction ko "pending" mark karo taaki agle round me actual result
+     aane par usse compare karke wins/level update kiya ja sake. */
+  if(res.prediction && res.prediction!=="WAIT"){ stats.pendingPeriod=np; stats.pendingPred=res.prediction.toLowerCase(); }
+  dgCustomSaveStats(target,stats);
+  return res;
 }
-function dgNormalizeCustom(out,target,np){
-  const wrap=(p,c,extra)=>Object.assign({prediction:p,confidence:Math.round(Math.max(0,Math.min(c||0,99))),win_rate:0,badge:"🟢L1",period:np},extra||{});
+function dgNormalizeCustom(out,target,np,stats){
+  const wr = stats && stats.total ? Math.round(stats.wins/stats.total*1000)/10 : 0;
+  const badge = stats ? dgLevelBadge(stats.level) : "🟢L1";
+  const wrap=(p,c,extra)=>Object.assign({prediction:p,confidence:Math.round(Math.max(0,Math.min(c||0,99))),win_rate:wr,badge:badge,period:np},extra||{});
   if(!out||typeof out!=="object") return wrap("WAIT",0);
   let o=out; if(o.prediction&&typeof o.prediction==="object") o=o.prediction;
   const conf=o.confidence||o.conf||out.confidence||0, reason=o.reason||out.reason||"";
@@ -558,9 +592,18 @@ async function loadPredictionPremium(body){
     const dh=await withRefresh(()=>apiFetch("/api/results-history",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf,limit:200}));
     if(!dh) return;
     let results=(dh.result&&dh.result.results)||[];
-    try{ const dl=await withRefresh(()=>apiFetch("/api/results-latest",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf}));
-      if(dl&&dl.result&&dl.result.period){ const lp=String(dl.result.period);
-        if(!results.length||String(results[results.length-1].period)!==lp){ results=results.concat([{period:lp,number:dl.result.number}]); } } }catch(e){}
+    // FIX: pehle yahan khaali catch(e){} tha jo /api/results-latest fail hone par
+    // bina kisi retry ke purani/stale data par hi prediction chala deta tha —
+    // isi wajah se loss ke baad kabhi-kabhi prediction "update" nahi hoti thi.
+    // Ab 3 attempts tak retry karte hain taaki latest round ka result zaroor mile.
+    let dl=null, latestErr=null;
+    for(let attempt=0; attempt<3 && !dl; attempt++){
+      try{ dl=await withRefresh(()=>apiFetch("/api/results-latest",{uid:a.uid,session_signature:a.session_signature,game:predGame,timeframe:predTf})); }
+      catch(e){ latestErr=e; if(attempt<2) await new Promise(r=>setTimeout(r,400)); }
+    }
+    if(latestErr && !dl) console.warn("[v0] results-latest fetch failed after retries — prediction may use slightly stale data:", latestErr&&latestErr.message);
+    if(dl&&dl.result&&dl.result.period){ const lp=String(dl.result.period);
+      if(!results.length||String(results[results.length-1].period)!==lp){ results=results.concat([{period:lp,number:dl.result.number}]); } }
     if(!results.length){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
     const res=runDragoEngine(drago,dragoTarget(),results);
     if(!res||!res.prediction){ body.innerHTML=`<div class="pred-msg-box"><span class="pred-msg-ic">⏳</span><span class="pred-msg-txt">Premium engine warm ho raha hai...<br>Thodi der baad try karo.</span></div>`; return; }
